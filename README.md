@@ -1,4 +1,4 @@
-![image](https://user-images.githubusercontent.com/2004103/57687289-c0393c00-766d-11e9-8b82-2dedecb29a44.png)
+![image](https://user-images.githubusercontent.com/2004103/57691648-59208500-7677-11e9-9b6f-21ee0eb5a4dd.png)
 
 Kong是一个丛云到本地的、快速的、可伸缩的分布式微服务抽象层(也称为API网关、API中间件或某些情况下的服务网格)。作为一个开源项目，它的核心价值是高性能和可扩展性。
 
