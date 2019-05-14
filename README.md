@@ -11,9 +11,9 @@
 - 启用插件  
 - 添加消费者   
 
-[**开发指南**](GUIDES&REFERENCES)
+**开发指南**
 
-- 配置    
+- [配置](GUIDES&REFERENCES/configuration.md)    
 - CLI    
 - 代理    
 - 认证     
