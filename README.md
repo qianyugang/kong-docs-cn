@@ -14,7 +14,7 @@
 **开发指南**
 
 - [配置](GUIDES&REFERENCES/configuration.md)    
-- CLI    
+- [CLI](GUIDES&REFERENCES/cli.md)    
 - 代理    
 - 认证     
 - 负载均衡  
