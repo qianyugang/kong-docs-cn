@@ -9,11 +9,11 @@ Kong是一个丛云到本地的、快速的、可伸缩的分布式微服务抽�
 
 [**快速入门**](GETTING-STARTED)
 
-- 简介  
-- 五分钟快速开始  
-- 配置一个服务   
-- 启用插件  
-- 添加消费者   
+- [简介](GETTING-STARTED/introduction.md)
+- [五分钟快速开始](GETTING-STARTED/quickstart.md)  
+- [配置一个服务](GETTING-STARTED/configuring-a-service.md)   
+- [启用插件](GETTING-STARTED/enabling-plugins.md)  
+- [添加消费者](GETTING-STARTED/adding-consumers.md)   
 
 **开发指南**
 
