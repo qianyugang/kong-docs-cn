@@ -8,15 +8,12 @@ Kong是一个丛云到本地的、快速的、可伸缩的分布式微服务抽�
 # 目录
 
 * [**快速入门**](GETTING-STARTED)
-
     * [简介](GETTING-STARTED/introduction.md)
     * [五分钟快速开始](GETTING-STARTED/quickstart.md)  
     * [配置一个服务](GETTING-STARTED/configuring-a-service.md)   
     * [启用插件](GETTING-STARTED/enabling-plugins.md)  
     * [添加消费者](GETTING-STARTED/adding-consumers.md)   
-
 * **开发指南**
-
     * [配置](GUIDES&REFERENCES/configuration.md)    
     * [CLI](GUIDES&REFERENCES/cli.md)    
     * 代理    
@@ -28,7 +25,6 @@ Kong是一个丛云到本地的、快速的、可伸缩的分布式微服务抽�
     * 网络&防火墙  
     * 保证 Admin API 安全  
     * 插件开发
-    
         * 简介
         * 文件结构
         * [实现自定义逻辑](GUIDES&REFERENCES/plugin-development/custom-logic.md)
@@ -39,7 +35,6 @@ Kong是一个丛云到本地的、快速的、可伸缩的分布式微服务抽�
         * 扩展Admin API
         * 编写单元测试
         * 安装/卸载插件
-    
     * 插件开发套件(PDK)
         * kong.client
         * kong.ctx
@@ -53,9 +48,7 @@ Kong是一个丛云到本地的、快速的、可伸缩的分布式微服务抽�
         * kong.service.request
         * kong.service.response
         * kong.table
-    
 * [**Admin Api**](ADMIN-API)
-
     * 支持的 Content Types
     * 信息路由
     * 无DB配置
@@ -68,11 +61,4 @@ Kong是一个丛云到本地的、快速的、可伸缩的分布式微服务抽�
     * SNI对象
     * Upstream对象
     * Target对象
-    
-    
-    
-    
-    
-    
-    
 
