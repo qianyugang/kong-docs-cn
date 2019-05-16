@@ -1,8 +1,4 @@
-# 微服务 API 网关 Kong 单元测试中文文档
-
-原文链接: [https://docs.konghq.com/1.0.x/plugin-development/tests/](https://docs.konghq.com/1.0.x/plugin-development/tests/)
-（如有翻译的不准确或错误之处，欢迎留言指出）  
-集成测试：https://docs.konghq.com/1.0.x/plugin-development/tests/#write-integration-tests
+# 单元测试
 
 ## 介绍
 如果你认真对待你写的插件，你可能想为它编写一些测试。Lua的单元测试很简单，并且可以使用许多[测试框架](http://lua-users.org/wiki/UnitTesting)。但是，您可能还想编写集成测试。Kong可以再次为您提供支援。
