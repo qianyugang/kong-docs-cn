@@ -1,6 +1,4 @@
-# 微服务 API 网关 Kong 插件开发 - 安装/卸载插件
-
-原文地址：https://docs.konghq.com/1.1.x/plugin-development/entities-cache/ （不能保证所有的翻译都是准确无误的，所有如有翻译的不准确或错误之处，请一定记得查看原文，并欢迎留言指出）。
+# 安装/卸载插件
 
 ## 介绍
 
