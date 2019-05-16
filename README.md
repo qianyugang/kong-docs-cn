@@ -26,15 +26,15 @@ Kong是一个丛云到本地的、快速的、可伸缩的分布式微服务抽�
     * 保证 Admin API 安全  
     * 插件开发
         * 简介
-        * 文件结构
+        * [文件结构](GUIDES&REFERENCES/plugin-development/file-structure.md)
         * [实现自定义逻辑](GUIDES&REFERENCES/plugin-development/custom-logic.md)
         * 插件配置
         * [访问数据存储区](GUIDES&REFERENCES/plugin-development/access-the-datastore.md)
         * [存储自定义实体](GUIDES&REFERENCES/plugin-development/custom-entities.md)
-        * 缓存自定义实体
+        * [缓存自定义实体](GUIDES&REFERENCES/plugin-development/entities-cache.md)
         * 扩展Admin API
-        * 编写单元测试
-        * 安装/卸载插件
+        * [编写单元测试](GUIDES&REFERENCES/plugin-development/tests.md)
+        * [安装/卸载插件](GUIDES&REFERENCES/plugin-development/distribution.md)
     * 插件开发套件(PDK)
         * kong.client
         * kong.ctx
