@@ -28,7 +28,7 @@ Kong是一个丛云到本地的、快速的、可伸缩的分布式微服务抽�
         * 简介
         * [文件结构](GUIDES&REFERENCES/plugin-development/file-structure.md)
         * [实现自定义逻辑](GUIDES&REFERENCES/plugin-development/custom-logic.md)
-        * 插件配置
+        * [插件配置](GUIDES&REFERENCES/plugin-development/plugin-configuration)
         * [访问数据存储区](GUIDES&REFERENCES/plugin-development/access-the-datastore.md)
         * [存储自定义实体](GUIDES&REFERENCES/plugin-development/custom-entities.md)
         * [缓存自定义实体](GUIDES&REFERENCES/plugin-development/entities-cache.md)
