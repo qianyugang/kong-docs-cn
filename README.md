@@ -36,7 +36,7 @@ Kong是一个丛云到本地的、快速的、可伸缩的分布式微服务抽�
         * [编写单元测试](GUIDES&REFERENCES/plugin-development/tests.md)
         * [安装/卸载插件](GUIDES&REFERENCES/plugin-development/distribution.md)
     * [插件开发套件(PDK)](GUIDES&REFERENCES/PDK/pdk.md)
-        * kong.client
+        * [kong.client](GUIDES&REFERENCES/PDK/kong-client.md)
         * kong.ctx
         * kong.ip
         * kong.log
