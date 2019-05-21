@@ -24,8 +24,8 @@ Kong是一个丛云到本地的、快速的、可伸缩的分布式微服务抽�
     * [日志](GUIDES&REFERENCES/logging.md)  
     * 网络&防火墙  
     * [保证 Admin API 安全](GUIDES&REFERENCES/secure-admin-api.md)  
-    * 插件开发
-        * 简介
+    * [插件开发](GUIDES&REFERENCES/plugin-development/)
+        * [简介](GUIDES&REFERENCES/plugin-development/README.md)
         * [文件结构](GUIDES&REFERENCES/plugin-development/file-structure.md)
         * [实现自定义逻辑](GUIDES&REFERENCES/plugin-development/custom-logic.md)
         * [插件配置](GUIDES&REFERENCES/plugin-development/plugin-configuration)
