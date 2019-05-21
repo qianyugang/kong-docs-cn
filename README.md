@@ -40,14 +40,14 @@ Kong是一个丛云到本地的、快速的、可伸缩的分布式微服务抽�
         * [kong.ctx](GUIDES&REFERENCES/PDK/kong-ctx.md)
         * [kong.ip](GUIDES&REFERENCES/PDK/kong-ip.md)
         * kong.log
-        * kong.node
+        * [kong.node](GUIDES&REFERENCES/PDK/kong-node.md)
         * kong.request
         * kong.response
         * kong.router
         * kong.service
         * kong.service.request
         * kong.service.response
-        * kong.table
+        * [kong.table](GUIDES&REFERENCES/PDK/kong-table.md)
 * [**Admin Api**](ADMIN-API)
     * 支持的 Content Types
     * 信息路由
