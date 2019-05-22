@@ -39,7 +39,7 @@ Kong是一个丛云到本地的、快速的、可伸缩的分布式微服务抽�
         * [kong.client](GUIDES&REFERENCES/PDK/kong-client.md)
         * [kong.ctx](GUIDES&REFERENCES/PDK/kong-ctx.md)
         * [kong.ip](GUIDES&REFERENCES/PDK/kong-ip.md)
-        * kong.log
+        * [kong.log](GUIDES&REFERENCES/PDK/kong-log.md)
         * [kong.node](GUIDES&REFERENCES/PDK/kong-node.md)
         * kong.request
         * kong.response
