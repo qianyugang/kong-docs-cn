@@ -96,13 +96,13 @@
 - 用法
 
   ```
-if kong.response.get_source() == "service" then
-  kong.log("The response comes from the Service")
-elseif kong.response.get_source() == "error" then
-  kong.log("There was an error while processing the request")
-elseif kong.response.get_source() == "exit" then
-  kong.log("There was an early exit while processing the request")
-end
+    if kong.response.get_source() == "service" then
+      kong.log("The response comes from the Service")
+    elseif kong.response.get_source() == "error" then
+      kong.log("There was an error while processing the request")
+    elseif kong.response.get_source() == "exit" then
+      kong.log("There was an early exit while processing the request")
+    end
   ```
 
 ## kong.response.set_status(status)
@@ -167,6 +167,7 @@ end
   kong.response.clear_header("X-Foo")
   -- 从这里开始，响应中将不存在X-Foo头
   ```
+  
 ## kong.response.set_headers(headers)
 
 - 阶段
