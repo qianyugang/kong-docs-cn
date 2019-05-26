@@ -42,6 +42,7 @@
 - 返回
 	- `string|nil` header 的值
 - 用法
+
 	```
     -- Given a response with the following headers:
     -- X-Custom-Header: bla
@@ -52,6 +53,47 @@
     kong.response.get_header("X-Another")       -- "foo bar"
     kong.response.get_header("X-None")          -- nil
     ```
+    
+## kong.response.get_headers([max_headers])
+
+返回一个包含响应头的Lua table，key是header头的名字。值要么是带有header头值的字符串，要么是字符串数组（如果header多次发送）。header名不区分大小写，统一为小写，破折号(`-`)可以写成下划线(`_`);也就是说，头文件`X-Custom-Header`也可以检索为`x_custom_header`。
+
+响应最初是没有header头的，直到插件生成一个header头（例如，一个身份验证插件拒绝了一个请求）而使代理中断，或者请求已经被代理，并且后一个执行阶段之一当前正在运行。
+
+与`kong.service.response.get_headers()`函数不同，该函数返回客户端接收到的所有头信息，包括Kong本身添加的头信息。
+
+默认情况下，该函数最多返回100个头部。可以指定可选的max_headers参数来自定义此限制，但必须大于1且不大于1000。
+
+- 阶段
+	- header_filter, body_filter, log, admin_api
+- 参数
+	`max_headers`(number, optional) 限制解析多少header信息
+- 返回
+  1. `table` 响应的头
+  2. `string` 如果出现的header比`max_headers`多，则错误为`“truncated”`的字符串。
+- 用法
+
+	```
+    -- Given an response from the Service with the following headers:
+    -- X-Custom-Header: bla
+    -- X-Another: foo bar
+    -- X-Another: baz
+    
+    local headers = kong.response.get_headers()
+    
+    headers.x_custom_header -- "bla"
+    headers.x_another[1]    -- "foo bar"
+    headers["X-Another"][2] -- "baz"
+    
+    ```
+
+## kong.response.get_source()
+## kong.response.set_status(status)
+## kong.response.set_header(name, value)
+## kong.response.add_header(name, value)
+## kong.response.clear_header(name)
+## kong.response.set_headers(headers)
+## kong.response.exit(status[, body[, headers]])
 
 
 
