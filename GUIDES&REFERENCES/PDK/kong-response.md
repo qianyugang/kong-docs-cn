@@ -178,18 +178,18 @@ end
 - 用法
   
   ```
-  kong.response.set_headers({
-  ["Bla"] = "boo",
-  ["X-Foo"] = "foo3",
-  ["Cache-Control"] = { "no-store", "no-cache" }
-})
-
--- 将按以下顺序向响应添加以下头信息:
--- X-Bar: bar1
--- Bla: boo
--- Cache-Control: no-store
--- Cache-Control: no-cache
--- X-Foo: foo3
+    kong.response.set_headers({
+      ["Bla"] = "boo",
+      ["X-Foo"] = "foo3",
+      ["Cache-Control"] = { "no-store", "no-cache" }
+    })
+    
+    -- 将按以下顺序向响应添加以下头信息:
+    -- X-Bar: bar1
+    -- Bla: boo
+    -- Cache-Control: no-store
+    -- Cache-Control: no-cache
+    -- X-Foo: foo3
   ```
 
 ## kong.response.exit(status[, body[, headers]])
@@ -205,23 +205,23 @@ end
 - 用法
   
   ```
-  return kong.response.exit(403, "Access Forbidden", {
-  ["Content-Type"] = "text/plain",
-  ["WWW-Authenticate"] = "Basic"
-})
-
----
-
-return kong.response.exit(403, [[{"message":"Access Forbidden"}]], {
-  ["Content-Type"] = "application/json",
-  ["WWW-Authenticate"] = "Basic"
-})
-
----
-
-return kong.response.exit(403, { message = "Access Forbidden" }, {
-  ["WWW-Authenticate"] = "Basic"
-})
+    return kong.response.exit(403, "Access Forbidden", {
+      ["Content-Type"] = "text/plain",
+      ["WWW-Authenticate"] = "Basic"
+    })
+    
+    ---
+    
+    return kong.response.exit(403, [[{"message":"Access Forbidden"}]], {
+      ["Content-Type"] = "application/json",
+      ["WWW-Authenticate"] = "Basic"
+    })
+    
+    ---
+    
+    return kong.response.exit(403, { message = "Access Forbidden" }, {
+      ["WWW-Authenticate"] = "Basic"
+    })
   ```
 
 
