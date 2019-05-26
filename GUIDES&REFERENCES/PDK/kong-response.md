@@ -88,7 +88,37 @@
     ```
 
 ## kong.response.get_source()
+
+- 阶段
+	- header_filter, body_filter, log, admin_api
+- 返回
+  - `string` 源服务
+- 用法
+
+  ```
+if kong.response.get_source() == "service" then
+  kong.log("The response comes from the Service")
+elseif kong.response.get_source() == "error" then
+  kong.log("There was an error while processing the request")
+elseif kong.response.get_source() == "exit" then
+  kong.log("There was an early exit while processing the request")
+end
+  ```
+
 ## kong.response.set_status(status)
+
+- 阶段
+	- header_filter, body_filter, log, admin_api
+- 参数
+  - status(status):新状态
+- 返回
+  - 无返回值，如果是无效输入会报错
+- 用法
+  
+  ```
+  kong.response.set_status(404)
+  ```
+
 ## kong.response.set_header(name, value)
 ## kong.response.add_header(name, value)
 ## kong.response.clear_header(name)
