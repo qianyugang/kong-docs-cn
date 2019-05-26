@@ -120,10 +120,109 @@ end
   ```
 
 ## kong.response.set_header(name, value)
+
+- 阶段
+	- rewrite, access, header_filter, admin_api
+- 参数
+  - name(string):header的名称
+  - value(string	number boolean):新header的值
+- 返回
+  - 无返回值，如果是无效输入会报错
+- 用法
+  
+  ```
+  kong.response.set_header("X-Foo", "value")
+  ```
+
 ## kong.response.add_header(name, value)
+
+- 阶段
+	- rewrite, access, header_filter, admin_api
+- 参数
+  - name(string):header的名称
+  - value(string	number boolean):新header的值
+- 返回
+  - 无返回值，如果是无效输入会报错
+- 用法
+  
+  ```
+  kong.response.add_header("Cache-Control", "no-cache")
+  kong.response.add_header("Cache-Control", "no-store")
+  ```
+  
 ## kong.response.clear_header(name)
+
+- 阶段
+	- rewrite, access, header_filter, admin_api
+- 参数
+  - name(string):被清理的header的名称
+- 返回
+  - 无返回值，如果是无效输入会报错
+- 用法
+  
+  ```
+  kong.response.set_header("X-Foo", "foo")
+  kong.response.add_header("X-Foo", "bar")
+
+  kong.response.clear_header("X-Foo")
+  -- 从这里开始，响应中将不存在X-Foo头
+  ```
 ## kong.response.set_headers(headers)
+
+- 阶段
+	- rewrite, access, header_filter, admin_api
+- 参数
+  - headers(table)
+- 返回
+  - 无返回值，如果是无效输入会报错
+- 用法
+  
+  ```
+  kong.response.set_headers({
+  ["Bla"] = "boo",
+  ["X-Foo"] = "foo3",
+  ["Cache-Control"] = { "no-store", "no-cache" }
+})
+
+-- 将按以下顺序向响应添加以下头信息:
+-- X-Bar: bar1
+-- Bla: boo
+-- Cache-Control: no-store
+-- Cache-Control: no-cache
+-- X-Foo: foo3
+  ```
+
 ## kong.response.exit(status[, body[, headers]])
+
+- 阶段
+	- rewrite, access, admin_api, header_filter (只有在body为空的时候)
+- 参数
+  - status(table):被使用的状态
+  - body(table	string, optional):被使用的返回体
+  - headers(table, optional):被使用的返回头
+- 返回
+  - 无返回值，如果是无效输入会报错
+- 用法
+  
+  ```
+  return kong.response.exit(403, "Access Forbidden", {
+  ["Content-Type"] = "text/plain",
+  ["WWW-Authenticate"] = "Basic"
+})
+
+---
+
+return kong.response.exit(403, [[{"message":"Access Forbidden"}]], {
+  ["Content-Type"] = "application/json",
+  ["WWW-Authenticate"] = "Basic"
+})
+
+---
+
+return kong.response.exit(403, { message = "Access Forbidden" }, {
+  ["WWW-Authenticate"] = "Basic"
+})
+  ```
 
 
 
