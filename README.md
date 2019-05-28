@@ -53,8 +53,8 @@ Kong是一个丛云到本地的、快速的、可伸缩的分布式微服务抽�
     * 信息路由
     * 无DB配置
     * 标签
-    * Service对象
-    * Router对象
+    * [Service对象](ADMIN-API/service-object.md)
+    * [Router对象](ADMIN-API/route-object.md)
     * Consumer对象
     * 插件对象
     * 认证对象
