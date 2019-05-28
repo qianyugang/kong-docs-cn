@@ -22,7 +22,7 @@ Kong是一个丛云到本地的、快速的、可伸缩的分布式微服务抽�
     * 健康检查和断路器
     * 集群  
     * [日志](GUIDES&REFERENCES/logging.md)  
-    * 网络&防火墙  
+    * [网络&防火墙](GUIDES&REFERENCES/network.md)  
     * [保证 Admin API 安全](GUIDES&REFERENCES/secure-admin-api.md)  
     * [插件开发](GUIDES&REFERENCES/plugin-development/)
         * [简介](GUIDES&REFERENCES/plugin-development/README.md)
