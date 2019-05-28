@@ -89,6 +89,15 @@
 
 ## kong.response.get_source()
 
+此功能有助于确定当前响应的来源。
+作为反向代理，它可以使请求终端并产生自己的响应，或者响应可以来自代理service。换句话说，也就是当请求被插件或Kong本身中断时（例如无效的凭证）。
+
+返回包含三个可能值的字符串：
+
+    - 当在处理请求期间的某个时刻，已经调用kong.response.exit（）时返回“exit”。
+    - 处理请求时发生错误时返回“error” ，例如，连接到上游服务时发生超时。
+    - 通过成功联系代理服务发起响应时，将返回“service”。
+
 - 阶段
 	- header_filter, body_filter, log, admin_api
 - 返回
@@ -107,6 +116,10 @@
 
 ## kong.response.set_status(status)
 
+允许在将下游响应HTTP状态代码发送到客户端之前更改它。
+
+此函数应该在`header_filter`阶段使用，因为Kong正在准备将header头发送回客户端。
+
 - 阶段
 	- header_filter, body_filter, log, admin_api
 - 参数
@@ -120,6 +133,10 @@
   ```
 
 ## kong.response.set_header(name, value)
+
+设置具有给定值的响应header。此函数会覆盖具有相同名称的任何现有header。
+
+此函数应该在`header_filter`阶段使用，因为Kong正在准备将header发送回客户端。
 
 - 阶段
 	- rewrite, access, header_filter, admin_api
@@ -136,6 +153,10 @@
 
 ## kong.response.add_header(name, value)
 
+添加具有给定值的响应header。不同于`kong.response.set_header()`，此函数不会删除任何具有相同名称的现有header。相反，另一个具有相同名称的header将添加到响应中。如果响应中不存在具有此名称的header，则会添加给定值，类似于`kong.response.set_header()`。
+
+此函数应该在`header_filter`阶段使用，因为Kong正在准备将header发送回客户端。
+
 - 阶段
 	- rewrite, access, header_filter, admin_api
 - 参数
@@ -151,6 +172,10 @@
   ```
   
 ## kong.response.clear_header(name)
+
+删除发送到客户端的响应中出现的所有指定header。
+
+此函数应该在`header_filter`阶段使用，因为Kong正在准备将header发送回客户端。
 
 - 阶段
 	- rewrite, access, header_filter, admin_api
@@ -169,6 +194,14 @@
   ```
   
 ## kong.response.set_headers(headers)
+
+设置响应的header。不同于`kong.response.set_header()`，headers参数必须是一个table，其中每个键都是一个字符串（对应于标题的名称），每个值都是一个字符串或一个字符串数组。
+
+此函数应该在`header_filter`阶段使用，因为Kong正在准备将header发送回客户端。
+
+生成的header按字典顺序生成。保留具有相同名称的顺序（当值是数组）。
+
+此函数将覆盖与headers参数中指定的名称相同的任何现有header。其他保持不变。
 
 - 阶段
 	- rewrite, access, header_filter, admin_api
@@ -194,6 +227,20 @@
   ```
 
 ## kong.response.exit(status[, body[, headers]])
+
+该函数中断当前处理并产生响应。在Kong有机会代理请求之前，通常会看到插件使用它来产生响应（例如，拒绝请求的身份验证插件或服务缓存响应的缓存插件）。
+
+建议将此函数与return运算符结合使用，以更好地反映其含义：
+```
+ return kong.response.exit(200, "Success")
+```
+调用`kong.response.exit()`将中断当前阶段插件的执行流程。后续阶段仍将被调用。例如，如果一个插件在`access`阶段调用`kong.response.exit()`，那么在该阶段不会执行其他插件，但仍然会执行`header_filter`，`body_filter`和日志阶段，以及他们的插件。因此，当请求未被代理到service时，插件应该采取编写防御性程序，而不是由Kong本身生成。
+
+第一个参数`status`将设置客户端将看到的响应的状态代码。
+
+第二个可选的参数`body`将设置到响应体上。如果它是一个字符串，则不会进行任何特殊处理，并且正文将按原样发送。调用者有责任通过第三个参数设置适当的Content-Type标头。为方便起见，可以将`body`指定为table，在这种情况下，它将进行JSON编码，并将设置`application/json` Content-Type header。
+
+除非手动指定，否则此方法将自动在生成的响应中设置Content-Length header以方便使用。
 
 - 阶段
 	- rewrite, access, admin_api, header_filter (只有在body为空的时候)
@@ -224,23 +271,4 @@
       ["WWW-Authenticate"] = "Basic"
     })
   ```
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
