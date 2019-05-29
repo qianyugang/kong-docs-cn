@@ -49,10 +49,10 @@ Kong是一个丛云到本地的、快速的、可伸缩的分布式微服务抽�
         * [kong.service.response](GUIDES&REFERENCES/PDK/kong-service-response.md)
         * [kong.table](GUIDES&REFERENCES/PDK/kong-table.md)
 * [**Admin Api**](ADMIN-API)
+    * 无DB配置
     * 支持的 Content Types
     * 声明性配置 
     * 信息路由
-    * 无DB配置
     * 标签
     * [Service对象](ADMIN-API/service-object.md)
     * [Router对象](ADMIN-API/route-object.md)
