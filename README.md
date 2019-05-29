@@ -17,7 +17,7 @@ Kong是一个丛云到本地的、快速的、可伸缩的分布式微服务抽�
     * [配置](GUIDES&REFERENCES/configuration.md)    
     * [CLI](GUIDES&REFERENCES/cli.md)    
     * 代理    
-    * 认证     
+    * [认证](GUIDES&REFERENCES/auth.md)       
     * 负载均衡  
     * 健康检查和断路器
     * 集群  
