@@ -1,4 +1,4 @@
-# 健康检查和断路器
+# Health Checks and Circuit Breakers
 
 ## 简介
 
@@ -114,26 +114,52 @@ HTTP/1.1 204 No Content
 
 ### 启用主动健康检查
 
+要启用主动健康检查，您需要在[Upstream对象](https://docs.konghq.com/1.1.x/admin-api#upstream-objects)配置中指定`healthchecks.active`下的配置项。您需要指定必要的信息，以便Kong可以对目标执行定期探测，以及如何解释结果信息。您可以使用`healthchecks.active.type`字段指定是执行HTTP探测还是HTTPS探测（将其设置为“http”或“https”），或者只是测试与给定主机和端口的连接是否成功（将其设置为“tcp”）。
+
+要配置探针，您需要指定：
+
+- `healthchecks.active.http_path` - 向目标发出HTTP GET请求时应使用的路径。默认值是`/`
+- `healthchecks.active.timeout` - 探针的HTTP GET请求的连接超时限制。默认值为1秒。
+- `healthchecks.active.concurrency` - 在活动运行状况检查中同时检查的目标数。
+
+您还需要为间隔指定正值，以便运行探针：
+
+- `healthchecks.active.healthy.interval` - 健康目标的活动健康检查之间的间隔（以秒为单位）。
+- `healthchecks.active.unhealthy.interval` - 值为零表示不应执行健康目标的活动探测。
+
+允许您调整主动健康检查的行为，无论您是希望健康和不健康目标的探测器以相同间隔运行，或者一个比另一个更频繁。
+
+如果您使用的是HTTPS运行状况检查，则还可以指定以下字段：
+
+- `healthchecks.active.https_verify_certificate` - 使用HTTPS执行活动运行状况检查时是否检查远程主机的SSL证书的有效性。
+- `healthchecks.active.https_sni` - 使用HTTPS执行活动运行状况检查时用作SNI（服务器名称标识）的主机名。当使用IP配置目标时，这尤其有用，因此可以使用正确的SNI验证目标主机的证书。
+
+请注意，失败的TLS验证将增加“TCP failures”计数器;“HTTP failures”仅指HTTP状态代码，无论探测是通过HTTP还是HTTPS完成的。
+
+最后，您需要通过设置运行状况计数器上的各种阈值来配置Kong应该如何解释探测器，一旦达到该阈值将触发状态更改。
+计数器阈值字段是：
+
+- `healthchecks.active.healthy.successes` - 活动探针中的成功次数（由`healthchecks.active.healthy.http_statuses`定义）以考虑目标健康。
+- `healthchecks.active.unhealthy.tcp_failures` - 在活动探测器中考虑目标不健康的TCP故障或TLS验证失败的数量。
+- `healthchecks.active.unhealthy.timeouts` - 活动探测器中用于考虑目标不健康的超时次数。
+- `healthchecks.active.unhealthy.http_failures` - 活动探测器中的HTTP故障数（由`healthchecks.active.unhealthy.http_statuses`定义）以考虑目标运行状况不佳。
+
 ### 启用被动健康检查
+
+被动健康检查没有探针，因为他们通过解析从目标流出的持续流量来工作。这意味着要启用被动检查，您只需配置其计数器阈值：
+
+- `healthchecks.passive.healthy.successes` - 代理流量的成功次数（由`healthchecks.passive.healthy.http_statuses`定义）以考虑目标健康，如被动健康检查所观察到的那样。当启用被动检查时，这需要是积极的，以便健康的流量重置不健康的计数器。
+- `healthchecks.passive.unhealthy.tcp_failures` - 通过被动运行状况检查观察到的代理流量中考虑目标不健康的TCP故障数。
+- `healthchecks.passive.unhealthy.timeouts` - 通过被动运行状况检查观察到的代理流量中考虑目标不健康的超时次数。
+- `healthchecks.passive.unhealthy.http_failures` - 代理流量（由`healthchecks.passive.unhealthy.http_statuses`定义）中的HTTP故障数，以考虑目标不健康，如被动运行状况检查所观察到的那样。
 
 ### 关闭健康检查
 
+在`healthchecks`胚置中指定的所有计数器阈值和间隔中，将值设置为零意味着禁用该字段表示的功能。将探测间隔设置为零会禁用探测。
+同样，您可以通过将其计数器阈值设置为零来禁用某些类型的检查。例如，要在执行健康检查时不考虑超时，可以将两个超时字段（用于主动和被动检查）设置为零。这使您可以对健康检查程序的行为进行细粒度控制。
 
+总之，要完全禁用上游的活动运行状况检查，您需要将`healthchecks.active.healthy.interval`和`healthchecks.active.unhealthy.interval`都设置为0。
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+默认情况下，`healthchecks`中的所有计数器阈值和间隔均为零，这意味着在新创建的上游中默认情况下完全禁用运行状况检查。
 
 
