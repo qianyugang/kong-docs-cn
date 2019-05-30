@@ -111,5 +111,103 @@ DNS解析器将按顺序开始解析以下记录类型：
 
 ## 蓝绿部署
 
+使用环装负载均衡器可以轻松地为服务进行[蓝绿色部署](http://blog.christianposta.com/deploy/blue-green-deployments-a-b-testing-and-canary-releases/)。切换目标基础结构仅需要服务上的`PATCH`请求，以更改其`host`值。
+
+设置“Blue”环境，运行地址服务的版本1：
+
+```
+# 创建一个 upstream
+curl -X POST http://kong:8001/upstreams \
+    --data "name=address.v1.service"
+
+# 添加两个 targets 到 upstream
+curl -X POST http://kong:8001/upstreams/address.v1.service/targets \
+    --data "target=192.168.34.15:80"
+    --data "weight=100"
+curl -X POST http://kong:8001/upstreams/address.v1.service/targets \
+    --data "target=192.168.34.16:80"
+    --data "weight=50"
+
+# 创建一个Service 目标到 Blue upstream
+curl -X POST http://kong:8001/services/ \
+    --data "name=address-service" \
+    --data "host=address.v1.service" \
+    --data "path=/address"
+
+# 最后, 添加一个 Route 作为一个端点到 Service
+curl -X POST http://kong:8001/services/address-service/routes/ \
+    --data "hosts[]=address.mydomain.com"
+```
+
+主机header设置为`address.mydomain.com`的请求现在由Kong代理到两个定义的目标;
+2/3的请求将转到`http://192.168.34.15:80/address`(`weight = 100`），而1/3将转到`http://192.168.34.16:80/address`(`weight = 50`）。
+
+在部署地址服务的第2版之前，请设置“Green”环境：
+
+```
+# 新建一个 Green upstream 到 地址service v2
+curl -X POST http://kong:8001/upstreams \
+    --data "name=address.v2.service"
+
+# 添加一个 targets 到upstream
+curl -X POST http://kong:8001/upstreams/address.v2.service/targets \
+    --data "target=192.168.34.17:80"
+    --data "weight=100"
+curl -X POST http://kong:8001/upstreams/address.v2.service/targets \
+    --data "target=192.168.34.18:80"
+    --data "weight=100"
+```
+
+要激活 Blue/Green  开关，我们现在只需要更新服务：
+
+```
+# 更改 Service从 Blue 到 Green upstream, v1 到 v2
+curl -X PATCH http://kong:8001/services/address-service \
+    --data "host=address.v2.service"
+```
+
+将主机header设置为`address.mydomain.com`的传入请求现在由Kong代理到新目标；1/2的请求将会到`http://192.168.34.17:80/address `(`weight=100`)，剩下1/2的请求将会到`http://192.168.34.18:80/address` (`weight=100`)。
+
+与往常一样，通过Kong Admin API进行的更改是动态的，并将立即生效。
+不需要重新加载或重新启动，也不会丢弃正在进行的请求。
+
 ## 金丝雀（灰度）发布
+
+使用环装负载均衡器， target 权重可以精细调整，允许平稳，受控制的[金丝雀（灰度）发布](http://blog.christianposta.com/deploy/blue-green-deployments-a-b-testing-and-canary-releases/)。
+
+使用一个非常简单的两个target目标示例：
+
+```
+# 第一个 target at 1000
+curl -X POST http://kong:8001/upstreams/address.v2.service/targets \
+    --data "target=192.168.34.17:80"
+    --data "weight=1000"
+
+# 第二个 target at 0
+curl -X POST http://kong:8001/upstreams/address.v2.service/targets \
+    --data "target=192.168.34.18:80"
+    --data "weight=0"
+```
+
+通过重复请求，但每次都改变权重，流量将慢慢地路由到另一个目标。
+例如，将其设置为10％：
+
+```
+# 第一个 target at 900
+curl -X POST http://kong:8001/upstreams/address.v2.service/targets \
+    --data "target=192.168.34.17:80"
+    --data "weight=900"
+
+# 第二个 target at 100
+curl -X POST http://kong:8001/upstreams/address.v2.service/targets \
+    --data "target=192.168.34.18:80"
+    --data "weight=100"
+```
+
+通过Kong Admin API进行的更改是动态的，并将立即生效。
+不需要重新加载或重新启动，也不会丢弃正在进行的请求。
+
+
+
+
 
