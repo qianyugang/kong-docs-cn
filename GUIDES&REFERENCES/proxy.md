@@ -155,11 +155,118 @@ Host: foo.com
 
 现在我们了解了`hosts`, `paths`, 和 `methods`属性如何协同工作，让我们分别来看每个属性。
 
-    ### host 请求头
+### host 请求头
 
-        #### 使用通配符主机名
-        #### preserve_host属性
+基于其host header 来路由请求是通过Kong代理流量的最直接方式，特别是因为这是HTTP host header 的预期用途。Kong可以通过Route实体的`hosts`字段轻松完成。
 
+`hosts`接受多个值，在通过Admin API指定它们时必须以逗号分隔：
+
+`hosts`接受多个值，这些值很容易在JSON有效负载中表示：
+```
+curl -i -X POST http://localhost:8001/routes/ \
+    -H 'Content-Type: application/json' \
+    -d '{"hosts":["example.com", "foo-service.com"]}'
+HTTP/1.1 201 Created
+...
+```
+
+但由于Admin API还支持form-urlencoded内容类型，因此您可以通过`[]`表示法指定数组：
+
+```
+curl -i -X POST http://localhost:8001/routes/ \
+    -d 'hosts[]=example.com' \
+    -d 'hosts[]=foo-service.com'
+HTTP/1.1 201 Created
+...
+```
+
+要满足此Route的`hosts`条件，来自客户端的任何传入请求现在必须将其Host header 设置为以下之一：
+```
+Host: example.com
+```
+
+或者
+
+```
+Host: foo-service.com
+```
+
+#### 使用通配符主机名
+
+为了提供灵活性，Kong允许您在`hosts`字段中指定带通配符的主机名。通配符主机名允许任何匹配的host满足条件，从而匹配给定的Route。
+
+通配符主机名**必须**在域的最左侧或最右侧标签中**仅包含**一个星号。例子：
+
+- `*.example.com `将匹配诸如`a.example.com` 和 `x.y.example.com`
+- `example.*` 将匹配诸如`example.com` 和 `example.org`
+
+一个完整的例子如下所示：
+```
+{
+    "hosts": ["*.example.com", "service.com"]
+}
+```
+
+将允许以下请求匹配此路由：
+```
+GET / HTTP/1.1
+Host: an.example.com
+```
+```
+GET / HTTP/1.1
+Host: service.com
+```
+
+#### `preserve_host`属性
+
+代理时，Kong的默认行为是将上游请求的主机头设置为服务主机中指定的`host`。`preserve_host`字段接受一个布尔标志，指示Kong不要这样做。
+
+例如，当preserve_host属性未更改且Route配置如下：
+```
+{
+    "hosts": ["service.com"],
+    "service": {
+        "id": "..."
+    }
+}
+```
+client对Kong的可能请求可能是：
+```
+GET / HTTP/1.1
+Host: service.com
+```
+
+Kong将从Service的主机属性中提取Host头值，并将发送以下上游请求：
+```
+GET / HTTP/1.1
+Host: <my-service-host.com>
+```
+
+但是，通过使用`preserve_host=true`配置Route：
+
+```
+{
+    "hosts": ["service.com"],
+    "preserve_host": true,
+    "service": {
+        "id": "..."
+    }
+}
+```
+
+并假设来自客户的相同请求：
+
+```
+GET / HTTP/1.1
+Host: service.com
+```
+
+Kong将根据客户端请求保留Host，并将发送以下上游请求：
+
+```
+GET / HTTP/1.1
+Host: service.com
+```
     ### 请求路径
     
     	#### 在路径中使用正则表达式
