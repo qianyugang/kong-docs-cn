@@ -267,9 +267,55 @@ Kong将根据客户端请求保留Host，并将发送以下上游请求：
 GET / HTTP/1.1
 Host: service.com
 ```
-    ### 请求路径
-    
-    	#### 在路径中使用正则表达式
+
+### 请求路径
+
+路由匹配的另一种方式是通过请求路径。
+要满足此路由条件，客户端请求的路径必须以`paths`属性的值之一为前缀。
+例如，使用如下配置的Route：
+```
+{
+    "paths": ["/service", "/hello/world"]
+}
+```
+以下请求将被匹配：
+```
+GET /service HTTP/1.1
+Host: example.com
+```
+```
+GET /service/resource?param=value HTTP/1.1
+Host: example.com
+```
+```
+GET /hello/world/resource HTTP/1.1
+Host: anything.com
+```
+
+对于这些请求中的每一个，Kong检测到其URL路径以路由的`paths`之一为前缀。默认情况下，Kong会在不更改URL路径的情况下代理上游请求。
+
+使用路径前缀进行代理时，**首先评估最长路径**。这允许您定义两个具有两个路径的Routes：`/service`和`/service/resource`，并确保前者不会“遮蔽”后者。
+
+#### 在路径中使用正则表达式
+
+Kong通过PCRE（Perl兼容正则表达式）支持Route的路径字段的正则表达式模式匹配。您可以同时将路径作为前缀和正则表达式分配给Route。例如，如果我们考虑以下Route：
+```
+{
+    "paths": ["/users/\d+/profile", "/following"]
+}
+```
+
+此Route将匹配以下请求：
+```
+GET /following HTTP/1.1
+Host: ...
+```
+```
+GET /users/123/profile HTTP/1.1
+Host: ...
+```
+
+使用PCRE标志（`PCRE_ANCHORED`）评估提供的正则表达式，这意味着它们将被约束为在路径中的第一个匹配点（root`/`character）匹配。
         	
             ##### 评估订单
             ##### 捕获团体
