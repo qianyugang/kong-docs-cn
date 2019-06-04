@@ -317,13 +317,139 @@ Host: ...
 
 使用PCRE标志（`PCRE_ANCHORED`）评估提供的正则表达式，这意味着它们将被约束为在路径中的第一个匹配点（root`/`character）匹配。
         	
-            ##### 评估订单
-            ##### 捕获团体
-            ##### 规避特殊字符
-            
-        #### strip_path属性
-        
-    ### 请求HTTP方法
+##### 评估顺序
+
+如前所述，Kong按长度评估前缀路径：首先评估最长前缀路径。
+但是，Kong将根据路由的`regex_priority`属性从最高优先级到最低优先级来评估正则表达式路径。这意味着考虑以下Routes：
+```
+[
+    {
+        "paths": ["/status/\d+"],
+        "regex_priority": 0
+    },
+    {
+        "paths": ["/version/\d+/status/\d+"],
+        "regex_priority": 6
+    },
+    {
+        "paths": ["/version"],
+    },
+    {
+        "paths": ["/version/any/"],
+    }
+]
+```
+在这种情况下，Kong将按以下顺序评估针对以下定义的URI的传入请求：
+
+1. `/version/any/`
+2. `/version`
+3. `/version/\d+/status/\d+`
+4. `/status/\d+`
+
+始终在正则表达式路径之前评估前缀路径。
+
+像往常一样，请求仍然必须匹配Route的机`hosts`和`methods`属性，并且Kong将遍历您的Routes，直到找到匹配最多规则的路由（请参阅[路由优先级] [代理路由优先级]）。
+
+##### 捕获组
+
+也支持正则的捕获组，匹配的组将从路径中提取并可用于插件使用。
+如果我们考虑以下正则表达式：
+```
+/version/(?<version>\d+)/users/(?<user>\S+)
+```
+
+以及以下请求路径：
+```
+/version/1/users/john
+```
+Kong会将请求路径视为匹配，如果匹配整个Route（考虑`hosts`和`methods`字段），则可以从`ngx.ctx`变量中的插件获取提取的捕获组：
+
+```
+local router_matches = ngx.ctx.router_matches
+
+-- router_matches.uri_captures is:
+-- { "1", "john", version = "1", user = "john" }
+```
+
+##### 规避特殊字符
+
+接下来，值得注意的是，根据[RFC 3986](https://tools.ietf.org/html/rfc3986)，在正则表达式中找到的字符通常是保留字符，因此应该是百分比编码（URL编码）。**通过Admin API配置具有正则表达式路径的路由时，请务必在必要时对您的有效负载进行URL编码**。例如，使用`curl`并使用`application/x-www-form-urlencode`MIME类型：
+```
+curl -i -X POST http://localhost:8001/routes \
+    --data-urlencode 'uris[]=/status/\d+'
+HTTP/1.1 201 Created
+...
+```
+
+请注意，`curl`不会自动对您的有效负载进行URL编码，并注意使用`--data-urlencode`，它可以防止Kong的Admin API对`+`字符进行URL解码，并将其解码为一个空的``。
+
+#### `strip_path`属性
+
+可能需要指定路径前缀以匹配路由，但不将其包括在上游请求中。为此，请通过配置如下所示的Route来使用`strip_path`布尔属性：
+```
+{
+    "paths": ["/service"],
+    "strip_path": true,
+    "service": {
+        "id": "..."
+    }
+}
+```
+
+启用此标志会指示Kong在匹配此路由并继续代理服务时，不应在上游请求的URL中包含URL路径的匹配部分。例如，以下客户端对上述路由的请求：
+```
+GET /service/path/to/resource HTTP/1.1
+Host: ...
+```
+
+将导致Kong发送以下上游请求：
+```
+GET /path/to/resource HTTP/1.1
+Host: ...
+```
+
+同样，如果在启用了`strip_path`的Route上定义了正则表达式路径，则将剥离整个请求URL匹配序列。
+例：
+```
+{
+    "paths": ["/version/\d+/service"],
+    "strip_path": true,
+    "service": {
+        "id": "..."
+    }
+}
+```
+
+以下HTTP请求与提供的正则表达式路径匹配：
+
+```
+GET /version/1/service/path/to/resource HTTP/1.1
+Host: ...
+```
+
+### 请求HTTP方法
+
+`methods`字段允许根据HTTP方法匹配请求。它接受多个值。其默认值为空（HTTP方法不用于路由）。
+以下路由允许通过`GET`和`HEAD`进行路由：
+```
+{
+    "methods": ["GET", "HEAD"],
+    "service": {
+        "id": "..."
+    }
+}
+```
+这样的Route将符合以下要求：
+```
+GET / HTTP/1.1
+Host: ...
+```
+```
+HEAD /resource HTTP/1.1
+Host: ...
+```
+    
+但它与`POST`或`DELETE`请求不匹配。在路由上配置插件时，这允许更多粒度。例如，可以想象两个指向同一服务的路由：一个具有无限制的未经身份验证的`GET`请求，另一个仅允许经过身份验证和速率限制的`POST`请求（通过将身份验证和速率限制插件应用于此类请求）。
     
 ## 匹配优先事项
 
