@@ -453,13 +453,118 @@ Host: ...
     
 ## 匹配优先事项
 
+Route可以基于其`hosts`, `paths`, 和 `methods`字段定义匹配规则。要使Kong匹配到路由的传入请求，必须满足所有现有字段。
+但是，通过允许两个或多个路由配置包含相同值的字段，Kong允许相当大的灵活性 - 当发生这种情况时，Kong应用优先级规则。
+
+规则是：**在评估请求时，Kong将首先尝试匹配具有最多规则的路由。**
+
+例如，如果两个路由配置如下：
+```
+{
+    "hosts": ["example.com"],
+    "service": {
+        "id": "..."
+    }
+},
+{
+    "hosts": ["example.com"],
+    "methods": ["POST"],
+    "service": {
+        "id": "..."
+    }
+}
+```
+
+第二个Route有一个`hosts`字段和一个`methods`字段，因此它将首先由Kong评估。通过这样做，我们避免了第一个用于第二个路径的“阴影”调用。
+
+因此，此请求将匹配第一个Route
+
+```
+GET / HTTP/1.1
+Host: example.com
+```
+
+这个请求将匹配第二个：
+
+```
+POST / HTTP/1.1
+Host: example.com
+```
+
+遵循这个逻辑，如果要使用`hosts`字段，`methods`字段和`uris`字段配置第三个Route，它将首先由Kong评估。
+
 ## 代理行为
 
-	### 负载均衡
-    ### 插件执行
-    ### 代理和上游超时
-    ### 错误和重试
-    ### 响应
+上面的代理规则详细说明了Kong如何将传入请求转发到您的上游服务。下面，我们详细说明Kong与HTTP请求与注册路由*匹配*的时间与请求的实际*转发*之间内部发生的情况。
+
+### 1.负载均衡
+
+Kong实现负载平衡功能，以跨上游服务实例池分发代理请求。
+
+您可以通过查看[负载平衡](https://docs.konghq.com/1.1.x/loadbalancing)来查找有关配置负载平衡的更多信息
+
+### 2.插件执行
+
+Kong可通过“插件”进行扩展，这些“插件”将自己挂载在代理请求的请求/响应生命周期中。插件可以在您的环境中执行各种操作 和/或 在代理请求上进行转换。
+
+可以将插件配置为全局（针对所有代理流量）或特定 Routes 和 Services运行。
+在这两种情况下，您都必须通过Admin API创建[插件配置](https://docs.konghq.com/1.1.x/admin-api#plugin-object)。
+
+一旦路由匹配（及其关联的服务实体），Kong将运行与这些实体中的任何一个相关联的插件。在路由上配置的插件在服务上配置的插件之前运行，否则，通常的[插件关联](https://docs.konghq.com/1.1.x/admin-api/#precedence)规则适用。
+
+这些配置的插件将运行其`access`阶段，您可以在[插件开发指南](https://docs.konghq.com/1.1.x/plugin-development)中找到更多相关信息。
+
+### 3.代理和上游超时
+
+一旦Kong执行了所有必要的逻辑（包括插件），它就可以将请求转发给您的上游服务。这是通过Nginx的[ngx_http_proxy_module](http://nginx.org/en/docs/http/ngx_http_proxy_module.html)完成的。
+您可以通过以下服务属性为Kong和给定上游之间的连接配置所需的超时：
+
+- `upstream_connect_timeout`:以毫秒为单位定义建立与上游服务的连接的超时。默认为`60000`。
+- `upstream_send_timeout`:以毫秒为单位定义用于向上游服务发送请求的两个连续写入操作之间的超时。默认为`60000`。
+- `upstream_read_timeout`:以毫秒为单位定义用于接收来自上游服务的请求的两个连续读取操作之间的超时。默认为`60000`。
+
+Kong将通过 HTTP/1.1 发送请求，并设置以下headers：
+
+- `Host: <your_upstream_host>`，如前文所述。
+- `Connection: keep-alive`，允许重用上游连接。
+- `X-Real-IP: <remote_addr>`，其中`$remote_addr是`与[ngx_http_core_module](http://nginx.org/en/docs/http/ngx_http_core_module.html#var_remote_addr)提供的名称相同的变量。请注意，`$remote_addr`可能被[ngx_http_realip_module](http://nginx.org/en/docs/http/ngx_http_realip_module.html)覆盖。
+- `X-Forwarded-For: <address>`，其中`<address>`是由附加到具有相同名称的请求标头的[ngx_http_realip_module](http://nginx.org/en/docs/http/ngx_http_realip_module.html)提供的`$realip_remote_addr`的内容。
+- `X-Forwarded-Proto: <protocol>`，其中`<protocol>`是客户端使用的协议。在`$realip_remote_addr`是可信地址之一的情况下，如果提供，则转发具有相同名称的请求头。否则，将使用[ngx_http_core_module](http://nginx.org/en/docs/http/ngx_http_core_module.html#var_scheme)提供的`$scheme`变量的值。
+- `X-Forwarded-Host: <host>`，其中`<host>`是客户端发送的主机名。在`$realip_remote_addr`是可信地址之一的情况下，如果提供，则转发具有相同名称的请求头。否则，将使用[ngx_http_core_module](http://nginx.org/en/docs/http/ngx_http_core_module.html#var_host)提供的`$host`变量的值。
+- `X-Forwarded-Port: <port>`，其中`<port>`是接受请求的服务器的端口。在`$realip_remote_addr`是可信地址之一的情况下，如果提供，则转发具有相同名称的请求头。否则，将使用[ngx_http_core_module](http://nginx.org/en/docs/http/ngx_http_core_module.html#var_server_port)提供的`$server_port`变量的值。
+
+所有其他请求headers都由Kong转发。
+
+使用WebSocket协议时会出现一个例外。如果是这样，Kong将设置以下标头以允许升级客户端和上游服务之间的协议：
+
+- `Connection: Upgrade`
+- `Upgrade: websocket`
+
+有关此主题的更多信息，请参见[Proxy WebSocket流量] [proxy-websocket]部分。
+
+### 4.错误和重试
+
+每当代理期间发生错误时，Kong将使用底层的Nginx[重试机制](http://nginx.org/en/docs/http/ngx_http_proxy_module.html#proxy_next_upstream_tries)将请求传递给下一个上游。
+
+这里有两个可配置元素：
+
+1. 重试次数：可以使用`retries`属性为每个服务配置。有关详细信息，请参阅[Admin API](https://docs.konghq.com/1.1.x/admin-api)。
+2. 究竟是什么构成错误：这里Kong使用Nginx默认值，这意味着在与服务器建立连接，向其传递请求或读取响应头时发生错误或超时。
+
+第二个选项基于Nginx的`proxy_next_upstream`指令。此选项不能通过Kong直接配置，但可以使用自定义Nginx配置添加。有关详细信息，请参阅配置参考。
+
+### 5.响应
+
+Kong接收来自上游服务的响应，并以流方式将其发送回下游客户端。此时，Kong将执行添加到 Route 和/或 Service 的后续插件，这些插件在`header_filter`阶段实现一个钩子。
+
+一旦执行了所有已注册插件的`header_filter`阶段，Kong将添加以下headers，并将完整的headers发送到客户端：
+
+- `Via: kong/x.x.x`，其中`x.x.x`是正在使用的Kong版本。
+- `X-Kong-Proxy-Latency: <latency>`，其中`latency`是Kong收到客户端请求和向上游服务发送请求之间的时间（以毫秒为单位）。
+- `X-Kong-Upstream-Latency: <latency>`，其中`latency`是Kong等待上游服务响应的第一个字节的时间（以毫秒为单位）。
+
+将标题发送到客户端后，Kong将开始为实现`body_filter`钩子的 Route和/或Service 执行已注册的插件。由于Nginx的流媒体特性，可以多次调用此钩子。由这样的`body_filter`挂钩成功处理的上游响应的每个块被发送回客户端。您可以在[插件开发指南](https://docs.konghq.com/1.1.x/plugin-development)中找到有关`body_filter`钩子的更多信息。
+    
     
 ## 配置一个回调路由
 
