@@ -565,19 +565,170 @@ Kong接收来自上游服务的响应，并以流方式将其发送回下游客�
 
 将标题发送到客户端后，Kong将开始为实现`body_filter`钩子的 Route和/或Service 执行已注册的插件。由于Nginx的流媒体特性，可以多次调用此钩子。由这样的`body_filter`挂钩成功处理的上游响应的每个块被发送回客户端。您可以在[插件开发指南](https://docs.konghq.com/1.1.x/plugin-development)中找到有关`body_filter`钩子的更多信息。
     
-    
-## 配置一个回调路由
+## 配置一个备用路由
+
+作为Kong的代理功能提供的灵活性的实际用例和示例，让我们尝试实现“后备路线”，因此，为了避免Kong响应HTTP `404`，“找不到路由”，我们可以捕获这些请求并将它们代理到特殊的上游服务，或者向它应用插件（例如，这样的插件可以使用不同的状态代码或响应终止请求，而不代理请求）。
+
+以下是此类后备路由的示例：
+```
+{
+    "paths": ["/"],
+    "service": {
+        "id": "..."
+    }
+}
+```
+
+正如您所猜测的，任何向Kong发出的HTTP请求实际上都会匹配此Route，因为所有URI都以根字符`/`为前缀。正如我们从[请求路径] [代理请求路径]部分所知，最长的URL路径首先由Kong评估，因此`/`路径最终将由Kong最后评估，并有效地提供“后备”路由，仅作为最后的手段。
 
 ## 为路由配置SSL
 
-	### 限制客户端协议（HTTP / HTTPS / TCP / TLS）
+Kong提供了一种基于每个连接动态提供SSL证书的方法。SSL证书由核心直接处理，并可通过Admin API进行配置。通过TLS连接到Kong的客户端必须支持服务器名称指示扩展才能使用此功能。
+
+SSL证书由Kong Admin API中的两个资源处理：
+
+- `/certificates`，存储您的密钥和证书。
+- `/snis`，将注册证书与Server Name 指示相关联。
+
+您可以在[Admin API参考](https://docs.konghq.com/1.1.x/admin-api)中找到这两种资源的文档。
+
+以下是在给定路由上配置SSL证书的方法：首先，通过Admin API上传您的SSL证书和密钥：
+
+```
+curl -i -X POST http://localhost:8001/certificates \
+    -F "cert=@/path/to/cert.pem" \
+    -F "key=@/path/to/cert.key" \
+    -F "snis=ssl-example.com,other-ssl-example.com"
+HTTP/1.1 201 Created
+...
+```
+
+`snis`表单参数是糖参数，直接插入SNI并将上传的证书与其关联。
+
+您现在必须在Kong内注册以下Route。
+为方便起见，我们仅使用Hos header 匹配对此Route的请求：
+```
+curl -i -X POST http://localhost:8001/routes \
+    -d 'hosts=ssl-example.com,other-ssl-example.com' \
+    -d 'service.id=d54da06c-d69f-4910-8896-915c63c270cd'
+HTTP/1.1 201 Created
+...
+```
+
+您现在可以期望Kong通过HTTPS提供路由：
+```
+curl -i https://localhost:8443/ \
+  -H "Host: ssl-example.com"
+HTTP/1.1 200 OK
+...
+```
+
+建立连接并协商SSL握手时，如果您的客户端发送`ssl-example.com`作为SNI扩展的一部分，Kong将提供先前配置的`cert.pem`证书。
+
+### 限制客户端协议（HTTP/HTTPS/TCP/TLS）
     
+路由具有`protocols`属性，以限制他们应该侦听的客户端协议。此属性接受一组值，可以是`“http”`，`“https”`，`“tcp”`或`“tls”`。
+
+具有`http`和`https`的路由将接受两种协议中的流量。
+```
+{
+    "hosts": ["..."],
+    "paths": ["..."],
+    "methods": ["..."],
+    "protocols": ["http", "https"],
+    "service": {
+        "id": "..."
+    }
+}
+```
+
+未指定任何协议具有相同的效果，因为路由默认为`[“http”，“https”]`。
+
+但是，仅使用`https`的路由*只*接受通过HTTPS的流量。如果以前从受信任的IP发生SSL终止，它也会接受未加密的流量。当请求来自[trusted_ip](https://docs.konghq.com/1.1.x/configuration/#trusted_ips)中的一个配置的IP并且如果设置了`X-Forwarded-Proto:https` header时，SSL终止被认为是有效的：
+```
+{
+    "hosts": ["..."],
+    "paths": ["..."],
+    "methods": ["..."],
+    "protocols": ["https"],
+    "service": {
+        "id": "..."
+    }
+}
+```
+
+如果上述路由与请求匹配，但该请求是纯文本而没有有效的先前SSL终止，则Kong响应：
+
+```
+HTTP/1.1 426 Upgrade Required
+Content-Type: application/json; charset=utf-8
+Transfer-Encoding: chunked
+Connection: Upgrade
+Upgrade: TLS/1.2, HTTP/1.1
+Server: kong/x.y.z
+
+{"message":"Please use HTTPS protocol"}
+```
+
+从Kong 1.0开始，可以使用`protocols`属性中的`“tcp”`为原始TCP（不一定是HTTP）连接创建路由：
+```
+{
+    "hosts": ["..."],
+    "paths": ["..."],
+    "methods": ["..."],
+    "protocols": ["tcp"],
+    "service": {
+        "id": "..."
+    }
+}
+```
+
+同样，我们可以使用`“tls”`值创建接受原始TLS流量（不一定是HTTPS）的路由：
+```
+{
+    "hosts": ["..."],
+    "paths": ["..."],
+    "methods": ["..."],
+    "protocols": ["tls"],
+    "service": {
+        "id": "..."
+    }
+}
+```
+
+仅具有`TLS`的路由仅接受通过TLS的流量。
+也可以同时接受TCP和TLS：
+```
+{
+    "hosts": ["..."],
+    "paths": ["..."],
+    "methods": ["..."],
+    "protocols": ["tcp", "tls"],
+    "service": {
+        "id": "..."
+    }
+}
+```
+
 ## 代理WebSocket流量
 
-	### WebSocket和TLS
-    
-## 结论
+由于底层的Nginx实现，Kong支持WebSocket流量。如果希望通过Kong在客户端和上游服务之间建立WebSocket连接，则必须建立WebSocket握手。这是通过HTTP升级机制完成的。这是您的客户要求对Kong的看法：
+```
+GET / HTTP/1.1
+Connection: Upgrade
+Host: my-websocket-api.com
+Upgrade: WebSocket
+```
 
+这将使Kong将`Connection`和`Upgrade` header 转发到您的上游服务，而不是由于标准HTTP代理的逐跳特性而将其解除。
+
+### WebSocket和TLS
+
+Kong将在其各自的`http`和`https`端口接受`ws`和`wss`连接。要从客户端强制执行TLS连接，请将Route的`protocols`属性设置为**仅**`https`。
+
+
+
+## 结论
 
 
 
