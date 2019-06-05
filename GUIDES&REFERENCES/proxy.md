@@ -726,21 +726,15 @@ Upgrade: WebSocket
 
 Kong将在其各自的`http`和`https`端口接受`ws`和`wss`连接。要从客户端强制执行TLS连接，请将Route的`protocols`属性设置为**仅**`https`。
 
+将 Service 设置为指向上游WebSocket服务时，应仔细选择要在Kong和上游之间使用的协议。如果要使用TLS（`wss`），则必须使用服务`protocol`属性中的`https`协议和正确的端口（通常为443）定义上游WebSocket服务。要在没有TLS（`ws`）的情况下进行连接，则应在协议中使用`http`协议和端口（通常为80）。
 
+如果您希望Kong终止SSL/TLS，您只能从客户端接受`wss`，而是通过纯文本或`ws`代理上游服务。
 
 ## 结论
 
+通过本指南，我们希望您了解Kong的基础代理机制，从请求如何匹配路由到其关联的服务，到如何允许使用WebSocket协议或设置动态SSL证书。
 
+该网站是开源的，可以在 https://github.com/Kong/docs.konghq.com 找到。
+如果您还没有，我们建议您还阅读[负载平衡参考](https://docs.konghq.com/1.1.x/loadbalancing)，因为它与我们刚刚介绍的主题密切相关。
 
-
-
-
-
-
-
-
-
-
-
-    
-    
+ 
