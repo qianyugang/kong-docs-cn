@@ -53,7 +53,7 @@ Kong是一个丛云到本地的、快速的、可伸缩的分布式微服务抽�
     * 无DB配置
     * [支持的 Content Types](ADMIN-API/supported-content-types.md)
     * [声明性配置](ADMIN-API/declarative-configuration.md)
-    * 信息路由
+    * [信息路由](ADMIN-API/information-routes.md)
     * 标签
     * [Service对象](ADMIN-API/service-object.md)
     * [Router对象](ADMIN-API/route-object.md)
