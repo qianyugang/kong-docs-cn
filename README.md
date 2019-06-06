@@ -51,7 +51,7 @@ Kong是一个丛云到本地的、快速的、可伸缩的分布式微服务抽�
         * [kong.table](GUIDES&REFERENCES/PDK/kong-table.md)
 * [**Admin Api**](ADMIN-API)
     * 无DB配置
-    * 支持的 Content Types
+    * [支持的 Content Types](ADMIN-API/supported-content-types.md)
     * [声明性配置](ADMIN-API/declarative-configuration.md)
     * 信息路由
     * 标签
