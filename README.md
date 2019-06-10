@@ -61,5 +61,5 @@ Kong是一个丛云到本地的、快速的、可伸缩的分布式微服务抽�
     * 认证对象
     * SNI对象
     * Upstream对象
-    * Target对象
+    * [Target对象](ADMIN-API/target-object.md)
 
