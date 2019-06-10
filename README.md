@@ -56,7 +56,7 @@ Kong是一个丛云到本地的、快速的、可伸缩的分布式微服务抽�
     * [标签](ADMIN-API/tags.md)
     * [Service对象](ADMIN-API/service-object.md)
     * [Router对象](ADMIN-API/route-object.md)
-    * Consumer对象
+    * [Consumer对象](ADMIN-API/consumer-object.md)
     * 插件对象
     * 认证对象
     * SNI对象
