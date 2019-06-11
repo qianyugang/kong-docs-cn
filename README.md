@@ -56,7 +56,7 @@ Kong是一个云原生，快速，可扩展和分布式微服务抽象层（也�
     * [Router对象](ADMIN-API/route-object.md)
     * [Consumer对象](ADMIN-API/consumer-object.md)
     * 插件对象
-    * 认证对象
+    * [证书对象]((ADMIN-API/certificate-object.md))
     * SNI对象
     * Upstream对象
     * [Target对象](ADMIN-API/target-object.md)
