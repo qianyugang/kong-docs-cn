@@ -261,5 +261,127 @@ HTTP 200 OK
     "tags": ["user-level", "low-priority"]
 }
 ```
+## 更新或创建插件
 
+### 更新或创建一个插件
 
+```
+PUT /plugins/{plugin id}
+```
+| 参数 | 描述 | 
+| ---- | ---- |
+| `plugin id`<br> required | 要更新的插件的唯一标识符。|
+
+*请求体*
+
+| 参数 | 描述 | 
+| ---- | ---- |
+| `name` | 要添加的插件的名称。目前，插件必须分别安装在每个Kong实例中。 |
+| `route` <br> *optional* | 如果设置，插件将仅在通过指定路由接收请求时激活。不管使用什么路由，都不要设置插件来激活它。 默认值为`null`。使用form-encoded时候，用`route.id=<route_id>`；使用JSON的时候，用`"route":{"id":"<route_id>"}`。 | 
+| `service` <br> *optional* | 如果设置，插件将仅在通过属于指定服务的路由之一接收请求时激活。无论服务是否匹配，都不要设置插件激活。 默认值为`null`。使用form-encoded时候，用`service.id=<service_id>`；使用JSON的时候，用`"service":{"id":"<service_id>"}`。 | 
+| `consumer` <br> *optional* | 如果设置，则插件仅对指定已经过身份验证的请求激活。（请注意，某些插件不能以这种方式限制在消费者身上。）无论经过身份验证的使用者是什么，都不要设置插件激活。默认值为`null`。使用form-encoded时候，用`consumer.id=<consumer_id>`；使用JSON的时候，用`"consumer":{"id":"<consumer_id>"}`。 | 
+| `config` <br> *optional* | 插件的配置属性，可以在[Kong Hub](https://docs.konghq.com/hub/)的插件文档页面找到。 | 
+| `run_on` <br> *optional* | 在给定Service Mesh场景的情况下，控制此插件将运行的Kong节点。可接受的值为：`* first`，表示“在请求遇到的第一个Kong节点上运行”。 在API Getaway场景中，这是常用操作，因为源和目标之间只有一个Kong节点。在sidecar-to-sidecar Service Mesh场景中，这意味着仅在出站连接的Kong边车上运行插件。`* second`，意思是“在请求遇到的第二个节点上运行”。此选项仅适用于sidecar-to-sidecar Service Mesh场景：这意味着仅在入站连接的Kong sidecar 上运行插件。`* all`，意味着“在所有节点上运行”，这意味着 sidecar-to-sidecar 场景中的所有 sidecars。这对 tracing/logging 插件很有用。默认为`“first”`。|  
+| `protocols` <br> *optional* | 将触发此插件的请求协议列表。可能的值为`“http”`，`“https”`，`“tcp”`和`“tls”`。默认值以及此字段上允许的可能值可能会根据插件类型而更改。例如，仅在流模式下工作的插件可能只支持`“tcp”`和`“tls”`。默认为`[“http”，“https”]`。	  | 
+| `enabled` <br> *optional* | 是否启用插件。默认为`true` | 
+| `tags` <br> *optional* | 与插件关联的一组可选字符串，用于分组和过滤。 | 
+
+使用正文中指定的定义在所请求的资源下插入（或替换）插件。插件将通过`name or id`属性进行标识。
+
+当`name or id`属性具有UUID的结构时，插入/替换的插件将由其`id`标识。否则将通过其名称识别。
+
+在创建新插件而不指定id（既不在URL中也不在正文中）时，它将自动生成。
+
+请注意，不允许在URL中指定`name`，也不允许在请求正文中指定其他名称。
+
+*响应*
+```
+HTTP 201 Created or HTTP 200 OK
+```
+请参阅POST和PATCH响应。
+
+## 删除插件
+
+## 删除一个插件
+
+```
+DELETE /plugins/{plugin id}
+```
+| 参数 | 描述 | 
+| ---- | ---- |
+| `plugin id`<br> required | 要删除的插件的唯一标识符。|
+
+*响应*
+```
+HTTP 204 No Content
+```
+
+## 查询可使用的插件
+
+检索Kong节点上所有已安装插件的列表。
+```
+GET /plugins/enabled
+```
+*响应*
+```
+HTTP 200 OK
+```
+```
+{
+    "enabled_plugins": [
+        "jwt",
+        "acl",
+        "cors",
+        "oauth2",
+        "tcp-log",
+        "udp-log",
+        "file-log",
+        "http-log",
+        "key-auth",
+        "hmac-auth",
+        "basic-auth",
+        "ip-restriction",
+        "request-transformer",
+        "response-transformer",
+        "request-size-limiting",
+        "rate-limiting",
+        "response-ratelimiting",
+        "aws-lambda",
+        "bot-detection",
+        "correlation-id",
+        "datadog",
+        "galileo",
+        "ldap-auth",
+        "loggly",
+        "statsd",
+        "syslog"
+    ]
+}
+```
+
+## 查询插件schema
+
+检索插件配置的schema。这有助于了解插件接受哪些字段，并可用于构建Kong插件系统的第三方集成。
+```
+GET /plugins/schema/{plugin name}
+```
+
+*响应*
+```
+HTTP 200 OK
+```
+```
+{
+    "fields": {
+        "hide_credentials": {
+            "default": false,
+            "type": "boolean"
+        },
+        "key_names": {
+            "default": "function",
+            "required": true,
+            "type": "array"
+        }
+    }
+}
+```
