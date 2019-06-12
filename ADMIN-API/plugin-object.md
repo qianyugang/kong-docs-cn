@@ -90,7 +90,7 @@ POST /routes/{consumer id}/plugins
 | `run_on` <br> *optional* | 在给定Service Mesh场景的情况下，控制此插件将运行的Kong节点。可接受的值为：`* first`，表示“在请求遇到的第一个Kong节点上运行”。 在API Getaway场景中，这是常用操作，因为源和目标之间只有一个Kong节点。在sidecar-to-sidecar Service Mesh场景中，这意味着仅在出站连接的Kong边车上运行插件。`* second`，意思是“在请求遇到的第二个节点上运行”。此选项仅适用于sidecar-to-sidecar Service Mesh场景：这意味着仅在入站连接的Kong sidecar 上运行插件。`* all`，意味着“在所有节点上运行”，这意味着 sidecar-to-sidecar 场景中的所有 sidecars。这对 tracing/logging 插件很有用。默认为`“first”`。|  
 | `protocols` <br> *optional* | 将触发此插件的请求协议列表。可能的值为`“http”`，`“https”`，`“tcp”`和`“tls”`。默认值以及此字段上允许的可能值可能会根据插件类型而更改。例如，仅在流模式下工作的插件可能只支持`“tcp”`和`“tls”`。默认为`[“http”，“https”]`。	  | 
 | `enabled` <br> *optional* | 是否启用插件。默认为`true` | 
-| `enatagsbled` <br> *optional* | 与插件关联的一组可选字符串，用于分组和过滤。 | 
+| `tags` <br> *optional* | 与插件关联的一组可选字符串，用于分组和过滤。 | 
 
 *响应*
 
@@ -114,11 +114,152 @@ HTTP 201 Created
 
 ```
 
+## 插件列表
+
+### 列出所有插件
+```
+GET /plugins
+```
+
+### 列出与特定 Route 关联的插件
+```
+GET /routes/{route id}/plugins
+```
+| 参数 | 描述 | 
+| ---- | ---- |
+| `route id`<br> required | 要检索其插件的Route的唯一标识符。使用此端点时，仅列出与指定Route关联的插件。|
+
+### 列出与特定 Service 关联的插件
+```
+GET /routes/{service id}/plugins
+```
+| 参数 | 描述 | 
+| ---- | ---- |
+| `service id`<br> required | 要检索其插件的Service的唯一标识符。使用此端点时，仅列出与指定Service关联的插件。|
+
+### 列出与特定 Consumer 关联的插件
+```
+GET /routes/{consumer id}/plugins
+```
+| 参数 | 描述 | 
+| ---- | ---- |
+| `consumer id`<br> required | 要检索其插件的Consumer的唯一标识符。使用此端点时，仅列出与指定Consumer关联的插件。|
+
+*响应*
+
+```
+HTTP 200 OK
+```
+```
+{
+"data": [{
+    "id": "a4407883-c166-43fd-80ca-3ca035b0cdb7",
+    "name": "rate-limiting",
+    "created_at": 1422386534,
+    "route": null,
+    "service": null,
+    "consumer": null,
+    "config": {"hour":500, "minute":20},
+    "run_on": "first",
+    "protocols": ["http", "https"],
+    "enabled": true,
+    "tags": ["user-level", "low-priority"]
+}, {
+    "id": "01c23299-839c-49a5-a6d5-8864c09184af",
+    "name": "rate-limiting",
+    "created_at": 1422386534,
+    "route": null,
+    "service": null,
+    "consumer": null,
+    "config": {"hour":500, "minute":20},
+    "run_on": "first",
+    "protocols": ["tcp", "tls"],
+    "enabled": true,
+    "tags": ["admin", "high-priority", "critical"]
+}],
+
+    "next": "http://localhost:8001/plugins?offset=6378122c-a0a1-438d-a5c6-efabae9fb969"
+}
+```
+
+## 查询插件
+
+### 查询插件
+
+```
+GET /plugins/{plugin id}
+```
+| 参数 | 描述 | 
+| ---- | ---- |
+| `plugin id`<br> required | 要检索的插件的唯一标识符。|
+
+*响应*
+
+```
+HTTP 200 OK
+```
+```
+{
+    "id": "ec1a1f6f-2aa4-4e58-93ff-b56368f19b27",
+    "name": "rate-limiting",
+    "created_at": 1422386534,
+    "route": null,
+    "service": null,
+    "consumer": null,
+    "config": {"hour":500, "minute":20},
+    "run_on": "first",
+    "protocols": ["http", "https"],
+    "enabled": true,
+    "tags": ["user-level", "low-priority"]
+}
+
+```
 
 
+## 更新插件
 
+### 更新插件
 
+```
+PATCH /plugins/{plugin id}
+```
+| 参数 | 描述 | 
+| ---- | ---- |
+| `plugin id`<br> required | 要更新的插件的唯一标识符。|
 
+*请求体*
 
+| 参数 | 描述 | 
+| ---- | ---- |
+| `name` | 要添加的插件的名称。目前，插件必须分别安装在每个Kong实例中。 |
+| `route` <br> *optional* | 如果设置，插件将仅在通过指定路由接收请求时激活。不管使用什么路由，都不要设置插件来激活它。 默认值为`null`。使用form-encoded时候，用`route.id=<route_id>`；使用JSON的时候，用`"route":{"id":"<route_id>"}`。 | 
+| `service` <br> *optional* | 如果设置，插件将仅在通过属于指定服务的路由之一接收请求时激活。无论服务是否匹配，都不要设置插件激活。 默认值为`null`。使用form-encoded时候，用`service.id=<service_id>`；使用JSON的时候，用`"service":{"id":"<service_id>"}`。 | 
+| `consumer` <br> *optional* | 如果设置，则插件仅对指定已经过身份验证的请求激活。（请注意，某些插件不能以这种方式限制在消费者身上。）无论经过身份验证的使用者是什么，都不要设置插件激活。默认值为`null`。使用form-encoded时候，用`consumer.id=<consumer_id>`；使用JSON的时候，用`"consumer":{"id":"<consumer_id>"}`。 | 
+| `config` <br> *optional* | 插件的配置属性，可以在[Kong Hub](https://docs.konghq.com/hub/)的插件文档页面找到。 | 
+| `run_on` <br> *optional* | 在给定Service Mesh场景的情况下，控制此插件将运行的Kong节点。可接受的值为：`* first`，表示“在请求遇到的第一个Kong节点上运行”。 在API Getaway场景中，这是常用操作，因为源和目标之间只有一个Kong节点。在sidecar-to-sidecar Service Mesh场景中，这意味着仅在出站连接的Kong边车上运行插件。`* second`，意思是“在请求遇到的第二个节点上运行”。此选项仅适用于sidecar-to-sidecar Service Mesh场景：这意味着仅在入站连接的Kong sidecar 上运行插件。`* all`，意味着“在所有节点上运行”，这意味着 sidecar-to-sidecar 场景中的所有 sidecars。这对 tracing/logging 插件很有用。默认为`“first”`。|  
+| `protocols` <br> *optional* | 将触发此插件的请求协议列表。可能的值为`“http”`，`“https”`，`“tcp”`和`“tls”`。默认值以及此字段上允许的可能值可能会根据插件类型而更改。例如，仅在流模式下工作的插件可能只支持`“tcp”`和`“tls”`。默认为`[“http”，“https”]`。	  | 
+| `enabled` <br> *optional* | 是否启用插件。默认为`true` | 
+| `tags` <br> *optional* | 与插件关联的一组可选字符串，用于分组和过滤。 | 
+
+*响应*
+
+```
+HTTP 200 OK
+```
+```
+{
+    "id": "ec1a1f6f-2aa4-4e58-93ff-b56368f19b27",
+    "name": "rate-limiting",
+    "created_at": 1422386534,
+    "route": null,
+    "service": null,
+    "consumer": null,
+    "config": {"hour":500, "minute":20},
+    "run_on": "first",
+    "protocols": ["http", "https"],
+    "enabled": true,
+    "tags": ["user-level", "low-priority"]
+}
+```
 
 
