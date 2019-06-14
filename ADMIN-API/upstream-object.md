@@ -150,22 +150,185 @@ HTTP 201 Created
 
 ```
  
+## Upstream 列表
 
+## 列出所有upstrem
+```
+GET /upstreams 
+```
 
+*响应*
+```
+HTTP 200 OK
+```
+```
+{
+"data": [{
+    "id": "a2e013e8-7623-4494-a347-6d29108ff68b",
+    "created_at": 1422386534,
+    "name": "my-upstream",
+    "hash_on": "none",
+    "hash_fallback": "none",
+    "hash_on_cookie_path": "/",
+    "slots": 10000,
+    "healthchecks": {
+        "active": {
+            "https_verify_certificate": true,
+            "unhealthy": {
+                "http_statuses": [429, 404, 500, 501, 502, 503, 504, 505],
+                "tcp_failures": 0,
+                "timeouts": 0,
+                "http_failures": 0,
+                "interval": 0
+            },
+            "http_path": "/",
+            "timeout": 1,
+            "healthy": {
+                "http_statuses": [200, 302],
+                "interval": 0,
+                "successes": 0
+            },
+            "https_sni": "example.com",
+            "concurrency": 10,
+            "type": "http"
+        },
+        "passive": {
+            "unhealthy": {
+                "http_failures": 0,
+                "http_statuses": [429, 500, 503],
+                "tcp_failures": 0,
+                "timeouts": 0
+            },
+            "type": "http",
+            "healthy": {
+                "successes": 0,
+                "http_statuses": [200, 201, 202, 203, 204, 205, 206, 207, 208, 226, 300, 301, 302, 303, 304, 305, 306, 307, 308]
+            }
+        }
+    },
+    "tags": ["user-level", "low-priority"]
+}, {
+    "id": "147f5ef0-1ed6-4711-b77f-489262f8bff7",
+    "created_at": 1422386534,
+    "name": "my-upstream",
+    "hash_on": "none",
+    "hash_fallback": "none",
+    "hash_on_cookie_path": "/",
+    "slots": 10000,
+    "healthchecks": {
+        "active": {
+            "https_verify_certificate": true,
+            "unhealthy": {
+                "http_statuses": [429, 404, 500, 501, 502, 503, 504, 505],
+                "tcp_failures": 0,
+                "timeouts": 0,
+                "http_failures": 0,
+                "interval": 0
+            },
+            "http_path": "/",
+            "timeout": 1,
+            "healthy": {
+                "http_statuses": [200, 302],
+                "interval": 0,
+                "successes": 0
+            },
+            "https_sni": "example.com",
+            "concurrency": 10,
+            "type": "http"
+        },
+        "passive": {
+            "unhealthy": {
+                "http_failures": 0,
+                "http_statuses": [429, 500, 503],
+                "tcp_failures": 0,
+                "timeouts": 0
+            },
+            "type": "http",
+            "healthy": {
+                "successes": 0,
+                "http_statuses": [200, 201, 202, 203, 204, 205, 206, 207, 208, 226, 300, 301, 302, 303, 304, 305, 306, 307, 308]
+            }
+        }
+    },
+    "tags": ["admin", "high-priority", "critical"]
+}],
 
+    "next": "http://localhost:8001/upstreams?offset=6378122c-a0a1-438d-a5c6-efabae9fb969"
+}
+```
 
+## 搜索 Upstream
 
+### 搜索 Upstream
+```
+GET /upstreams/{name or id}
+```
+| 参数 | 描述 |
+| ---- | ---- |
+| `name or id` | 要检索的上游的唯一标识符或名称。 |
 
+### 检索与特定目标关联的Upstream
 
+```
+GET /targets/{target host:port or id}/upstream
+```
 
+| 参数 | 描述 |
+| ---- | ---- |
+| `target host:port or id` | 与要检索的上游相关联的Target的唯一标识符或host：port。 |
 
+*响应*
+```
+HTTP 200 OK
+```
+```
+{
+    "id": "91020192-062d-416f-a275-9addeeaffaf2",
+    "created_at": 1422386534,
+    "name": "my-upstream",
+    "hash_on": "none",
+    "hash_fallback": "none",
+    "hash_on_cookie_path": "/",
+    "slots": 10000,
+    "healthchecks": {
+        "active": {
+            "https_verify_certificate": true,
+            "unhealthy": {
+                "http_statuses": [429, 404, 500, 501, 502, 503, 504, 505],
+                "tcp_failures": 0,
+                "timeouts": 0,
+                "http_failures": 0,
+                "interval": 0
+            },
+            "http_path": "/",
+            "timeout": 1,
+            "healthy": {
+                "http_statuses": [200, 302],
+                "interval": 0,
+                "successes": 0
+            },
+            "https_sni": "example.com",
+            "concurrency": 10,
+            "type": "http"
+        },
+        "passive": {
+            "unhealthy": {
+                "http_failures": 0,
+                "http_statuses": [429, 500, 503],
+                "tcp_failures": 0,
+                "timeouts": 0
+            },
+            "type": "http",
+            "healthy": {
+                "successes": 0,
+                "http_statuses": [200, 201, 202, 203, 204, 205, 206, 207, 208, 226, 300, 301, 302, 303, 304, 305, 306, 307, 308]
+            }
+        }
+    },
+    "tags": ["user-level", "low-priority"]
+}
 
-
-
-
-
-
-
+```
 
 
 
