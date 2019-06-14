@@ -12,7 +12,7 @@ Kong是一个云原生，快速，可扩展和分布式微服务抽象层（也�
     * [配置一个服务](GETTING-STARTED/configuring-a-service.md)   
     * [启用插件](GETTING-STARTED/enabling-plugins.md)  
     * [添加消费者](GETTING-STARTED/adding-consumers.md)   
-* **开发指南**
+* [**开发指南**](GUIDES&REFERENCES)
     * [配置](GUIDES&REFERENCES/configuration.md)    
     * [CLI](GUIDES&REFERENCES/cli.md)    
     * [代理](GUIDES&REFERENCES/proxy.md)    
