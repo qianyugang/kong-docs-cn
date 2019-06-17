@@ -63,7 +63,7 @@ Kong是一个云原生，快速，可扩展和分布式微服务抽象层（也�
 
 # 插件中文文档
 
-* JWT 插件
+* [JWT 插件](HUB/jwt.md)
 * CORS 插件
 * File Log 插件
 
