@@ -1,5 +1,7 @@
 # 启用插件
 
+> 本文原文链接：https://docs.konghq.com/1.1.x/getting-started/enabling-plugins/
+
 > 在开始之前  
 > 1  确保你已经安装了Kong - 只需要一分钟！
 > 2  确保你已经启动了Kong。
