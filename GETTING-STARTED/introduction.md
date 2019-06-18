@@ -1,5 +1,7 @@
 # 欢迎使用kong
 
+> 本文原文链接：https://docs.konghq.com/1.1.x/getting-started/introduction/
+
 > 开始之前，确保已经安装好Kong —— 只需要花一分钟的时间。
 
 在你深入学习Kong之前，确保你已经知晓它的目标和设计理念。一旦您熟悉Api网关的概念，本指南将为您介绍如何使用Kong，以及一些基本操作，比如:
