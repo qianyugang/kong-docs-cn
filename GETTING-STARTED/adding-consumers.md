@@ -1,4 +1,6 @@
-# 添加一个Consumer
+# 添加 Consumers
+
+> 本文原文链接：https://docs.konghq.com/1.1.x/getting-started/adding-consumers/
 
 > 在开始之前  
 > 1  确保你已经安装了Kong - 只需要一分钟！
