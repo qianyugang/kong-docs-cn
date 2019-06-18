@@ -1,5 +1,7 @@
 # CORS
 
+> 本文原文链接：https://docs.konghq.com/hub/kong-inc/cors/
+
 通过启用此插件，轻松将跨源资源共享（CORS）添加到 Service, Route 。
 
 ## 配置
