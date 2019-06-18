@@ -1,5 +1,7 @@
 # JWT 插件
 
+> 本文原文链接：https://docs.konghq.com/hub/kong-inc/jwt/
+
 验证包含HS256或RS256签名JSON Web令牌的请求（如[RFC 7519](https://tools.ietf.org/html/rfc7519)中所述）。每个消费者都将拥有JWT凭证（公钥和密钥），这些凭证必须用于签署其JWT。然后可以通过令牌传递如下：
 
 - 查询字符串参数
