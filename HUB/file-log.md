@@ -1,7 +1,4 @@
-# 微服务 API 网关 Kong File Log 插件中文文档
-
-** 原文链接：** [https://docs.konghq.com/hub/kong-inc/file-log/#parameters](https://docs.konghq.com/hub/kong-inc/file-log/#parameters)  
-（如有翻译的不准确或错误之处，欢迎留言指出）
+# File Log 插件
 
 将请求和响应数据写入磁盘上的日志文件中。不建议在生产中使用此插件，在生产环境下，最好使用另一个日志插件，例如`syslog`。由于系统限制，此插件使用阻塞文件i/o，将会损害性能，因此是Kong安装的反面模式。  
 注意：此插件的功能与0.10.2之前的Kong版本捆绑在一起，与此处记录的不同。
