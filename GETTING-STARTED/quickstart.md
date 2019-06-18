@@ -1,5 +1,7 @@
 # 五分钟快速开始
 
+> 本文原文链接：https://docs.konghq.com/1.1.x/getting-started/quickstart/
+
 > 开始之前：确保你已经[安装](https://konghq.com/install/)了Kong - 只需要一分钟！
 
 在本节中，您将学习如何管理Kong实例。
