@@ -45,7 +45,7 @@ Permalink
 
 ## 下一步
 
-现在你已经配置好key-auth插件，接下来我们学习如何为Service[添加Consumer](https://docs.konghq.com/1.1.x/getting-started/adding-consumers)，以便我们可以通过认证继续通过Kong代理请求。
+现在你已经配置好key-auth插件，接下来我们学习如何为Service[添加Consumer](adding-consumers.md)，以便我们可以通过认证继续通过Kong代理请求。
 
 
 
