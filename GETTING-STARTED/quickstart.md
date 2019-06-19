@@ -47,7 +47,7 @@ $ kong restart
 ## 下一步
 
 现在你已经启动了Kong,可以使用Admin API管理。
-首先，可以去[配置一个Service](https://docs.konghq.com/1.1.x/getting-started/configuring-a-service)
+首先，可以去[配置一个Service](configuring-a-service.md)
 
 
 
