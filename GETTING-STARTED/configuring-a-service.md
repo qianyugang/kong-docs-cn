@@ -101,7 +101,7 @@ $ curl -i -X GET \
 
 ## 下一步
 
-现在你已经添加了Service到Kong,接下来我们学习如何[启用插件](https://docs.konghq.com/1.1.x/getting-started/enabling-plugins)。
+现在你已经添加了Service到Kong,接下来我们学习如何[启用插件](enabling-plugins.md)。
 
 
 
