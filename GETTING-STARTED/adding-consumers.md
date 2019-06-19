@@ -57,7 +57,7 @@ $ curl -i -X GET \
 
 现在，我们已经介绍了添加Service,Route,Consumer和启用插件的基础知识，欢迎继续阅读以下文档：
 
-- 配置
+- [配置](../GUIDES&REFERENCES/configuration.md)
 - CLI
 - 代理
 - 管理Api
