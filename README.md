@@ -8,13 +8,13 @@ Kong是一个云原生，快速，可扩展和分布式微服务抽象层（也�
 
 # 目录
 
-* [**快速入门**](GETTING-STARTED)
+* **快速入门**
     * [简介](GETTING-STARTED/introduction.md)
     * [五分钟快速开始](GETTING-STARTED/quickstart.md)  
     * [配置一个服务](GETTING-STARTED/configuring-a-service.md)   
     * [启用插件](GETTING-STARTED/enabling-plugins.md)  
     * [添加消费者](GETTING-STARTED/adding-consumers.md)   
-* [**开发指南**](GUIDES&REFERENCES)
+* **开发指南**
     * [配置](GUIDES&REFERENCES/configuration.md)    
     * [CLI](GUIDES&REFERENCES/cli.md)    
     * [代理](GUIDES&REFERENCES/proxy.md)    
@@ -49,7 +49,7 @@ Kong是一个云原生，快速，可扩展和分布式微服务抽象层（也�
         * [kong.service.request](GUIDES&REFERENCES/PDK/kong-service-request.md)
         * [kong.service.response](GUIDES&REFERENCES/PDK/kong-service-response.md)
         * [kong.table](GUIDES&REFERENCES/PDK/kong-table.md)
-* [**Admin Api**](ADMIN-API)
+* **Admin Api**
     * 无DB配置
     * [支持的 Content Types](ADMIN-API/supported-content-types.md)
     * [信息路由](ADMIN-API/information-routes.md)
