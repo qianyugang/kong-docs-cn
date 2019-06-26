@@ -1,5 +1,7 @@
 ## 配置加载
 
+> 本文原文地址：https://docs.konghq.com/1.1.x/configuration/
+
 如果您通过官方软件包安装Kong，则可以在`/etc/kong/kong.conf.default`找到默认配置文件。
 要开始配置Kong，您可以复制此配置文件文件：
 
