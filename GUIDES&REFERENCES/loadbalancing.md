@@ -1,5 +1,7 @@
 # 负载均衡
 
+> 本文原文链接：https://docs.konghq.com/1.1.x/loadbalancing/
+
 ## 简介
 
 Kong为多个后端服务提供了多种负载均衡请求：一种简单的基于DNS的方法，以及一个更加动态的环装负载均衡，它还允许service注册，而无需DNS服务器。
