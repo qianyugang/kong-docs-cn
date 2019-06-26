@@ -1,5 +1,7 @@
 # 保证 Admin API 安全
 
+> 本文原文链接：https://docs.konghq.com/1.1.x/secure-admin-api/
+
 ## 简介
 
 Kong的Admin API为 Services, Routes, Plugins, Consumers, 和 Credentials的管理和配置提供RESTful接口。由于此API允许完全控制Kong，因此保护此API以防止不必要的访问非常重要。本文档介绍了一些保护Admin API的方法。
