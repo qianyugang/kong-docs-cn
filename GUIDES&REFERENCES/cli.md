@@ -1,5 +1,8 @@
 
 ## 介绍
+
+> 本文原文链接：https://docs.konghq.com/1.1.x/cli/
+
 提供的CLI（命令行界面Command Line Interface）允许启动，停止和管理Kong实例。CLI可以管理本地节点（如在当前计算机上）。
 
 如果您还没有使用，我们建议您阅读[配置参考](https://docs.konghq.com/1.0.x/configuration)。
