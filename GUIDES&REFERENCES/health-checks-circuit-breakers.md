@@ -1,4 +1,4 @@
-# 健康检查和短裤器
+# 健康检查和断路器
 
 > 本文原文链接：https://docs.konghq.com/1.1.x/health-checks-circuit-breakers/
 
