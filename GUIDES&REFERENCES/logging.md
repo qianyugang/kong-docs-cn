@@ -1,5 +1,7 @@
 # 日志
 
+> 本文原文地址：https://docs.konghq.com/1.1.x/logging/
+
 ## 日志等级
 
 日志级别在Kong的配置中设置。以下是日志级别，按照严重程度顺序递增，`debug`, `info`, `notice`, `warn`, `error` and `crit`。
