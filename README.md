@@ -65,11 +65,14 @@ Kong是一个云原生，快速，可扩展和分布式微服务抽象层（也�
 
 # 插件中文文档
 
-* [JWT 插件](HUB/jwt.md)
-* [CORS 插件](HUB/cors.md)
-* [File Log 插件](HUB/file-log.md)
-* [IP Restriction 插件](HUB/ip-restriction.md)
-* [Bot Detection 机器人检测插件](HUB/bot-detection.md)
+- **认证**
+    * [JWT 插件](HUB/jwt.md)
+- **安全**
+    * [CORS 插件](HUB/cors.md)
+    * [IP Restriction 插件](HUB/ip-restriction.md)
+    * [Bot Detection 机器人检测插件](HUB/bot-detection.md)
+- **日志**
+    * [File Log 插件](HUB/file-log.md)
 
 **译者注：**
 翻译这个文档的原因是自己正好在学习这个kong，一方面也是锻炼自己的英语能力，所以采用的是人工+机翻结合的方式，如果有遇到翻译的不够通顺，或者对于翻译的语句有歧义的地方，麻烦一定点击官网英文文档 https://docs.konghq.com/ 查看，并且欢迎提 PR 提修改意见。另，由于kong的文档本身也在不断增加和完善当中，如果有遇到没有即使更新翻译的状况欢迎提issue，我会不断补充的。
