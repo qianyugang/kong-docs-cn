@@ -34,8 +34,7 @@ local cache = kong.cache
 | FUNCTION NAME | DESCRIPTION | 
 | ------------- | ----------- |
 | `value, err = cache:get(key, opts?, cb, ...)` | 从缓存中检索值。如果缓存没有值（未命中）,在保护模式下调用`cb`。`cb`必须返回一个（并且只有一个）将被缓存的值。它可能会抛出错误，因为这些错误会被Kong捕获并正确记录在`ngx.ERR`级别。 此函数会缓存否定结果（nil）。因此，在检查错误时必须依赖其第二个参数`err`。| 
-| `ttl, err, value = cache:probe(key)` | 检查是否缓存了值。如果是，则返回其剩余的TTL。它没有，返回零。
-缓存的值也可以是负缓存。第三个返回值是被缓存的值本身。 | 
+| `ttl, err, value = cache:probe(key)` | 检查是否缓存了值。如果是，则返回其剩余的TTL。它没有，返回零。缓存的值也可以是负缓存。第三个返回值是被缓存的值本身。 | 
 | `cache:invalidate_local(key)`| 从节点缓存中移除一个值。 |
 | `cache:invalidate(key)` | 从节点的缓存中删除一个值，并将删除事件传播到集群中的所有其他节点。 |
 | `cache:purge()` | 从节点缓存中删除所有值。 |
