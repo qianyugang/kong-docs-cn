@@ -6,6 +6,8 @@ Kong是一个云原生，快速，可扩展和分布式微服务抽象层（也�
 
 本文档是基于 https://docs.konghq.com/1.1.x/ `1.1.x` 版本，目前官网已经更新至 `1.2.x` 版本，如果使用的最新版本，请查看   https://docs.konghq.com 并注意差别。
 
+**文档说明：http://www.102no.com/archives/1595**
+
 # 目录
 
 * **快速入门**
