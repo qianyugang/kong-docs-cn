@@ -1,4 +1,4 @@
-# Kubernetes Sidecar 注入
+# Kubernetes Sidecar 注入插件
 
 该插件将注入Kong数据平面节点并在Kubernetes之上形成服务网格
 
