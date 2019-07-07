@@ -1,4 +1,4 @@
-# Datadog
+# Datadog 插件
 
 记录Service的指标，Route到本地[Datadog](https://docs.datadoghq.com/agent/basic_agent_usage/?tab=chefcookbook)代理。
 
