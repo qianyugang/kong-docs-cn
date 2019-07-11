@@ -47,7 +47,7 @@ plugins:
     host: 127.0.0.1
     port: 9999
 ```
-在这两种情况下，`{service}`是此插件配置将定位的`Route`的`ID`或名称。
+在这两种情况下，`{service}`是此插件配置将定位的Service的`id`或`name`。
 
 ## 在 Consumer 上启用插件
 
