@@ -145,14 +145,14 @@ plugins:
 
 ## 报告
 
+操作员“Reporter”是如何将跟踪数据报告给另一个系统的。此插件记录给定请求的跟踪数据，并使用[Zipkin v2 API](https://zipkin.io/zipkin-api/#/default/post_spans)将其作为批处理发送到Zipkin服务器。请注意，需要zipkin 1.31或更高版本。
 
+`http_endpoint`配置变量必须包含完整的uri，包括scheme，host，port和path部分（即你的uri可能以`/api/v2/spans`结尾）。
 
+## FAQ
 
+**我可以将此插件与类似Jaeger等其他跟踪系统一起使用吗？**
 
-
-
-
-
-
-
+大概！
+Jaeger接受Zipkin格式的跨度 - 请参阅https://www.jaegertracing.io/docs/features/#backwards-compatibility-with-zipkin 查看更多信息。
 
