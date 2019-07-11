@@ -52,7 +52,7 @@ plugins:
     - group2
     hide_groups_header: true
 ```
-在这两种情况下，`{service}`是此插件配置将定位的`service`的`id`或`name`。
+在这两种情况下，`{service}`是此插件配置将定位的Service的`id`或`name`。
 
 ## 在 Route 上启用插件
 
@@ -81,7 +81,7 @@ plugins:
     hide_groups_header: true
 ```
 
-在这两种情况下，`{route}`是此插件配置将定位的`Route`的`ID`或名称。
+在这两种情况下，`{route}`是此插件配置将定位的Route的`id`或`name`。
 
 
 ## 全局插件
