@@ -1,5 +1,7 @@
 # TCP Log
 
+> 本文原文链接：https://docs.konghq.com/hub/kong-inc/tcp-log/
+
 将请求和响应数据记录到TCP服务器。
 
 > 注意：此插件的功能与0.12.0之前的Kong版本捆绑在一起，与此处记录的不同。
