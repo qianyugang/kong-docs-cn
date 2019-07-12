@@ -107,18 +107,167 @@ plugins:
 
 ### 创建一个 Consumer
 
+您需要将凭证与现有的Consumer对象相关联。消费者可以拥有多个凭据。
+
+**使用数据库：**
+
+要创建使用者，您可以执行以下请求：
+```
+curl -d "username=user123&custom_id=SOME_CUSTOM_ID" http://kong:8001/consumers/
+```
+**不使用数据库：**
+
+您的声明性配置文件需要有一个或多个使用者。您可以在`consumers:`上创建它们yaml部分：
+```
+consumers:
+- username: user123
+  custom_id: SOME_CUSTOM_ID
+```
+
+在这两种情况下，参数如下所述：
+
+| 参数 | 描述 |
+| ---- | ---- |
+| `username` <br> *semi-optional* |  consumer的用户名。必须指定此字段或`custom_id`。|
+| `custom_id` <br> *semi-optional* | 用于将使用者映射到另一个数据库的自定义标识符。必须指定此字段或`username`。|
+
+如果您还将[ACL插件](https://docs.konghq.com/plugins/acl/)和白名单与此服务一起使用，则必须将新使用者添加到列入白名单的组。有关详细信息，请参阅[ ACL: Associating Consumers ](https://docs.konghq.com/plugins/acl/#associating-consumers) 。
+
 ### 创建一个 Credential
+
+**使用数据库：**
+
+您可以通过发出以下HTTP请求来配置新的用户名/密码凭据：
+```
+$ curl -X POST http://kong:8001/consumers/{consumer}/basic-auth \
+    --data "username=Aladdin" \
+    --data "password=OpenSesame"
+```
+
+**不使用数据库：**
+
+您可以在`basicauth_credentials`yaml条目上的声明性配置文件中添加凭据：
+```
+basicauth_credentials:
+- consumer: {consumer}
+  username: Aladdin
+  password: OpenSesame
+```
+
+在这两种情况下，字段/参数的工作方式如下所示：
+
+| 字段/参数 | 描述 |
+| --------- | ---- |
+| `{consumer}` | 要将凭据关联到的[Consumer](https://docs.konghq.com/latest/admin-api/#consumer-object)实体的`id`或`username`属性。|
+| `username` | 要在基本身份验证中使用的用户名 | 
+| `password` <br> *optional* | 在基本身份验证中使用的密码 | 
 
 ### 使用 Credential
 
+authorization header 必须是base64编码的。例如，如果凭证使用`Aladdin`作为用户名而`OpenSesame`作为密码，则字段的值是`Aladdin：OpenSesame`或`QWxhZGRpbjpPcGVuU2VzYW1l`的base64编码。
+
+然后，授权（或代理授权）标头必须显示为：
+
+```
+Authorization: Basic QWxhZGRpbjpPcGVuU2VzYW1l
+```
+
+只需使用标题发出请求：
+
+```
+$ curl http://kong:8000/{path matching a configured Route} \
+    -H 'Authorization: Basic QWxhZGRpbjpPcGVuU2VzYW1l'
+```
+
 ### 上游 headers
+
+当客户端经过身份验证后，插件会在将请求代理到上游服务之前将一些header添加到请求中，以便您可以在代码中标识Consumer：
+
+- `X-Consumer-ID`，Kong Consumer 的ID
+- `X-Consumer-Custom-ID`，Consumer 的 `custom_id`（如果设置）
+- `X-Consumer-Username`，Consumer 的 `username`（如果设置）
+- `X-Credential-Username`，Credential的用户名（仅当消费者不是'匿名'消费者时）
+- `X-Anonymous-Consumer`，身份验证失败时将设置为`true`，并设置“匿名”使用者。
+
+您可以使用此信息来实现其他逻辑。您可以使用`X-Consumer-ID`值来查询Kong Admin API并检索有关Consumer的更多信息。
 
 ## 通过基本认证证书进行分页
 
+> 注意：此功能在Kong 0.11.2中引入。
+
+您可以使用以下请求为所有使用者分配基本身份验证凭据：
+
+```
+$ curl -X GET http://kong:8001/basic-auths
+
+{
+    "total": 3,
+    "data": [
+        {
+            "created_at": 1511379926000,
+            "id": "805520f6-842b-419f-8a12-d1de8a30b29f",
+            "password": "37b1af03d3860acf40bd9c681aa3ef3f543e49fe",
+            "username": "baz",
+            "consumer": { "id": "5e52251c-54b9-4c10-9605-b9b499aedb47" }
+        },
+        {
+            "created_at": 1511379863000,
+            "id": "8edfe5c7-3151-4d92-971f-3faa5e6c5d7e",
+            "password": "451b06c564a06ce60874d0ea2f542fa8ed26317e",
+            "username": "foo",
+            "consumer": { "id": "89a41fef-3b40-4bb0-b5af-33da57a7ffcf" }
+        },
+        {
+            "created_at": 1511379877000,
+            "id": "f11cb0ea-eacf-4a6b-baea-a0e0b519a990",
+            "password": "451b06c564a06ce60874d0ea2f542fa8ed26317e",
+            "username": "foobar",
+            "consumer": { "id": "89a41fef-3b40-4bb0-b5af-33da57a7ffcf" }
+        }
+    ]
+}
+```
+
+您可以使用此其他路径按使用者筛选列表：
+
+```
+$ curl -X GET http://kong:8001/consumers/{username or id}/basic-auths
+
+{
+    "total": 1,
+    "data": [
+        {
+            "created_at": 1511379863000,
+            "id": "8edfe5c7-3151-4d92-971f-3faa5e6c5d7e",
+            "password": "451b06c564a06ce60874d0ea2f542fa8ed26317e",
+            "username": "foo",
+            "consumer": { "id": "89a41fef-3b40-4bb0-b5af-33da57a7ffcf" }
+        }
+    ]
+}
+```
+
+`username or id`:需要列出凭据的consumer的用户名或ID
+
+
 ## 检索与凭据关联的使用者
 
+> 注意：此功能在Kong 0.11.2中引入。
 
+可以使用以下请求检索与basic-auth Credential关联的Consumer ：
 
+```
+curl -X GET http://kong:8001/basic-auths/{username or id}/consumer
+
+{
+   "created_at":1507936639000,
+   "username":"foo",
+   "id":"c0d92ba9-8306-482a-b60d-0cfdd2f0e880"
+}
+```
+
+`username or id` : 要获取关联Consumer的basic-auth Credential的`id`或`username`属性。
+请注意，此处接受的`username`不是Consumer的`username`属性。
 
 
 
