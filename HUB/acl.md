@@ -1,5 +1,7 @@
 # ACL
 
+> 本文原文链接：https://docs.konghq.com/hub/kong-inc/acl/
+
 通过使用任意ACL组名称将消费者列入白名单或将其列入黑名单来限制对 Service 或者 Route 的访问。
 此插件需要在服务或路由上启用[身份验证插件](https://docs.konghq.com/about/faq/#how-can-i-add-authentication-to-a-microservice-api)。
 
