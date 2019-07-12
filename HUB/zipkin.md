@@ -1,5 +1,7 @@
 # Zipkin 插件
 
+> 本文原文链接：https://docs.konghq.com/hub/kong-inc/zipkin/
+
 传播Zipkin分布式跟踪跨度，并向Zipkin服务器报告跨度。
 
 > 注意：此插件的功能与0.14.1之前的Kong版本和0.34之前的Kong Enterprise版本捆绑在一起，与此处记录的不同。
