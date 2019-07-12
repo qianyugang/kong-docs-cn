@@ -1,5 +1,7 @@
 # Datadog 插件
 
+> 本文原文链接：https://docs.konghq.com/hub/kong-inc/datadog/
+
 记录Service的指标，Route到本地[Datadog](https://docs.datadoghq.com/agent/basic_agent_usage/?tab=chefcookbook)代理。
 
 > 注意：此插件的功能与0.11.0之前的Kong版本捆绑在一起，与此处记录的不同。
