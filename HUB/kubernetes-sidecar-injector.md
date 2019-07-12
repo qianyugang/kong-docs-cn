@@ -1,5 +1,7 @@
 # Kubernetes Sidecar 注入插件
 
+> 本文原文链接：https://docs.konghq.com/hub/kong-inc/kubernetes-sidecar-injector/
+
 该插件将注入Kong数据平面节点并在Kubernetes之上形成服务网格
 
 ## 介绍
