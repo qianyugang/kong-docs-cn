@@ -1,5 +1,7 @@
 # IP限制
 
+> 本文原文链接：https://docs.konghq.com/hub/kong-inc/ip-restriction/
+
 通过将IP地址列入白名单或列入黑名单来限制对Service 或Route的访问。可以使用 [CIDR表示法](https://en.wikipedia.org/wiki/Classless_Inter-Domain_Routing#CIDR_notation)中的单个IP，多个IP或范围，如`10.10.10.0/24`。
 
 ## 术语
