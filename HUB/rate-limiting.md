@@ -1,5 +1,7 @@
 # 速率限制
 
+> 本文原文链接：https://docs.konghq.com/hub/kong-inc/rate-limiting/
+
 速率限制插件就是限定了开发人员在给定的秒，分钟，小时，天，月或年中可以进行的HTTP请求数。如果底层  Service/Route （或已弃用的API实体）没有身份验证层，则将使用Client IP地址，否则，如果已配置身份验证插件，则将使用Consumer。
 
 > 注意：此插件的功能与0.13.1之前的Kong版本和0.32之前的Kong Enterprise版本捆绑在一起，与此处记录的不同。
