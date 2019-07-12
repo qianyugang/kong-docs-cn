@@ -1,5 +1,7 @@
 # 基础认证
 
+> 本文原文链接：https://docs.konghq.com/hub/kong-inc/basic-auth/
+
 使用用户名和密码保护将基础认证添加到 Service 或 Route 。该插件将检查`Proxy-Authorization`和`Authorization` header 中的有效凭据（按此顺序）。
 
 > 注意：此插件的功能与0.14.1之前的Kong版本和0.34之前的Kong Enterprise版本捆绑在一起，与此处记录的不同。
