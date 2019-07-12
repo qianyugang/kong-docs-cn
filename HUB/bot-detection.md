@@ -1,5 +1,9 @@
 # 机器人检测
 
+> 本文原文链接：https://docs.konghq.com/hub/kong-inc/bot-detection/
+
+保护服务或路由免受大多数常见机器人的攻击，并具有将自定义客户端列入白名单和列入黑名单的能力。
+
 ## 术语
 
 - `plugin`: 在请求被代理到上游API之前或之后，在Kong内部执行操作的插件。
