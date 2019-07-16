@@ -189,7 +189,7 @@ $ curl http://kong:8000/{path matching a configured Route} \
 - `X-Consumer-Custom-ID`，Consumer 的 `custom_id`（如果设置）
 - `X-Consumer-Username`，Consumer 的 `username`（如果设置）
 - `X-Credential-Username`，Credential的用户名（仅当消费者不是'匿名'消费者时）
-- `X-Anonymous-Consumer`，身份验证失败时将设置为`true`，并设置“匿名”使用者。
+- `X-Anonymous-Consumer`，身份验证失败时将设置为`true`，并设置“匿名”Consumer。
 
 您可以使用此信息来实现其他逻辑。您可以使用`X-Consumer-ID`值来查询Kong Admin API并检索有关Consumer的更多信息。
 
@@ -197,7 +197,7 @@ $ curl http://kong:8000/{path matching a configured Route} \
 
 > 注意：此功能在Kong 0.11.2中引入。
 
-您可以使用以下请求为所有使用者分配基本身份验证凭据：
+您可以使用以下请求为所有Consumer分配基本身份验证凭据：
 
 ```
 $ curl -X GET http://kong:8001/basic-auths
@@ -230,7 +230,7 @@ $ curl -X GET http://kong:8001/basic-auths
 }
 ```
 
-您可以使用此其他路径按使用者筛选列表：
+您可以使用此其他路径按Consumer筛选列表：
 
 ```
 $ curl -X GET http://kong:8001/consumers/{username or id}/basic-auths
