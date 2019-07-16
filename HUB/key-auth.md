@@ -104,21 +104,173 @@ plugins:
 
 ## 创建一个 Consumer
 
+您需要将 credential 与现有的 Consumer 对象相关联。一个 Consumer 可以拥有多个 credential。
+
+**使用数据库**
+
+要创建一个Consumer，您可以执行以下请求：
+```
+curl -d "username=user123&custom_id=SOME_CUSTOM_ID" http://kong:8001/consumers/
+```
+
+**不使用数据库**
+
+您的声明性配置文件需要有一个或多个Consumers。您可以在`consumers:`上创建它们yaml选项：
+```
+consumers:
+- username: user123
+  custom_id: SOME_CUSTOM_ID
+```
+
+在这两种情况下，参数如下所述：
+
+| 参数 | 描述 | 
+| ---- | ---- |
+| `username` <br> *semi-optional* | consumer 的用户名。必须指定此字段或`custom_id`。 |
+| `custom_id` <br> *semi-optional* | 用于将使用者映射到另一个数据库的自定义标识符。必须指定此字段或`username`。|
+
+如果您还将[ACL](https://docs.konghq.com/plugins/acl/)插件和白名单与此服务一起使用，则必须将新使用者添加到列入白名单的组。
+有关详细信息，请参阅[ACL: Associating Consumers ](https://docs.konghq.com/plugins/acl/#associating-consumers)。
+
+
 ## 创建一个 Key
+
+**使用数据库**
+
+您可以通过发出以下HTTP请求来配置新credentials：
+```
+$ curl -X POST http://kong:8001/consumers/{consumer}/key-auth -d ''
+HTTP/1.1 201 Created
+
+{
+    "consumer": { "id": "876bf719-8f18-4ce5-cc9f-5b5af6c36007" },
+    "created_at": 1443371053000,
+    "id": "62a7d3b7-b995-49f9-c9c8-bac4d781fb59",
+    "key": "62eb165c070a41d5c1b58d9d3d725ca1"
+}
+```
+
+> 注意：建议让Kong自动生成密钥。如果要将现有系统迁移到Kong，请仅自行指定。您必须重新使用密钥才能向您的Consumers透明移植到Kong。
+
+**不使用数据库**
+
+您可以在`keyauth_credentials`yaml选项上的声明性配置文件中添加凭据：
+```
+keyauth_credentials:
+- consumer: {consumer}
+```
+
+在这两种情况下，字段/参数的工作方式如下：
+ 
+| 字段/参数 | 描述 |
+| --------- | ---- |
+| `{consumer}` | 要将凭据关联到的Consumer实体的`id`或`username`属性。|
+| `key` <br> *optional* | 您可以选择设置自己的唯一`key`来验证客户端。如果缺少，插件将生成一个。| 
 
 ## 使用 Key
 
+只需使用密钥作为查询字符串参数发出请求：
+```
+$ curl http://kong:8000/{proxy path}?apikey=<some_key>
+```
+或者在headers中
+```
+$ curl http://kong:8000/{proxy path} \
+    -H 'apikey: <some_key>'
+```
+
 ## 删除 Key
+
+您可以通过发出以下HTTP请求来删除API密钥：
+```
+$ curl -X DELETE http://kong:8001/consumers/{consumer}/key-auth/{id}
+HTTP/1.1 204 No Content
+```
+
+- `consumer`：要将凭据关联到的Consumer实体的`id`或`username`属性。
+- `id`：密钥凭证对象的`id`属性。
 
 ## 上游 Headers
 
+当客户端经过身份验证后，插件会在将请求代理到上游服务之前将一些header添加到请求中，以便您可以在代码中标识 Consumer：
+
+- `X-Consumer-ID`，Kong Consumer 的ID
+- `X-Consumer-Custom-ID`，Consumer 的 `custom_id`（如果设置）
+- `X-Consumer-Username`，Consumer 的 `username`（如果设置）
+- `X-Credential-Username`，Credential的用户名（仅当消费者不是'匿名'消费者时）
+- `X-Anonymous-Consumer`，身份验证失败时将设置为`true`，并设置“匿名”使用者。
+
+您可以使用此信息来实现其他逻辑。您可以使用`X-Consumer-ID`值来查询Kong Admin API并检索有关Consumer的更多信息。
+
 ## 通过 Keys 分页
+
+> 注意：此功能在Kong 0.11.2中引入。
+
+您可以使用以下请求为所有Consumers分配API密钥：
+```
+$ curl -X GET http://kong:8001/key-auths
+
+{
+   "data":[
+      {
+         "id":"17ab4e95-9598-424f-a99a-ffa9f413a821",
+         "created_at":1507941267000,
+         "key":"Qslaip2ruiwcusuSUdhXPv4SORZrfj4L",
+         "consumer": { "id": "c0d92ba9-8306-482a-b60d-0cfdd2f0e880" }
+      },
+      {
+         "id":"6cb76501-c970-4e12-97c6-3afbbba3b454",
+         "created_at":1507936652000,
+         "key":"nCztu5Jrz18YAWmkwOGJkQe9T8lB99l4",
+         "consumer": { "id": "c0d92ba9-8306-482a-b60d-0cfdd2f0e880" }
+      },
+      {
+         "id":"b1d87b08-7eb6-4320-8069-efd85a4a8d89",
+         "created_at":1507941307000,
+         "key":"26WUW1VEsmwT1ORBFsJmLHZLDNAxh09l",
+         "consumer": { "id": "3c2c8fc1-7245-4fbb-b48b-e5947e1ce941" }
+      }
+   ]
+   "next":null,
+}
+```
+
+您可以使用此其他路径按使用者筛选列表：
+
+```
+$ curl -X GET http://kong:8001/consumers/{username or id}/key-auth
+
+{
+    "data": [
+       {
+         "id":"6cb76501-c970-4e12-97c6-3afbbba3b454",
+         "created_at":1507936652000,
+         "key":"nCztu5Jrz18YAWmkwOGJkQe9T8lB99l4",
+         "consumer": { "id": "c0d92ba9-8306-482a-b60d-0cfdd2f0e880" }
+       }
+    ]
+    "next":null,
+}
+```
+
+`username or id`：需要列出凭据的使用者的用户名或ID
 
 ## 检索与密钥关联的 Consumer
 
+> 注意：此功能在Kong 0.11.2中引入。
 
+可以使用以下请求检索与API密钥关联的Consumer ：
+```
+curl -X GET http://kong:8001/key-auths/{key or id}/consumer
 
+{
+   "created_at":1507936639000,
+   "username":"foo",
+   "id":"c0d92ba9-8306-482a-b60d-0cfdd2f0e880"
+}
+```
 
+- `key or id`：要获取关联Consumer的API密钥的`id`或`key`属性。
 
 
 
