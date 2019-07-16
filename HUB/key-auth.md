@@ -1,5 +1,6 @@
 # Key Authentication 密钥认证插件
 
+本文原文链接：https://docs.konghq.com/hub/kong-inc/key-auth/
 
 将密钥身份验证（有时也称为API密钥）添加到 Service 或 Route 。该插件将检查`Proxy-Authorization`和`Authorization` header 中的有效凭据（按此顺序）。
 
