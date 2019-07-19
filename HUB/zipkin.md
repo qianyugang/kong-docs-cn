@@ -51,7 +51,7 @@ plugins:
     http_endpoint: http://your.zipkin.collector:9411/api/v2/spans
     sample_ratio: 0.001
 ```
-在这两种情况下，`{service}`是此插件配置将定位的`Route`的`ID`或名称。
+在这两种情况下，`{service}`是此插件配置将定位的Service的`id`或`name`。
 
 ## 在 Route 上启用插件
 
