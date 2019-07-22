@@ -242,14 +242,48 @@ ___
 7. 在这两种情况下，忽略响应状态代码，只需将用户重定向到`redirect_uri`属性中返回的任何URI。
 8. 客户端应用程序将从此处获取它，并将继续使用Kong，而不与您的Web应用程序进行其他交互。如果它是授权代码授权流程，则交换访问令牌的授权代码。
 9. 检索到 Access Token后，客户端应用程序将代表用户向您的上游服务发出请求。
-10.  Access Token可能会过期，当发生这种情况时，客户端应用程序需要使用Kong续订 Access Token并检索新的令牌。
+10.  Access Token 可能会过期，当发生这种情况时，客户端应用程序需要使用Kong续订 Access Token并检索新的令牌。
 ____
 
 
+## 资源所有者密码凭据
 
+[资源所有者密码凭据授权](https://tools.ietf.org/html/rfc6749#section-4.3)是授权代码流的一个更简单的版本，但它仍然需要构建授权后端（没有前端）才能使其正常工作。
+![](https://docs.konghq.com/assets/images/docs/oauth2/oauth2-flow2.png)
 
+1. 在第一个请求中，客户端应用程序向您的Web应用程序发出包含一些OAuth2参数（包括`username`和`password`参数）的请求。
+2. 您的Web应用程序的后端将验证客户端发送的`username`和`password`，如果成功，将`provision_key`，`authenticated_userid`和`grant_type`参数添加到客户端最初发送的参数中，它将向Kong发出POST请求，在已配置插件的`/oauth2/token`端点上。如果客户端已发送Authorization标头，则必须添加该header。相当于：
+	```
+     $ curl https://your.service.com/oauth2/token \
+     --header "Authorization: Basic czZCaGRSa3F0MzpnWDFmQmF0M2JW" \
+     --data "client_id=XXX" \
+     --data "client_secret=XXX" \
+     --data "grant_type=password" \
+     --data "scope=XXX" \
+     --data "provision_key=XXX" \
+     --data "authenticated_userid=XXX" \
+     --data "username=XXX" \
+     --data "password=XXX"
+    ```
+`provision_key`是插件在添加到服务时生成的密钥，而`authenticated_userid`是其`username`和`password`所属的最终用户的ID。
+    
+3. Kong将会以一个JSON回复
+4. Kong发送的JSON响应必须按原样发送回原始客户端。如果操作成功，则此响应将包含Access Token，否则将包含错误。
 
+在此流程中，您需要实现的步骤是：
 
+- 后端端点将处理原始请求并将验证客户端发送的`username`和`password`，如果验证成功，则向Kong发出请求并返回客户端，无论Kong发送回的任何响应。
+
+## Refresh Token
+
+当您的访问令牌过期时，您可以使用与过期访问令牌一起收到的刷新令牌生成新的访问令牌。
+```
+$ curl -X POST https://your.service.com/oauth2/token \
+    --data "grant_type=refresh_token" \
+    --data "client_id=XXX" \
+    --data "client_secret=XXX" \
+    --data "refresh_token=XXX"
+```
 
 
 
