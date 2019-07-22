@@ -139,20 +139,117 @@ $ curl -X POST http://kong:8001/consumers/{consumer_id}/oauth2 \
 
 | 表单参数 | 默认值 | 描述 |
 | -------- | ------ | ---- |
-| `name` | | 与凭证关联的名称。在OAuth 2.0中，这将是应用程序名称。 | 
+| `name` |  | 与凭证关联的名称。在OAuth 2.0中，这将是应用程序名称。 | 
 | `client_id` <br> *optional* | | 您可以选择设置自己唯一的`client_id`。如果不设置，插件将生成一个。 |
 | `client_secret` <br> *optional* |  | 您可以选择设置自己唯一的`client_secret`。如果不设置，插件将生成一个。 |
 | `redirect_uris` | | 应用程序中包含一个或多个URL的数组，用户将在授权后发送（[RFC 6742第3.1.2节](https://tools.ietf.org/html/rfc6749#section-3.1.2)） |
 
 ## 迁移 Access Tokens
 
+如果您要迁移现有的OAuth 2.0应用程序并将 access tokens 转移到Kong，那么您可以：
+
+-  如上所述，通过创建OAuth 2.0应用程序来迁移使用者和应用程序。
+-  使用Kong的Admin API中的/ oauth2_tokens端点迁移访问令牌。例如：
+	```
+    $ curl -X POST http://kong:8001/oauth2_tokens \
+        --data 'credential.id=KONG-APPLICATION-ID' \
+        --data "token_type=bearer" \
+        --data "access_token=SOME-TOKEN" \
+        --data "refresh_token=SOME-TOKEN" \
+        --data "expires_in=3600"
+	```
+
+| 表单参数 | 默认值 | 描述 |
+| ----------- | ------- | ------ |
+| `credential` |  | 包含在Kong上创建的OAuth 2.0应用程序的ID。 | 
+|`token_type` <br> *optional* | `bearer` |  [token 类型](https://tools.ietf.org/html/rfc6749#section-7.1) |
+|`access_token` <br> *optional* |  |  您可以选择设置自己的访问token值，否则将生成随机字符串 |
+|`refresh_token` <br> *optional* |   | 您可以选择设置自己唯一的refresh token值，否则将生成随机字符串。  |
+|`expires_in` |   | 访问token的到期时间（以秒为单位）。  |
+|`scope` <br> *optional* |   | 与token关联的授权范围。  |
+|`authenticated_userid` <br> *optional* |   | 授权应用程序的用户的自定义ID。  |
 
 ## 上游请求头
 
+当客户端经过身份验证和授权后，插件会在将请求代理到上游服务之前将一些headers附加到请求中，以便您可以在代码中识别使用者和最终用户：
+
+- `X-Consumer-ID`，Kong的Consumer的ID
+-  `X-Consumer-Custom-ID`，Consumer 的`custom_id`（如果设置）
+-  `X-Consumer-Username`，Consumer的`username`（如果设置）
+-  `X-Authenticated-Scope`，最终用户已经过身份验证的以逗号分隔的范围列表（如果可用）（仅当消费者不是“匿名”消费者时）
+-  `X-Authenticated-Userid`，已授予客户端权限的已登录用户标识（仅当消费者不是“匿名”消费者时）
+-  `X-Anonymous-Consumer`，身份验证失败时将设置为`true`，并设置“匿名”使用者。
+
+您可以使用此信息来实现其他逻辑。您可以使用`X-Consumer-ID`值来查询Kong Admin API并检索有关Consumer的更多信息。
+
 ___
 
-
 ## OAuth 2.0 Flows
+
+### 客户端凭据
+
+[客户端凭据](https://tools.ietf.org/html/rfc6749#section-4.4)流将开箱即用，无需构建任何授权页面。客户端需要使用`/oauth2/token`端点来请求访问令牌。
+
+### 认证码
+
+配置使用者并将OAuth 2.0凭据与其关联后，了解OAuth 2.0授权流程的工作原理非常重要。与大多数Kong插件相反，OAuth 2.0插件需要一些额外的工作才能使一切运行良好：
+- 您必须在Web应用程序上实现授权页面，该页面将与插件服务器端通信。
+- 您可以选择在您的网站/文档中解释如何使用受OAuth 2.0保护的服务，以便访问您服务的开发人员知道如何构建其客户端实现。
+
+**流程解释**
+
+构建授权页面将是插件本身无法开箱即用的主要任务，因为它需要检查用户是否已正确登录，并且此操作与您的身份验证实现密切相关。
+
+授权页面由两部分组成：
+
+- 用户将看到的前端页面，这将允许他授权客户端应用程序访问他的数据
+- 后端将处理前端中显示的HTML表单，该表单将与Kong上的OAuth 2.0插件进行通信，并最终将用户重定向到第三方URL。
+
+> [您可以在GitHub上的node.js + express.js中看到示例实现](https://github.com/Kong/kong-oauth2-hello-world)
+
+一个此流程的图表：
+![](https://docs.konghq.com/assets/images/docs/oauth2/oauth2-flow.png)
+
+1. 客户端应用程序将最终用户重定向到Web应用程序上的授权页面，将`client_id`，`response_type`和`scope`（如果需要）作为查询字符串参数传递。这是一个示例授权页面：
+	![](https://docs.konghq.com/assets/images/docs/oauth2/oauth2-prompt.png)
+    
+2. 在显示实际授权页面之前，Web应用程序将确保用户已登录。
+3. 客户端应用程序将在查询字符串中发送`client_id`，Web应用程序可以通过向Kong发出以下请求来检索OAuth 2.0应用程序名称和开发人员名称：
+	```
+    $ curl kong:8001/oauth2?client_id=XXX
+    ```
+    
+4. 如果最终用户授权应用程序，表单将使用`POST`请求将数据提交到后端，发送放置在`<input type =“hidden”../>`字段中的`client_id`，`response_type`和`scope`参数。
+5. 后端必须将`provision_key`和`authenticated_userid`参数添加到`client_id`，`response_type`和`scope`参数中，它将在`/oauth2/authorize`端点上的服务地址向Kong发出`POST`请求。如果客户端已发送`Authorization`请求头，则必须添加该标请求头。
+	```
+     $ curl https://your.service.com/oauth2/authorize \
+     --header "Authorization: Basic czZCaGRSa3F0MzpnWDFmQmF0M2JW" \
+     --data "client_id=XXX" \
+     --data "response_type=XXX" \
+     --data "scope=XXX" \
+     --data "provision_key=XXX" \
+     --data "authenticated_userid=XXX"
+    ```
+`provision_ke`y是插件在添加到Service 时生成的密钥，而`authenticated_userid`是已授予权限的登录最终用户的ID。
+
+6. Kong将会以一个JSON回复：
+	```
+     {
+   		"redirect_uri": "http://some/url"
+	 }
+    ```
+    根据请求是否成功，使用`200 OK`或`400 Bad Request`响应代码。
+7. 在这两种情况下，忽略响应状态代码，只需将用户重定向到`redirect_uri`属性中返回的任何URI。
+8. 客户端应用程序将从此处获取它，并将继续使用Kong，而不与您的Web应用程序进行其他交互。如果它是授权代码授权流程，则交换访问令牌的授权代码。
+9. 检索到 Access Token后，客户端应用程序将代表用户向您的上游服务发出请求。
+10.  Access Token可能会过期，当发生这种情况时，客户端应用程序需要使用Kong续订 Access Token并检索新的令牌。
+____
+
+
+
+
+
+
 
 
 
