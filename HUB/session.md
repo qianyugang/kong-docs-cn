@@ -123,12 +123,181 @@ Kong Session Plugin可以全局配置或按实体配置（例如，Service，Rou
     ```
     url `http//localhost:8000/sessions-test`现在将显示所请求的内容。
 
+2. 配置Service的key-auth插件
+	
+    发出以下cURL请求以将key-auth插件添加到Service：
+    ```
+     $ curl -i -X POST \
+       --url http://localhost:8001/services/example-service/plugins/ \
+       --data 'name=key-auth'
+    ```
+    请务必记下创建的插件`id` - 稍后将需要它。
 
+3. 验证是否正确配置了key-auth插件
 
+	发出以下cURL请求以验证在服务上正确配置了[key-auth] [key-auth]插件：
+    ```
+     $ curl -i -X GET \
+	   --url http://localhost:8000/sessions-test
+    ```
+    由于未指定所需的头或参数`apikey`，并且尚未启用匿名访问，因此响应应为`401 Unauthorized`：
+    
+4. 创建Consumer和匿名Consumer
+	
+    由Kong代理和验证的每个请求都必须与Consumer相关联。现在，您将通过发出以下请求来创建名为`anonymous_users`的Consumer：
+    ```
+     $ curl -i -X POST \
+       --url http://localhost:8001/consumers/ \
+       --data "username=anonymous_users"
+    ```
+    请务必记下消费者`id` - 您将在以后的步骤中使用它。
+    
+    现在创建一个将通过会话进行身份验证的使用者
+    ```
+     $ curl -i -X POST \
+       --url http://localhost:8001/consumers/ \
+       --data "username=fiona"
+    ```
 
+5. 为您的消费者提供密钥身份验证凭据
 
+	```
+     $ curl -i -X POST \
+       --url http://localhost:8001/consumers/fiona/key-auth/ \
+       --data 'key=open_sesame'
+    ```
 
+6. 启用匿名访问
 
+	您现在将通过发出以下请求重新配置key-auth插件以允许匿名访问（使用前面步骤中的`id`值替换下面的uuids）：
+    ```
+     $ curl -i -X PATCH \
+       --url http://localhost:8001/plugins/<your-key-auth-plugin-id> \
+       --data "config.anonymous=<anonymous_consumer_id>"
+    ```
+
+7. 将Kong Session插件添加到service中
+
+	```
+     $ curl -X POST http://localhost:8001/services/example-service/plugins \
+     --data "name=session"  \
+     --data "config.storage=kong" \
+     --data "config.cookie_secure=false"
+    ```
+    > 注意：默认情况下，cookie_secure为true，并且应始终为true，但为了避免使用HTTPS，为了演示而将其设置为false。
+
+8. 添加请求终止插件
+
+	要禁用匿名访问，仅允许用户通过会话或身份验证凭据进行访问，请启用“请求终止插件”。
+    ```
+     $ curl -X POST http://localhost:8001/services/example-service/plugins \
+         --data "name=request-termination"  \
+         --data "config.status_code=403" \
+         --data "config.message=So long and thanks for all the fish!" \
+         --data "consumer.id=<anonymous_consumer_id>"
+    ```
+
+##  无数据库安装
+
+将所有这些添加到声明性配置文件中：
+
+```
+services:
+- name: example-service
+  url: http://mockbin.org/request
+
+routes:
+- service: example-service
+  paths: [ "/sessions-test" ]
+
+consumers:
+- username: anonymous_users
+  # 手动设置为固定的uuid，以便在key-auth插件中使用它
+  id: 81823632-10c0-4098-a4f7-31062520c1e6
+- username: fiona
+
+keyauth_credentials:
+- consumer: fiona
+  key: open_sesame
+
+plugins:
+- name: key-auth
+  service: example-service
+  config:
+    # 使用匿名consumer修复uuid（不能使用用户名）
+    anonymous: 81823632-10c0-4098-a4f7-31062520c1e6
+    # cookie_secure默认为true，并且应始终为true，
+    # 但为了避免使用HTTPS，为了这个演示而设置为false
+    cookie_secure: false
+- name: session
+  config:
+    storage: kong
+    cookie_secure: false
+- name: request-termination
+  service: example-service
+  consumer: anonymous_users
+  config:
+    status_code: 403
+    message: "So long and thanks for all the fish!"
+```
+
+### 验证
+
+1. 检查是否禁用了匿名请求
+	```
+      $ curl -i -X GET \
+    	--url http://localhost:8000/sessions-test
+    ```
+    应该返回`403`
+    
+2. 验证用户是否可以通过会话进行身份验证
+	```
+     $ curl -i -X GET \
+   		--url http://localhost:8000/sessions-test?apikey=open_sesame
+    ```
+    响应现在应该具有Set-Cookie标头。确保此cookie有效。
+    
+    如果cookie看起来像这样：
+    ```
+    Set-Cookie: session=emjbJ3MdyDsoDUkqmemFqw..|1544654411|4QMKAE3I-jFSgmvjWApDRmZHMB8.; Path=/; SameSite=Strict; HttpOnly
+    ```
+    像这样使用它：
+    ```
+       $ curl -i -X GET \
+         --url http://localhost:8000/sessions-test \
+         -H "cookie:session=emjbJ3MdyDsoDUkqmemFqw..|1544654411|4QMKAE3I-jFSgmvjWApDRmZHMB8."
+    ```
+    此请求应该成功，并且在续订期之前不会出现`Set-Cookie`响应标头。
+    
+3. 您现在还可以验证cookie是否附加到浏览器会话：导航到 http://localhost:8000/sessions-test ，它应该返回403并看到消息“So long and thanks for all the fish!”
+4. 在同一浏览器会话中，导航到http://localhost:8000/sessions-test？apikey=open_sesame ，它应返回200，通过密钥验证密钥查询参数进行身份验证。
+5. 在同一个浏览器会话中，导航到http://localhost:8000/sessions-test ，它现在将使用Kong Session Plugin授予的会话cookie。
+
+### 默认情况
+
+默认情况下，Kong Session Plugin使用`Secure`，`HTTPOnly`，`Samesite = Strict` cookie来支持安全性。
+cookie_domain是使用Nginx变量主机自动设置的，但可以被覆盖。
+    
+### 会话数据存储
+
+会话数据可以存储在cookie本身（加密）`storage = cookie`或https://docs.konghq.com/hub/kong-inc/session/#-kong-storage-adapter[Kong](https://docs.konghq.com/hub/kong-inc/session/#-kong-storage-adapter)内。
+会话数据存储两个上下文变量：
+```
+ngx.ctx.authenticated_consumer.id
+ngx.ctx.authenticated_credential.id
+```
+
+## Kong存储适配器
+
+当`storage=kong`时，Kong Session Plugin使用自己的会话数据存储适配器扩展了[lua-resty-session](https://github.com/bungle/lua-resty-session)的功能。这会将加密的会话数据存储到当前的数据库策略中（例如postgres，cassandra等），并且cookie将不包含任何会话数据。存储在数据库中的数据是加密的，cookie将仅包含会话ID，到期时间和HMAC签名。会话将使用内置的Kong DAO `ttl`机制，该机制在指定的cookie_lifetime之后销毁会话，除非在正常浏览器活动期间发生更新。建议应用程序通过XHR请求（或类似的东西）注销以手动处理重定向。
+
+## 注销
+
+通常为用户提供注销（即手动销毁）其当前会话的能力。可以使用请求URL中的查询参数或`POST`参数进行注销。config的`logout_methods`允许插件根据HTTP谓词限制注销。设置`logout_query_arg`时，它将检查是否存在指定的URL查询参数，同样当设置`logout_post_arg`时，它将检查请求体中是否存在指定的变量。允许的HTTP方法是`GET`，`DELETE`和`POST`。当存在会话且传入请求是注销请求时，Kong Session Plugin将在继续插件运行循环之前返回200，并且请求将不会继续到上游。
+
+## 已知限制
+
+由于OpenResty的限制，`header_filter`阶段无法连接到数据库，这对初始检索cookie（新鲜会话）造成问题。有一个小窗口的时间，其中cookie被发送到客户端，但数据库插入尚未提交，因为数据库调用在`ngx.timer`线程中。当前的解决方法是在发出后续请求之前将`Set-Cookie`header头发送到客户端之后等待一段时间（~100-500ms）。这在会话续订期间不是问题，因为在`access`阶段进行更新。
 
 
 
