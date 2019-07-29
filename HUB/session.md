@@ -1,5 +1,7 @@
 # Session 插件
 
+本文原文链接：https://docs.konghq.com/hub/kong-inc/session
+
 Kong Session Plugin可用于管理通过Kong API Gateway代理的API的浏览器会话。它为会话数据存储，加密，续订，到期和发送浏览器cookie提供配置和管理。它是使用[lua-resty-session](https://github.com/bungle/lua-resty-session)构建的。
 
 ## 术语
