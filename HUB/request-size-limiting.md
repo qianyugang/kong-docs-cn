@@ -1,5 +1,7 @@
 # Request Size Limiting 请求大小限制插件
 
+> 本文原文链接：https://docs.konghq.com/hub/kong-inc/request-size-limiting/
+
 > 出于安全原因，我们建议为您添加到Kong的任何服务启用此插件，以防止DOS（拒绝服务）攻击。
 
 阻止正文大于特定大小（以兆字节为单位）的传入请求。
