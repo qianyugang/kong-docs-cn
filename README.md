@@ -72,7 +72,7 @@ Kong是一个云原生，快速，可扩展和分布式微服务抽象层（也�
     * HMAC Authentication 认证插件 
     * [JWT 插件](HUB/jwt.md)
     * [Key Authentication 密钥认证插件](HUB/key-auth.md)
-    * LDAP Authentication 认证插件
+    * [LDAP Authentication 认证插件](HUB/ldap-auth.md)
     * [OAuth 2.0 Authentication 认证插件](HUB/oauth2.md)
     * [Session 插件](HUB/session.md)
 - **安全**
