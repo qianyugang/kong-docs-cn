@@ -1,5 +1,7 @@
 # Correlation ID 关联 ID插件
 
+> 本文原文链接：https://docs.konghq.com/hub/kong-inc/correlation-id/
+
 使用通过HTTP header 传输的唯一ID关联请求和响应。
 
 ## 术语
