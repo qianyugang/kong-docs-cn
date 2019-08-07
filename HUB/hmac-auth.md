@@ -1,5 +1,7 @@
 # HMAC Authentication 认证插件
 
+> 本文原文链接：https://docs.konghq.com/hub/kong-inc/hmac-auth/
+
 将HMAC签名身份验证添加到服务或路由以确定传入请求的完整性。该插件将验证在`Proxy-Authorization`或`Authorization` header 中发送的数字签名（按此顺序）。此插件实现基于[draft-cavage-http-signature](https://tools.ietf.org/html/draft-cavage-http-signatures)特征草案，其签名方案略有不同。
 
 > 注意：此插件的功能与0.14.0之前的Kong版本和0.34之前的Kong Enterprise版本捆绑在一起，与此处记录的不同。
