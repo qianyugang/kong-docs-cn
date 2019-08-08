@@ -1,7 +1,5 @@
 # HMAC Authentication 认证插件
 
-> 本文原文链接：https://docs.konghq.com/hub/kong-inc/hmac-auth/
-
 将HMAC签名身份验证添加到服务或路由以确定传入请求的完整性。该插件将验证在`Proxy-Authorization`或`Authorization` header 中发送的数字签名（按此顺序）。此插件实现基于[draft-cavage-http-signature](https://tools.ietf.org/html/draft-cavage-http-signatures)特征草案，其签名方案略有不同。
 
 > 注意：此插件的功能与0.14.0之前的Kong版本和0.34之前的Kong Enterprise版本捆绑在一起，与此处记录的不同。
@@ -98,8 +96,68 @@ plugins:
 
 ## 用法
 
+要使用该插件，首先需要创建一个Consumer来将一个或多个凭据关联起来。
+
+注意：由于HMAC签名是由客户端生成的，因此您应确保Kong在此插件运行之前不更新或删除HMAC签名中使用的任何请求参数。
+
 ### 创建一个 Consumer
+
+您需要将凭证与现有的Consumer对象相关联。一个 Consumer 可以拥有许多凭据。
+
+**使用数据库**
+
+要创建 Consumer，您可以执行以下请求：
+```
+curl -d "username=user123&custom_id=SOME_CUSTOM_ID" http://kong:8001/consumers/
+```
+
+**不使用数据库**
+
+您的声明性配置文件需要有一个或多个使用者。
+您可以在`consumers:`创建它们yaml部分：
+```
+consumers:
+- username: user123
+  custom_id: SOME_CUSTOM_ID
+```
+
+在这两种情况下，参数如下所述：
+
+| 参数 | 描述 |
+| --- | ---- |
+| `username` <br> *semi-optional* |  consumer的用户名。必须指定此字段或`custom_id`。 |
+| `custom_id` <br> *semi-optional* | 用于将使用者映射到另一个数据库的自定义标识符。必须指定此字段或`username`。|
+
 ### 创建一个 Credential
+
+**使用数据库**
+
+您可以通过发出以下HTTP请求来配置新的用户名/密码凭据：
+```
+$ curl -X POST http://kong:8001/consumers/{consumer}/hmac-auth \
+    --data "username=bob" \
+    --data "secret=secret456"
+```
+
+**不使用数据库**
+
+您可以在`hmacauth_credentials` yaml条目上的声明性配置文件中添加凭据：
+您可以在`consumers:`创建它们yaml部分：
+```
+hmacauth_credentials:
+- consumer: {consumer}
+  username: bob
+  secret: secret456
+```
+
+在这两种情况下，字段/参数的工作方式如下：
+
+|  字段/参数 | 描述 |
+| --------- | --- |
+| `{consumer}` | 要将凭据关联到的Consumer实体的id或username属性。 | 
+| `{username}` | 用于HMAC签名验证的用户名。 | 
+| `{secret}` <br> `optional` | 在HMAC签名验证中使用的秘密。请注意，如果未提供此参数，Kong将为您生成一个值并将其作为响应正文的一部分发送。|
+ 
 ### 签名认证方案
 ### 签名参数
 ### 签名字符串构造
@@ -120,3 +178,5 @@ plugins:
 
 
 
+
+ 
