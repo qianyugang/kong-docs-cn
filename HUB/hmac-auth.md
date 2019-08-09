@@ -42,7 +42,7 @@ plugins:
   config: 
 ```
 在这两种情况下，`{service}`是此插件配置将定位的`Route`的`ID`或名称。
-
+查询：get | 新增：add | 修改：
 ## 在 Route 上启用插件
 
 **使用数据库：**
@@ -159,22 +159,240 @@ hmacauth_credentials:
 | `{secret}` <br> `optional` | 在HMAC签名验证中使用的秘密。请注意，如果未提供此参数，Kong将为您生成一个值并将其作为响应正文的一部分发送。|
  
 ### 签名认证方案
-### 签名参数
-### 签名字符串构造
 
+期望客户端使用以下参数化发送`Authorization`或`Proxy-Authorization` header：
+```
+credentials := "hmac" params
+params := keyId "," algorithm ", " headers ", " signature
+keyId := "username" "=" plain-string
+algorithm := "algorithm" "=" DQUOTE (hmac-sha1|hmac-sha256|hmac-sha384|hmac-sha512) DQUOTE
+headers := "headers" "=" plain-string
+signature := "signature" "=" plain-string
+plain-string   = DQUOTE *( %x20-21 / %x23-5B / %x5D-7E ) DQUOTE
+```
+
+### 签名参数
+
+| 参数 | 描述 |
+| --- | ---- |
+| username | 凭证的`username` |
+| algorithm | 用于创建签名的数字签名算法 |
+| headers | 用于对请求进行签名的HTTP标头名称列表，由单个空格字符分隔 |
+| signature | 客户端生成的`Base64`编码数字签名 |
+
+### 签名字符串构造
+为了生成使用密钥签名的字符串，客户端必须按照它们出现的顺序获取`headers`指定的每个HTTP标头的值。
+
+1. 如果标题名称不是`request-line`，则附加小写标题名称，后跟ASCII冒号`：`和ASCII空格` `。
+2. 如果标题名称是`request-line`，则附加HTTP请求行（ASCII格式），否则追加标题值。
+3. 如果value不是最后一个值，则附加ASCII换行符`\n`。字符串绝不能包含尾随的ASCII换行符。
 
 ### 时钟偏移 Clock Skew
+
+HMAC身份验证插件还实现了[规范](https://tools.ietf.org/html/draft-cavage-http-signatures-00#section-3.4)中描述的时钟偏差检查，以防止重放攻击。默认情况下，允许在任一方向（过去/未来）上最小延迟300秒。任何具有更高或更低日期值的请求都将被拒绝。通过设置`clock_skew`属性（`config.clock_skew `POST参数），可以通过插件的配置编辑时钟偏差的长度。
+
+服务器和请求客户端应与NTP同步，并且应使用`X-Date`或`Date` header 发送有效日期（使用GMT格式）。
+
 ### 正文验证 Body Validation
+
+用户可以将`config.validate_request_body`设置为`true`以验证请求正文。如果启用，插件将计算请求正文的`SHA-256` HMAC摘要，并将其与`Digest` header 的值进行匹配。
+摘要header需要采用以下格式：
+```
+Digest: SHA-256=base64(sha256(<body>))
+```
+
+如果没有请求主体，则应将`Digest`设置为0长度的主体的摘要。
+
+注意：为了创建请求主体的摘要，插件需要将其保留在内存中，这可能会在处理大型主体（几个MB）或高请求并发期间对工作者的Lua VM造成压力。
+
 ### 执行 Headers
+
+`config.enforce_headers`可用于强制任何 header 成为签名创建的一部分。默认情况下，插件不强制需要使用哪个标头来创建签名。要签名的最小建议数据是`request-line`，`host`和`date`。强烈的签名将包括所有headers和请求体的`digest`。
+
 ### HMAC 示例
+
+可以在Service或Route上启用HMAC插件。
+
+**创建一个 Service**
+```
+  $ curl -i -X POST http://localhost:8001/services \
+      -d "name=example-service" \
+      -d "url=http://example.com"
+  HTTP/1.1 201 Created
+  ...
+```
+
+**创建一个 Route**
+```
+  $ curl -i -f -X POST http://localhost:8001/services/example-service/routes \
+      -d "paths[]=/"
+  HTTP/1.1 201 Created
+  ...
+```
+**在 Service 上启用插件**
+可以在 Service 或 Route 上启用插件。
+此示例使用 Service。
+```
+  $ curl -i -X POST http://localhost:8001/services/example-service/plugins \
+      -d "name=hmac-auth" \
+      -d "config.enforce_headers=date, request-line" \
+      -d "config.algorithms=hmac-sha1, hmac-sha256"
+  HTTP/1.1 201 Created
+  ...
+```
+**添加一个 Consumer**
+```
+  $ curl -i -X POST http://localhost:8001/consumers/ \
+      -d "username=alice"
+  HTTP/1.1 201 Created
+  ...
+
+```
+**给Alice添加一个凭证**
+```
+  $ curl -i -X POST http://localhost:8001/consumers/alice/hmac-auth \
+      -d "username=alice123" \
+      -d "secret=secret"
+  HTTP/1.1 201 Created
+  ...
+```
+**提出授权请求**
+```
+  $ curl -i -X GET http://localhost:8000/requests \
+      -H "Host: hmac.com" \
+      -H "Date: Thu, 22 Jun 2017 17:15:21 GMT" \
+      -H 'Authorization: hmac username="alice123", algorithm="hmac-sha256", headers="date request-line", signature="ujWCGHeec9Xd6UD2zlyxiNMCiXnDOWeVFMu5VeRUxtw="'
+  HTTP/1.1 200 OK
+  ...
+
+```
+在上面的请求中，我们使用`date`和` request-line` header组成签名字符串，并使用`hmac-sha256`创建摘要来散列摘要：
+```
+  signing_string="date: Thu, 22 Jun 2017 17:15:21 GMT\nGET /requests HTTP/1.1"
+  digest=HMAC-SHA256(<signing_string>, "secret")
+  base64_digest=base64(<digest>)
+```
+因此`Authorization`标头的最终值如下所示：
+```
+  Authorization: hmac username="alice123", algorithm="hmac-sha256", headers="date request-line", signature=<base64_digest>"
+```
+
+**验证请求体**
+
+要启用正文验证，我们需要将`config.validate_request_body`设置为`true`：
+
+以下示例的工作方式相同，无论插件是添加到 Service 还是 Route。
+```
+  $ curl -i -X PATCH http://localhost:8001/plugins/{plugin-id} \
+      -d "config.validate_request_body=true"
+  HTTP/1.1 200 OK
+  ...
+
+```
+现在，如果客户端在请求中包含正文摘要作为`Digest`header 的值，则插件将通过计算正文的`SHA-256`并将其与`Digest`header的值进行匹配来验证请求正文。
+```
+  $ curl -i -X GET http://localhost:8000/requests \
+      -H "Host: hmac.com" \
+      -H "Date: Thu, 22 Jun 2017 21:12:36 GMT" \
+      -H "Digest: SHA-256=SBH7QEtqnYUpEcIhDbmStNd1MxtHg2+feBfWc1105MA=" \
+      -H 'Authorization: hmac username="alice123", algorithm="hmac-sha256", headers="date request-line digest", signature="gaweQbATuaGmLrUr3HE0DzU1keWGCt3H96M28sSHTG8="' \
+      -d "A small body"
+  HTTP/1.1 200 OK
+  ...
+```
+在上面的请求中，我们计算了正文的`SHA-256`摘要，并使用以下格式设置`Digest`header：
+```
+  body="A small body"
+  digest=SHA-256(body)
+  base64_digest=base64(digest)
+  Digest: SHA-256=<base64_digest>
+```
+
 ### 上游 Headers
+
+当客户端经过身份验证后，插件会在将请求代理到上游服务之前将一些标头添加到请求中，以便您可以在代码中标识 Consumer：
+- `X-Consumer-ID`，Kong 里 Consumer 的ID
+- `X-Consumer-Custom-ID`，Consumer 的 `custom_id`（如果设置）
+- `X-Consumer-Username`，Consumer 的 `username`（如果设置）
+- `X-Credential-Username`，Credential 的 `username`（仅当消费者不是'匿名'消费者时）
+- `X-Anonymous-Consumer`，身份验证失败时将设置为`true`，并设置“匿名” Consumer。
+
+您可以使用此信息来实现其他逻辑。
+您可以使用`X-Consumer-ID`值来查询Kong Admin API并检索有关Consumer的更多信息。
+
 ### 通过HMAC Credentials 进行分页
+
+> 注意：此终点在Kong 0.11.2中引入。
+
+您可以使用以下请求为所有使用者分配 hmac-auth Credentials：
+```
+$ curl -X GET http://kong:8001/hmac-auths
+
+{
+    "total": 3,
+    "data": [
+        {
+            "created_at": 1509681246000,
+            "id": "75695322-e8a0-4109-aed4-5416b0308d85",
+            "secret": "wQazJ304DW5huJklHgUfjfiSyCyTAEDZ",
+            "username": "foo",
+            "consumer": { "id": "c0d92ba9-8306-482a-b60d-0cfdd2f0e880" }
+        },
+        {
+            "created_at": 1509419793000,
+            "id": "11d5cbfb-31b9-4a6d-8496-2f4a76500643",
+            "secret": "zi6YHyvLaUCe21XMXKesTYiHSWy6m6CW",
+            "username": "bar",
+            "consumer": { "id": "3c2c8fc1-7245-4fbb-b48b-e5947e1ce941" }
+        },
+        {
+            "created_at": 1509681215000,
+            "id": "eb0365bc-88ae-4568-be7c-db1eb7c16e5e",
+            "secret": "NvHDTg5mp0ySFVJsITurtgyhEq1Cxbnv",
+            "username": "baz",
+            "consumer": { "id": "c0d92ba9-8306-482a-b60d-0cfdd2f0e880" }
+        }
+    ]
+}
+```
+
+您可以使用此其他路径按使用者筛选列表：
+```
+$ curl -X GET http://kong:8001/consumers/{username or id}/hmac-auths
+
+{
+    "total": 1,
+    "data": [
+        {
+            "created_at": 1509419793000,
+            "id": "11d5cbfb-31b9-4a6d-8496-2f4a76500643",
+            "secret": "zi6YHyvLaUCe21XMXKesTYiHSWy6m6CW",
+            "username": "bar",
+            "consumer": { "id": "3c2c8fc1-7245-4fbb-b48b-e5947e1ce941" }
+        }
+    ]
+}
+```
+`username or id` 需要列出凭据的consumer的用户名或ID
+
+
 ### 检索与 Credential 关联的 Consumer
 
+> 注意：此终点在Kong 0.11.2中引入。
 
+可以使用以下请求检索与HMAC凭据关联的使用者：
+```
+curl -X GET http://kong:8001/hmac-auths/{hmac username or id}/consumer
 
+{
+   "created_at":1507936639000,
+   "username":"foo",
+   "id":"c0d92ba9-8306-482a-b60d-0cfdd2f0e880"
+}
+```
 
-
+`hmac username or id`：HMAC Credential的`id`或`username`属性，用于获取关联的Consumer。
+请注意，此处接受的`username`不是Consumer的`username`属性。
 
 
 
