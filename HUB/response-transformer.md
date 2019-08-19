@@ -1,5 +1,7 @@
 # Response Transformer 响应变更插件
 
+> 本文原文链接：https://docs.konghq.com/hub/kong-inc/response-transformer/
+
 在将响应返回给客户端之前，转换上游服务器在Kong上发送的响应。
 
 > 关于转换体的注意事项：注意响应体上转换的性能。为了解析和修改JSON主体，插件需要将其保留在内存中，这可能会在处理大型body（几个MB）时对工作者的Lua VM造成压力。由于Nginx的内部结构，在转换响应主体时不会设置`Content-Length` header。
