@@ -1,5 +1,7 @@
 # Request Transformer 请求变更插件
 
+> https://docs.konghq.com/hub/kong-inc/request-transformer/
+
 在上游服务器接收之前，变更客户端在Kong上发送的请求。
 
 > 注意：此插件的功能与0.10.0之前的Kong版本捆绑在一起，与此处记录的不同。有关详细信息，请参阅[CHANGELOG](https://github.com/Kong/kong/blob/master/CHANGELOG.md)。
