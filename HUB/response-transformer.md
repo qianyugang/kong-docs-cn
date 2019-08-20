@@ -54,7 +54,7 @@ plugins:
     add.json: new-json-key:some_value, another-json-key:some_value
     append.headers: x-existing-header:some_value, x-another-header:some_value
 ```
-在这两种情况下，`{service}`是此插件配置将定位的`Route`的`ID`或名称。
+在这两种情况下，`{service}`是此插件配置将定位的service的`ID`或`name`。
 
 ## 在 Route 上启用插件
 
