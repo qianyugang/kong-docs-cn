@@ -1,8 +1,8 @@
 # Proxy Caching 代理缓存
 
+> 本文原文地址：https://docs.konghq.com/hub/kong-inc/proxy-cache/
+
 此插件为Kong提供反向代理缓存实现。它基于可配置的响应代码和内容类型以及请求方法来缓存响应实体。它可以缓存每个Consumer或每个API。缓存实体存储一段可配置的时间，之后对同一资源的后续请求将重新获取并重新存储资源。缓存实体也可以在到期时间之前通过Admin API强制清除。
-
-
 
 ## 术语
 
