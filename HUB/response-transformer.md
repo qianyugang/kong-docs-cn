@@ -140,7 +140,7 @@ plugins:
 
 | 参数 | 默认值 | 描述 |
 | ---- | ------ | ---- |
-| `name` |  |  要使用的插件的名称，在本例中为`ip-restriction`  |
+| `name` |  |  要使用的插件的名称，在本例中为`response-transformer`  |
 | `service_id` |  | 此插件将定位的 Service 的ID。|
 | `route_id` |  |  此插件将定位的 Route 的ID。 |
 | `enabled` |  `true` | 是否将应用此插件。  |
