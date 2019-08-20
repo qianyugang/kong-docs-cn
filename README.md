@@ -88,7 +88,7 @@ Kong是一个云原生，快速，可扩展和分布式微服务抽象层（也�
     * [Response Transformer 响应变更插件](HUB/response-transformer.md)
 - **传输限制**
     * [ACL 插件](HUB/acl.md)
-    * [Proxy Caching 代理缓存插件]
+    * [Proxy Caching 代理缓存插件](HUB/proxy-cache.md)
     * [Rate Limiting 速率限制插件](HUB/rate-limiting.md)
     * [Response Rate Limiting 响应率限制插件](HUB/response-ratelimiting.md)
     * [Request Termination 请求终止插件](HUB/request-termination.md)
