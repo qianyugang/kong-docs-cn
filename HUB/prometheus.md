@@ -1,5 +1,7 @@
 # Prometheus 插件
 
+> 本文原文链接：https://docs.konghq.com/hub/kong-inc/prometheus/
+
 以Prometheus exposition格式公开与Kong和代理上游服务相关的指标，Prometheus服务器可以对这些指标进行抓取。
 
 > 注意：要在具有高吞吐量的配置中保持性能，还需要配置[StatsD](https://docs.konghq.com/hub/kong-inc/statsd/)插件或[StatsD Advanced](https://docs.konghq.com/hub/kong-inc/statsd-advanced/)插件。
