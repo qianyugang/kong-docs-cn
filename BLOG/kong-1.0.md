@@ -1,4 +1,4 @@
-# 微服务 API 网关 Kong 1.0 GA 版本正式发布(更新详情)
+# Kong 1.0 GA 版本正式发布(更新详情)
 **原文地址：**[https://github.com/Kong/kong/blob/master/CHANGELOG.md#100](https://github.com/Kong/kong/blob/master/CHANGELOG.md#100) ，（如有翻译的不准确或错误之处，欢迎留言指出）
 
 这个是一个非常重要的版本，引入了对Service Mesh和Stream Routing支持的新功能，以及新的迁移框架，它还包括插件开发工具包（Plugin Development Kit）的1.0.0版本，它包含大量其他功能和修复，如下所示。此外，Kong 1.0中包含的所有插件都更新为使用PDK 1.0版。
