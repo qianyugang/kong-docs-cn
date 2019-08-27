@@ -1,4 +1,4 @@
-# 微服务 API 网关 Kong 1.0.0 升级指南
+# Kong 1.0.0 升级指南
 
 注意：以下是1.0.x的升级指南。
 如果您要升级到Kong的早期版本，请阅读Kong repo中的[UPGRADE.md](https://github.com/Kong/kong/blob/master/UPGRADE.md)文件。
