@@ -8,7 +8,7 @@ Kong是一个云原生，快速，可扩展和分布式微服务抽象层（也�
 
 **文档说明：http://www.102no.com/archives/1595**
 
-# 目录
+# 文档目录
 
 * **快速入门**
     * [简介](GETTING-STARTED/introduction.md)
@@ -64,6 +64,11 @@ Kong是一个云原生，快速，可扩展和分布式微服务抽象层（也�
     * [SNI对象](ADMIN-API/sni-object.md)
     * [Upstream对象](ADMIN-API/upstream-object.md)
     * [Target对象](ADMIN-API/target-object.md)
+
+# 安装目录
+
+- **官方支持**
+   * [使用Docker安装](INSTALL/docker.md)
 
 # 插件中文文档
 
