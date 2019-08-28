@@ -1,5 +1,7 @@
 # 在 Ubuntu 上安装 Kong
 
+> 本文原文地址：https://docs.konghq.com/install/ubuntu/
+
 ## 安装包
 
 首先下载配置的相应软件包：
