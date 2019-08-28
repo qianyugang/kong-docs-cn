@@ -1,4 +1,6 @@
-# 使用Docker 安装
+# 使用Docker 安装 Kong
+
+> 本文原文链接：https://docs.konghq.com/install/docker/
 
 有关如何在Docker中使用Kong的详细信息可以在镜像图像的DockerHub存储库中找到：[kong](https://hub.docker.com/_/kong/)。
 我们还有一个[Docker Compose template](https://github.com/Kong/docker-kong/tree/master/compose)，内置编排和可扩展性。
