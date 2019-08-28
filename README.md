@@ -65,12 +65,12 @@ Kong是一个云原生，快速，可扩展和分布式微服务抽象层（也�
     * [Upstream对象](ADMIN-API/upstream-object.md)
     * [Target对象](ADMIN-API/target-object.md)
 
-# 安装目录
+# 安装文档目录
 
 - **官方支持**
    * [使用Docker安装](INSTALL/docker.md)
 
-# 插件中文文档
+# 插件中文文档目录
 
 - **认证**
     * [Basic Authentication 基础认证插件](HUB/basic-auth.md)
