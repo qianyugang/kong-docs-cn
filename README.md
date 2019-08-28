@@ -68,7 +68,8 @@ Kong是一个云原生，快速，可扩展和分布式微服务抽象层（也�
 # 安装文档目录
 
 - **官方支持**
-   * [使用Docker安装](INSTALL/docker.md)
+   * [使用 Docker 安装](INSTALL/docker.md)
+   * [在 Ubuntu 上安装](INSTALL/ubuntu.md)
 
 # 插件中文文档目录
 
