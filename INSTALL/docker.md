@@ -10,11 +10,13 @@
 这是一个快速示例，显示如何将Kong容器连接到Cassandra或PostgreSQL容器。
 
 1. 创建一个Docker network
+
 	您需要创建一个自定义网络，以允许容器相互发现和通信。在此示例中，`kong-net`是网络名称，您可以使用任何名称。
     ```
     $ docker network create kong-net
     ```
 2. 启动数据库
+
 	如果您想使用Cassandra容器：
     ```
      $ docker run -d --name kong-database \
@@ -32,6 +34,7 @@
                postgres:9.6
     ```
 3. 准备数据库
+
 	使用临时Kong容器运行迁移：
     ```
      $ docker run --rm \
@@ -45,6 +48,7 @@
     对于Kong 小于0.15的注意事项：如果Kong版本低于0.15（最高0.14），请使用up子命令而不是bootstrap。另请注意，如果Kong  版本小于0.15，则不应同时进行迁移;只有一个Kong节点应该一次执行迁移。对于0.15,1.0及以上的Kong，此限制被取消。
 
 4. 启动Kong
+
 	迁移运行并且数据库准备就绪后，启动一个将连接到数据库容器的Kong容器，就像临时迁移容器一样：
     ```
      $ docker run -d --name kong \
@@ -65,6 +69,7 @@
     ```
 
 5. 使用Kong
+
 	Kong正在运行：
     ```
      $ curl -i http://localhost:8001/
@@ -76,6 +81,7 @@
 在无DB模式下启动Kong所涉及的步骤如下：
 
 1. 创建一个Docker network
+
 	这与Pg / Cassandra指南中的相同。我们也使用`kong-net`作为网络名称，它也可以改为其他东西。
     ```
      $ docker network create kong-net
