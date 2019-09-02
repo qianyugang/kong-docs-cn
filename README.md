@@ -8,7 +8,21 @@ Kong是一个云原生，快速，可扩展和分布式微服务抽象层（也�
 
 **文档说明：http://www.102no.com/archives/1595**
 
-# 文档目录
+# 安装文档目录
+
+- **官方支持**
+
+   - **包安装**
+      * [使用 Docker 安装](INSTALL/docker.md)
+      * [在 Ubuntu 上安装](INSTALL/ubuntu.md)
+      * [在 macOS 上安装](INSTALL/macos.md)
+   - **云安装**
+      * [在 Kubernetes 上安装 Kong 和 Kong Enterprise](INSTALL/kubernetes.md)
+   - **源安装**
+      * [使用源码安装](INSTALL/source.md)
+      
+      
+# 开发文档目录
 
 * **快速入门**
     * [简介](GETTING-STARTED/introduction.md)
@@ -65,20 +79,8 @@ Kong是一个云原生，快速，可扩展和分布式微服务抽象层（也�
     * [Upstream对象](ADMIN-API/upstream-object.md)
     * [Target对象](ADMIN-API/target-object.md)
 
-# 安装文档目录
-
-- **官方支持**
-
-   - **包安装**
-      * [使用 Docker 安装](INSTALL/docker.md)
-      * [在 Ubuntu 上安装](INSTALL/ubuntu.md)
-      * [在 macOS 上安装](INSTALL/macos.md)
-   - **云安装**
-      * [在 Kubernetes 上安装 Kong 和 Kong Enterprise](INSTALL/kubernetes.md)
-   - **源安装**
-      * [使用源码安装](INSTALL/source.md)
    
-# 插件中文文档目录
+# 插件文档目录
 
 - **认证**
     * [Basic Authentication 基础认证插件](HUB/basic-auth.md)
