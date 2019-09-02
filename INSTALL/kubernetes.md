@@ -1,5 +1,7 @@
 # 在 Kubernetes 上安装 Kong 和 Kong Enterprise 
 
+本文原文地址：https://docs.konghq.com/install/kubernetes/
+
 ## Kubernetes Ingress Controller for Kong
 
 使用官方[Kubernetes Ingress控制器](https://github.com/Kong/kubernetes-ingress-controller)安装Kong或Kong Enterprise。
