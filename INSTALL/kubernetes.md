@@ -125,29 +125,30 @@ $ export ADMIN_PORT=$(kubectl get svc --namespace kong kong-control-plane  -o js
 
 1. 将Kong Enterprise Docker映像发布到容器注册表
 
-由于Kong Enterprise映像在公共Docker容器注册表中不可用，因此必须将其发布到私有存储库以与Kubernetes一起使用。虽然任何私有存储库都可以使用，但此示例使用[Google Cloud Platform容器注册表](https://cloud.google.com/container-registry/)，该注册表在其他步骤中自动与Google Cloud Platform示例集成。
-
-在下面的步骤中，将`<image ID>`替换为与docker images输出中已加载图像关联的ID。
-将`<project ID>`替换为您的Google Cloud Platform项目ID。
-
+    由于Kong Enterprise映像在公共Docker容器注册表中不可用，因此必须将其发布到私有存储库以与Kubernetes一起使用。虽然任何私有存储库都可以使用，但此示例使用[Google Cloud Platform容器注册表](https://cloud.google.com/container-registry/)，该注册表在其他步骤中自动与Google Cloud Platform示例集成。	
+    
+    在下面的步骤中，将 `<image ID>` 替换为与docker images输出中已加载图像关联的ID。将 `<project ID>` 替换为您的Google Cloud Platform项目ID。
+    ```
+     $ docker load -i /tmp/kong-docker-enterprise-edition.tar.gz
+     $ docker images
+     $ docker tag <image ID> gcr.io/<project ID>/kong-ee
+     $ gcloud docker -- push gcr.io/demo-cs-lab/kong-ee:latest
+    ```
+    
 2. 添加您的Kong Enterprise许可文件
+
+    编辑`kong_trial_postgres.yaml`和`kong_trial_migration_postgres.yaml`，将`YOUR_LICENSE_HERE`替换为您的Kong Enterprise License File字符串 - 它应如下所示：
+    ```
+     - name: KONG_LICENSE_DATA
+     value: '{"license":{"signature":"alongstringofcharacters","payload":{"customer":"Test Company","license_creation_date":"2018-03-06","product_subscription":"Kong Only","admin_seats":"5","support_plan":"Premier","license_expiration_date":"2018-06-04","license_key":"anotherstringofcharacters"},"version":1}}'
+    ```
 3. 使用Kong Enterprise图像
+
+	编辑`kong_trial_postgres.yaml`和`kong_trial_migration_postgres.yaml`并将`image：kong`替换为`image：gcr.io/<project ID> / kong-ee`，使用与上面相同的项目ID。
+    
+    
 4. 部署Kong Enterprise
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+	使用[Kong Enterprise Trial目录](https://github.com/Kong/kong-dist-kubernetes/tree/master/ee-trial)中的`kong_trial_*` YAML文件，从上面的Manifest Files指令继续执行Kong或Kong Enterprise中的步骤4。
+    一旦Kong Enterprise运行，您应该能够通过`<kong-admin-ip-address>：8002`或`https：// <kong-ssl-admin-ip-address>：8445`访问Kong Admin GUI。
 
