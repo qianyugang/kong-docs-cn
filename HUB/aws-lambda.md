@@ -176,9 +176,108 @@ plugins:
 
 ## 分步指南
 
+**步骤**
+
+1. 以允许用户使用lambda函数操作以及创建用户和角色的用户身份访问AWS Console。
+2. 在AWS中创建执行角色
+3. 创建一个将通过Kong调用该功能的用户，对其进行测试。
+4. 在Kong中创建一个Service＆Route，添加链接到我们的aws函数的aws-lambda插件并执行它。
+
+**配置**
+
+1. 首先，让我们为lambda函数创建一个称为LambdaExecutor的执行角色。
+
+	在IAM控制台中创建一个选择AWS Lambda服务的新角色，将没有任何策略，因为本示例中的函数将简单地执行自身，从而返回硬编码JSON作为响应，而无需访问其他AWS资源
+    
+2. 现在，我们创建一个名为KongInvoker的用户，由我们的Kong API网关用来调用该函数。
+
+	在IAM控制台中，创建一个新用户，必须通过访问和秘密密钥向其提供编程访问权限；然后将直接附加现有策略，尤其是预定义的AWSLambdaRole。确认用户创建后，将访问密钥和秘密密钥存储在安全的地方。
+
+3. 现在我们需要创建lambda函数本身，将在弗吉尼亚北部地区（代码us-east-1）进行。
+
+	在Lambda Management中，创建一个新函数Mylambda，将没有蓝图，因为我们将在下面粘贴代码。
+
+	对于执行角色，我们选择一个以前专门创建的LambdaExecutor角色使用下面的内联代码来返回简单的JSON响应，请注意，这是Python 3.6解释器的代码。
+    ```
+     import json
+ def lambda_handler(event, context):
+     """
+       If is_proxy_integration is set to true :
+       jsonbody='''{"statusCode": 200, "body": {"response": "yes"}}'''
+     """
+     jsonbody='''{"response": "yes"}'''
+     return json.loads(jsonbody)
+    ```
+    从AWS控制台测试lambda函数，并确保执行成功。
+    
+4. 最后，我们在Kong中设置了Service＆Route，并将其链接到刚刚创建的功能。
 
 
+**使用数据库**
 
+```
+curl -i -X POST http://{kong_hostname}:8001/services \
+--data 'name=lambda1' \
+--data 'url=http://localhost:8000' \
+```
+
+该Service并不需要真正的`URL`，因为我们不会对上游进行HTTP调用，而需要由函数生成的响应。
+
+还要为 Service 创建一条 Route ：
+
+```
+curl -i -X POST http://{kong_hostname}:8001/services/lambda1/routes \
+--data 'paths[1]=/lambda1'
+```
+
+添加插件
+```
+curl -i -X POST http://{kong_hostname}:8001/services/lambda1/plugins \
+--data 'name=aws-lambda' \
+--data-urlencode 'config.aws_key={KongInvoker user key}' \
+--data-urlencode 'config.aws_secret={KongInvoker user secret}' \
+--data 'config.aws_region=us-east-1' \
+--data 'config.function_name=MyLambda'
+```
+
+**不使用数据库**
+
+将 Service, Route and Plugin 添加到声明性配置文件中：
+```
+services:
+- name: lambda1
+  url: http://localhost:8000
+
+routes:
+- service: lambda1
+  paths: [ "/lambda1" ]
+
+plugins:
+- service: lambda1
+  name: aws-lambda
+  config:
+    aws_key: {KongInvoker user key}
+    aws_secret: {KongInvoker user secret}
+    aws_region: us-east-1
+    function_name: MyLambda
+```
+
+创建所有内容后，请调用服务并验证正确的调用，执行和响应：
+```
+curl http://{kong_hostname}:8000/lambda1
+```
+
+附加标题：
+```
+x-amzn-Remapped-Content-Length, X-Amzn-Trace-Id, x-amzn-RequestId
+```
+
+JSON响应：
+```
+{"response": "yes"}
+```
+
+充分利用AWS Lambda在Kong的强大功能，尽享乐趣！
 
 
 
