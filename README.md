@@ -108,7 +108,6 @@ Kong是一个云原生，快速，可扩展和分布式微服务抽象层（也�
     * [Loggly 插件]
     * [StatsD 插件]
     * [Syalog 插件]
-    * []
 - **变更**
     * [Correlation ID 关联 ID插件](HUB/correlation-id.md)
     * [Request Transformer 请求变更插件](HUB/request-transformer.md)
