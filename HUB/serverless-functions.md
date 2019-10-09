@@ -87,15 +87,169 @@ plugins:
 | `enabled` |  `true` | 是否将应用此插件。  |
 | `config.functions` | [] | 在访问阶段要缓存并按顺序运行的字符串化Lua代码数组。  |
 
+## 插件名称
+
+Serverless Functions 作为两个单独的插件来。每个插件在插件链中以不同的优先级运行。
+- `pre-function`
+	- 在访问阶段其他插件运行之前运行。
+- `post-function`
+	- 在访问阶段在其他插件之后运行。
+
+## 演示
+
+### 使用数据库
+	
+1. 在Kong上创建一个 Service： 
+    
+    ```
+    $ curl -i -X  POST http://localhost:8001/services/ \
+   	--data "name=plugin-testing" \
+   	--data "url=http://httpbin.org/headers"
+ 	
+    HTTP/1.1 201 Created
+    ```
+
+2. 将 Route 添加到 Service ：
+	```
+    $ curl -i -X  POST http://localhost:8001/services/plugin-testing/routes \
+   	--data "paths[]=/test"
+
+ 	HTTP/1.1 201 Created
+ 	...
+    ```
+
+3. 创建一个名为`custom-auth.lua`的文件，其内容如下：
+	```
+       -- 获取请求头列表
+       local custom_auth = kong.request.get_header("x-custom-auth")
+
+       -- 如果我们的自定义身份验证头不存在，终止请求
+       if not custom_auth then
+         return kong.response.exit(401, "Invalid Credentials")
+       end
+
+       -- 从请求中删除自定义身份验证标头
+       kong.service.request.clear_header('x-custom-auth')
+    ```
+
+4. 确保文件内容：
+	```
+     $ cat custom-auth.lua
+    ```
+
+5. 使用带有cURL文件上传功能的插件来应用我们的Lua代码
+
+	```
+     $ curl -i -X POST http://localhost:8001/services/plugin-testing/plugins \
+     -F "name=pre-function" \
+     -F "config.functions=@custom-auth.lua"
+
+ 	HTTP/1.1 201 Created
+ 	...
+    ```
+    
+6. 测试没有任何头传递时，我们的Lua代码将终止请求：
+
+	```
+     curl -i -X GET http://localhost:8000/test
+
+     HTTP/1.1 401 Unauthorized
+     ...
+     "Invalid Credentials"
+    ```
+
+7. 通过发出有效请求来测试我们刚刚应用的Lua代码：
+	
+    ```
+     curl -i -X GET http://localhost:8000/test \
+   	--header "x-custom-auth: demo"
+
+ 	HTTP/1.1 200 OK
+ 	...
+    ```
 
 
+### 不使用数据库
 
+1. 在声明性配置文件上创建Service，Route和Associated插件：
 
+	```
+     services:
+     - name: plugin-testing
+       url: http://httpbin.org/headers
 
+     routes:
+     - service: plugin-testing
+       paths: [ "/test" ]
 
+     plugins:
+     - name: pre-function
+       config:
+         functions: |
+           -- Get list of request headers
+           local custom_auth = kong.request.get_header("x-custom-auth")
 
+           -- Terminate request early if our custom authentication header
+           -- does not exist
+           if not custom_auth then
+             return kong.response.exit(401, "Invalid Credentials")
+           end
 
+           -- Remove custom authentication header from request
+           kong.service.request.clear_header('x-custom-auth')
+    ```
 
+2. 测试没有任何头传递时，我们的Lua代码将终止请求：
 
+	```
+     curl -i -X GET http://localhost:8000/test
 
+     HTTP/1.1 401 Unauthorized
+     ...
+     "Invalid Credentials"
+    ```
 
+3. 通过发出有效请求来测试我们刚刚应用的Lua代码：
+
+	```
+     curl -i -X GET http://localhost:8000/test \
+   	--header "x-custom-auth: demo"
+
+ 	HTTP/1.1 200 OK
+ 	...
+    ```
+
+这只是这些插件所赋予功能的一个小例子。
+我们能够将Lua代码动态注入插件 access 阶段，以动态终止或转换请求，而无需创建自定义插件或重新 reloading / redeployin部署Kong。
+简而言之，无服务器功能可在访问阶段为您提供自定义插件的全部功能，而无需重新 reloading / redeployin启动Kong。
+
+### 笔记
+
+**Upvalues**
+
+在插件的0.3版本之前，提供的Lua代码将作为函数运行。
+从版本0.3开始，还可以返回一个函数，以允许升值。
+
+因此，较旧的版本可以做到这一点（仍然适用于0.3及更高版本）：
+
+```
+-- this entire block is executed on each request
+ngx.log(ngx.ERR, "hello world")
+```
+
+使用此版本版本，您可以返回一个在每个请求上运行的函数，从而允许升值使请求之间保持状态：
+
+```
+-- this runs once when Kong starts
+local count = 0
+
+return function()
+  -- this runs on each request
+  count = count + 1
+  ngx.log(ngx.ERR, "hello world: ", count)
+end
+```
+
+**缩小Lua**
+
+由于我们以字符串格式发送代码，因此建议使用curl文件上传`@file.lua`（请参见演示）或使用[Minifier](https://mothereff.in/lua-minifier)缩小Lua代码。
