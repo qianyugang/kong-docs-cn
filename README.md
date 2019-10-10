@@ -105,7 +105,7 @@ Kong是一个云原生，快速，可扩展和分布式微服务抽象层（也�
     * [TCP Log 插件](HUB/tcp-log.md)
     * [UDP Log 插件](HUB/udp-log.md)
     * [HTTP Log 插件](HUB/http-log.md)
-    * [Loggly 插件]
+    * [Loggly 插件](HUB/loggly.md)
     * [StatsD 插件]
     * [Syalog 插件]
 - **变更**
