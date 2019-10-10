@@ -121,7 +121,7 @@ Kong是一个云原生，快速，可扩展和分布式微服务抽象层（也�
     * [Request Size Limiting 请求大小限制插件](HUB/request-size-limiting.md)
 - **无服务**
    * [AWS Lambda 插件](HUB/aws-lambda.md)
-   * [Serverless Functions 插件]
+   * [Serverless Functions 插件](HUB/serverless-functions.md)
 
 - **分析与监测**
     * [Datadog 插件](HUB/datadog.md)
