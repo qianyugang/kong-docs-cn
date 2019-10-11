@@ -69,7 +69,7 @@
     ```
     $ kong config init
     ```
-    填写`kong.yml`文件后，编辑您的`kong.conf`文件。将数据库选项设置为`off`，将`declarative_config`选项设置为`kong.yml`文件的路径：
+    填写`kong.yml`文件后，编辑您的`kong.conf`文件。将`database`选项设置为`off`，将`declarative_config`选项设置为`kong.yml`文件的路径：
     ```
     database = off
  	declarative_config = /path/to/kong.yml
