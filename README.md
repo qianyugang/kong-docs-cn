@@ -24,6 +24,7 @@ Kong是一个云原生，快速，可扩展和分布式微服务抽象层（也�
       * [在 Debian 上安装](INSTALL/debian.md)
       * [在 Red Hat 上安装](INSTALL/redhat.md)
    - **云安装**
+      * [在 DC/OS 集群部署](INSTALL/dcos.md)
       * [在 Google Cloud 上安装](INSTALL/google-cloud.md)
       * [在 Kubernetes 上安装 Kong 和 Kong Enterprise](INSTALL/kubernetes.md)
    - **源安装**
