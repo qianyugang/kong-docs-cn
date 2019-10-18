@@ -1,5 +1,7 @@
 # Loggly
 
+> 本文原文链接：https://docs.konghq.com/hub/kong-inc/loggly/
+
 通过UDP将请求和响应数据记录到[Loggly](https://www.loggly.com/)。
 
 ## 术语
