@@ -1,5 +1,7 @@
 # 在 DC/OS 集群安装
 
+> 本文原文链接：https://docs.konghq.com/install/dcos/
+
 可以使用以下步骤在Mesosphere DC/OS群集上配置Kong：
 
 以下步骤使用AWS来配置DC/OS集群，并假设您具有[DC/OS](https://dcos.io/docs/1.9/)，[Marathon](https://mesosphere.github.io/marathon/)，[VIP](https://dcos.io/docs/1.9/networking/load-balancing-vips/virtual-ip-addresses/)和[Marathon-LB](https://dcos.io/docs/1.9/networking/marathon-lb/)的基本知识。
