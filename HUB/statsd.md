@@ -1,5 +1,7 @@
 # StatsD
 
+> 本文原文链接：https://docs.konghq.com/hub/kong-inc/statsd/
+
 为  Service Route 记录日志[指标](https://docs.konghq.com/hub/kong-inc/statsd/#metrics)到一个StatsD 服务器。
 通过启用它的[Statsd插件](https://collectd.org/wiki/index.php/Plugin:StatsD)，还可用于在Collected守护程序上记录指标。
 
