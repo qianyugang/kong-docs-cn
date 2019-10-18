@@ -1,5 +1,7 @@
 # 在 Vagrant 上安装
 
+> 本文原文链接https://docs.konghq.com/install/vagrant/
+
 Vagrant可用于为Kong及其依赖项创建隔离环境。
 
 您可以将Vagrant框用作一体化的Kong安装用于测试目的，或者您可以将其与源代码链接并开始在Kong或定制插件上进行开发。
