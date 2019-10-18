@@ -1,5 +1,7 @@
 # Syslog
 
+> 本文原文链接：https://docs.konghq.com/hub/kong-inc/syslog/
+
 将请求和响应数据记录到Syslog。
 
 ## 术语
