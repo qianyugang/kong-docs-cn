@@ -1,5 +1,7 @@
 # 在 google-cloud 安装 Kong
 
+> 本文原文链接：https://docs.konghq.com/install/google-cloud/
+
 当前有两种选择可从Google Cloud Platform（GCP）市场安装Kong-您可以在CasCompandra上将Kong虚拟机部署在Google Compute Engine（GCE）上，也可以在Google Kubernetes Engine（GKE）上部署带有Postgres的Kong。
 
 请注意，GCP的[免费套餐和积分](https://cloud.google.com/free/)，使您有可能免费在GCP上试用Kong！
