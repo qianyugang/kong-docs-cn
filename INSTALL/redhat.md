@@ -1,5 +1,7 @@
 # 在 Red Hat 安装 Kong
 
+> 本文原文链接：https://docs.konghq.com/install/redhat/
+
 ## 安装包
 
 首先下载适合您的配置的软件包
