@@ -1,5 +1,7 @@
 # 在 macOS 上安装 Kong
 
+> 本文原文链接：https://docs.konghq.com/install/macos/
+
 ## 安装包
 
 - Homebrew Formula：https://github.com/Kong/homebrew-kong
