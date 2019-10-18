@@ -1,5 +1,7 @@
 # UDP Log
 
+> 本文原文链接：https://docs.konghq.com/hub/kong-inc/udp-log/
+
 将请求和响应数据记录到UDP服务器。
 
 ## 术语
