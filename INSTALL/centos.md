@@ -1,5 +1,7 @@
 # 在 CentOS 安装 Kong
 
+> 本文原文链接：https://docs.konghq.com/install/centos/
+
 ## 安装包
 
 首先下载配置的相应软件包：
