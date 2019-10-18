@@ -1,5 +1,7 @@
 # 使用源码安装 Kong
 
+> 本文原文链接：https://docs.konghq.com/install/source/
+
 无论是否有数据库，Kong都可以运行。
 
 使用数据库时，您将使用`kong.conf`配置文件在启动时设置Kong的配置属性，并将数据库用作所有已配置实体的存储，例如Kong代理所在的 Routes 和 Services 。
