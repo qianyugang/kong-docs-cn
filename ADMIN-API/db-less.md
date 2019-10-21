@@ -43,7 +43,7 @@
 	- [Upstream 检索](#Upstream-检索)
 	- [显示节点的Upstream运行状况](#显示节点的Upstream运行状况)
 - [Target 对象](#Target 对象)
-	- [Target 列表](#arget-列表)
+	- [Target 列表](#Target-列表)
 	- [将Target设定为健康](#将Target设定为健康)
 	- [将Target设置为不健康](#将Target设置为不健康)
 	- [所有Target列表](#所有Target列表)
