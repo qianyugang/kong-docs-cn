@@ -241,10 +241,107 @@ GET /services?tags=example/admin
 
 ### 列出所有标签
 
+返回系统中所有标签的分页列表。
+
+实体列表将不限于单个实体类型：所有标记了标签的实体都将出现在此列表中。
+
+如果一个实体被多个标签标记，则该实体的`entity_id`将在结果列表中出现多次。
+同样，如果几个实体已使用同一标签标记，则该标签将出现在此列表的多个项目中。
+```
+GET /tags
+```
+**响应**
+```
+HTTP 200 OK
+```
+```
+{
+    {
+      "data": [
+        { "entity_name": "services",
+          "entity_id": "acf60b10-125c-4c1a-bffe-6ed55daefba4",
+          "tag": "s1",
+        },
+        { "entity_name": "services",
+          "entity_id": "acf60b10-125c-4c1a-bffe-6ed55daefba4",
+          "tag": "s2",
+        },
+        { "entity_name": "routes",
+          "entity_id": "60631e85-ba6d-4c59-bd28-e36dd90f6000",
+          "tag": "s1",
+        },
+        ...
+      ],
+      "offset" = "c47139f3-d780-483d-8a97-17e9adc5a7ab",
+      "next" = "/tags?offset=c47139f3-d780-483d-8a97-17e9adc5a7ab",
+    }
+}
+```
 
 ### 按标签列出实体ID
 
+返回已被指定标签标记的实体。
+
+实体列表将不限于单个实体类型：所有标记了标签的实体都将出现在此列表中。
+
+```
+GET /tags/:tags
+```
+**响应**
+```
+HTTP 200 OK
+```
+```
+{
+    {
+      "data": [
+        { "entity_name": "services",
+          "entity_id": "c87440e1-0496-420b-b06f-dac59544bb6c",
+          "tag": "example",
+        },
+        { "entity_name": "routes",
+          "entity_id": "8a99e4b1-d268-446b-ab8b-cd25cff129b1",
+          "tag": "example",
+        },
+        ...
+      ],
+      "offset" = "1fb491c4-f4a7-4bca-aeba-7f3bcee4d2f9",
+      "next" = "/tags/example?offset=1fb491c4-f4a7-4bca-aeba-7f3bcee4d2f9",
+    }
+}
+```
+
 ## Service 对象
+
+顾名思义，Service实体是您自己的每个上游服务的抽象。服务的示例将是数据转换微服务，计费API等。
+
+Service的主要属性是其URL（Kong应该将流量代理到此URL），可以将其设置为单个字符串，也可以通过单独指定其`protocol`，`host`，`port`和`path`来设置。
+
+Service与Routes关联（一个Service可以有许多与之关联的Routes）。Routes是Kong中的入口点，并定义规则以匹配客户请求。
+Route匹配后，Kong将请求代理到其关联的服务。有关Kong代理流量的详细说明，请参阅[代理参考](https://docs.konghq.com/1.3.x/proxy)。
+
+Service可以通过[标签进行标记和过滤](https://docs.konghq.com/1.3.x/db-less-admin-api/#tags)
+```
+{
+    "id": "9748f662-7711-4a90-8186-dc02f10eb0f5",
+    "created_at": 1422386534,
+    "updated_at": 1422386534,
+    "name": "my-service",
+    "retries": 5,
+    "protocol": "http",
+    "host": "example.com",
+    "port": 80,
+    "path": "/some_api",
+    "connect_timeout": 60000,
+    "write_timeout": 60000,
+    "read_timeout": 60000,
+    "tags": ["user-level", "low-priority"],
+    "client_certificate": {"id":"4e3ad2e4-0bc4-4638-8e34-c84a417ba39b"}
+}
+
+```
+
+
 ### Service 列表
 ### Service 检索
 
@@ -280,7 +377,7 @@ GET /services?tags=example/admin
 ### Upstream 检索
 ### 显示节点的Upstream运行状况
 
-## Targe t对象
+## Target 对象
 ### Target 列表
 ### 将Target设定为健康
 ### 将Target设置为不健康
