@@ -17,9 +17,9 @@
 - [Service 对象](#Service-对象)
 	- [Service 列表](#Service-列表)
 	- [Service 检索](#Service-列表)
-- [Router 对象](#Router-对象)
-	- [Router 列表](#Router-列表)
-	- [Router 检索](#Router-检索)
+- [Route 对象](#Route-对象)
+	- [Route 列表](#Route-列表)
+	- [Route 检索](#Route-检索)
 - [Consumer 对象](#Consumer-对象)
 	- [Consumer 列表](#Consumer-列表)
 	- [Consumer 检索](#Consumer-检索)
@@ -343,11 +343,162 @@ Service可以通过[标签进行标记和过滤](https://docs.konghq.com/1.3.x/d
 
 
 ### Service 列表
+
+#### 列出所有Service
+
+```
+GET /services
+```
+
+#### 列出与特定Certificate相关的Service
+
+```
+GET /certificates/{certificate name or id}/services
+```
+
+| 属性 | 描述 | 
+| --- | ---- |
+| `certificate name or id` <br> required | 要检索其Services的Certificate的唯一标识符或`name`属性。使用此端点时，将仅列出与指定证书关联的服务。 |
+
+*响应*
+```
+HTTP 200 OK
+```
+
+```
+{
+"data": [{
+    "id": "a5fb8d9b-a99d-40e9-9d35-72d42a62d83a",
+    "created_at": 1422386534,
+    "updated_at": 1422386534,
+    "name": "my-service",
+    "retries": 5,
+    "protocol": "http",
+    "host": "example.com",
+    "port": 80,
+    "path": "/some_api",
+    "connect_timeout": 60000,
+    "write_timeout": 60000,
+    "read_timeout": 60000,
+    "tags": ["user-level", "low-priority"],
+    "client_certificate": {"id":"51e77dc2-8f3e-4afa-9d0e-0e3bbbcfd515"}
+}, {
+    "id": "fc73f2af-890d-4f9b-8363-af8945001f7f",
+    "created_at": 1422386534,
+    "updated_at": 1422386534,
+    "name": "my-service",
+    "retries": 5,
+    "protocol": "http",
+    "host": "example.com",
+    "port": 80,
+    "path": "/another_api",
+    "connect_timeout": 60000,
+    "write_timeout": 60000,
+    "read_timeout": 60000,
+    "tags": ["admin", "high-priority", "critical"],
+    "client_certificate": {"id":"4506673d-c825-444c-a25b-602e3c2ec16e"}
+}],
+
+    "next": "http://localhost:8001/services?offset=6378122c-a0a1-438d-a5c6-efabae9fb969"
+}
+```
+
 ### Service 检索
 
-## Router 对象
-### Router 列表
-### Router 检索
+#### 检索Service
+
+```
+GET /services/{name or id}
+```
+
+| 属性 | 描述 | 
+| --- | ---- |
+| `name or id` <br> required | 要检索的Service的唯一标识符或名称。 |
+
+#### 检索与特定Route关联的Service
+
+```
+GET /routes/{route name or id}/service
+```
+
+| 属性 | 描述 | 
+| --- | ---- |
+| `route name or id` <br> required | 与要检索的服务关联的唯一标识符或route的名称。 |
+
+#### 检索与特定插件相关的Service
+
+```
+GET /plugins/{plugin id}/service
+```
+
+| 属性 | 描述 | 
+| --- | ---- |
+| `plugin id` <br> required | 与要检索的Service关联的插件的唯一标识符。。 |
+
+*响应*
+```
+HTTP 200 OK
+```
+
+```
+{
+    "id": "9748f662-7711-4a90-8186-dc02f10eb0f5",
+    "created_at": 1422386534,
+    "updated_at": 1422386534,
+    "name": "my-service",
+    "retries": 5,
+    "protocol": "http",
+    "host": "example.com",
+    "port": 80,
+    "path": "/some_api",
+    "connect_timeout": 60000,
+    "write_timeout": 60000,
+    "read_timeout": 60000,
+    "tags": ["user-level", "low-priority"],
+    "client_certificate": {"id":"4e3ad2e4-0bc4-4638-8e34-c84a417ba39b"}
+}
+```
+
+## Route 对象
+
+Route 实体定义规则以匹配客户端请求。每个 Route 都与 Service 关联，并且一个 Service 可能具有与其关联的多个 Route。
+匹配给定路线的每个请求都将被代理到其关联的 Service。
+
+Route 和 Service 的组合（以及它们之间的关注点分离）提供了一种强大的路由机制，通过它可以在Kong中定义细粒度的入口点，从而导致基础结构的不同上游服务。
+
+您需要至少一个匹配规则，该规则适用于路由要匹配的协议。
+取决于配置为与路由匹配的协议（如协议字段所定义），这意味着必须设置以下属性中的至少一个：
+
+- 对于`http`，至少是`methods`，`hosts`，`headers`,`paths`其中之一；
+- 对于`https`，至少是`methods`，`hosts`，`headers`,`paths`,`snis`其中之一；
+- 对于`tcp`，至少是`sources`，`destinations`其中之一
+- 对于`tls`，至少是`sources`，`destinations`，`snis`其中之一
+- 对于`grpc`，`hosts`，`headers`,`paths`其中之一；
+- 对于`grpcs`，`hosts`，`headers`,`paths`，`snis`其中之一。
+
+Routes 可以通过[标签进行标记和过滤](https://docs.konghq.com/1.3.x/db-less-admin-api/#tags)。
+```
+{
+    "id": "d35165e2-d03e-461a-bdeb-dad0a112abfe",
+    "created_at": 1422386534,
+    "updated_at": 1422386534,
+    "name": "my-route",
+    "protocols": ["http", "https"],
+    "methods": ["GET", "POST"],
+    "hosts": ["example.com", "foo.test"],
+    "paths": ["/foo", "/bar"],
+    "headers": {"x-another-header":["bla"], "x-my-header":["foo", "bar"]},
+    "https_redirect_status_code": 426,
+    "regex_priority": 0,
+    "strip_path": true,
+    "preserve_host": false,
+    "tags": ["user-level", "low-priority"],
+    "service": {"id":"af8330d3-dbdc-48bd-b1be-55b98608834b"}
+}
+```
+
+### Route 列表
+### Route 检索
 
 ## Consumer 对象
 ### Consumer 列表
