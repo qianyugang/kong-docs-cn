@@ -569,7 +569,7 @@ GET /routes/{name or id}
 | --- | ---- |
 | `name or id` <br> required | 要检索的唯一标识符或路线名称。 |
 
-#### 检索与特定插件关联的 route
+#### 检索与特定插件关联的route
 
 ```
 GET /plugins/{plugin id}/route
@@ -604,10 +604,117 @@ HTTP 200 OK
 ```
 
 ## Consumer 对象
+
+Consumer对象代表服务的消费者或用户。您可以依靠Kong作为主要数据存储，也可以将使用者列表与数据库进行映射，以保持Kong和现有主要数据存储之间的一致性。
+
+Consumer 可以通过[标签进行标记和过滤](https://docs.konghq.com/1.3.x/db-less-admin-api/#tags)。
+
+```
+{
+    "id": "ec1a1f6f-2aa4-4e58-93ff-b56368f19b27",
+    "created_at": 1422386534,
+    "username": "my-username",
+    "custom_id": "my-custom-id",
+    "tags": ["user-level", "low-priority"]
+}
+```
+
 ### Consumer 列表
+
+#### 列出所有 Consumers
+
+```
+GET /consumers
+```
+*响应*
+```
+HTTP 200 OK
+```
+```
+{
+"data": [{
+    "id": "a4407883-c166-43fd-80ca-3ca035b0cdb7",
+    "created_at": 1422386534,
+    "username": "my-username",
+    "custom_id": "my-custom-id",
+    "tags": ["user-level", "low-priority"]
+}, {
+    "id": "01c23299-839c-49a5-a6d5-8864c09184af",
+    "created_at": 1422386534,
+    "username": "my-username",
+    "custom_id": "my-custom-id",
+    "tags": ["admin", "high-priority", "critical"]
+}],
+
+    "next": "http://localhost:8001/consumers?offset=6378122c-a0a1-438d-a5c6-efabae9fb969"
+}
+```
+
 ### Consumer 检索
 
+#### 检索 Consumers
+
+
+```
+GET /consumers/{username or id}
+```
+
+| 属性 | 描述 | 
+| --- | ---- |
+| `username or id` <br> required | 要检索的consumer的唯一标识符或用户名。 |
+
+#### 检索与特定插件相关的使用者
+
+| 属性 | 描述 | 
+| --- | ---- |
+| `plugin id` <br> required | 与要检索的consumer相关联的插件的唯一标识符。 |
+
+
+*响应*
+```
+HTTP 200 OK
+```
+```
+{
+    "id": "ec1a1f6f-2aa4-4e58-93ff-b56368f19b27",
+    "created_at": 1422386534,
+    "username": "my-username",
+    "custom_id": "my-custom-id",
+    "tags": ["user-level", "low-priority"]
+}
+```
+
+
 ## 插件对象
+
+插件实体表示将在HTTP请求/响应生命周期内执行的插件配置。
+通过这种方法，您可以为在Kong后面运行的服务添加功能，例如身份验证或速率限制。
+您可以通过访问[Kong Hub](https://docs.konghq.com/hub/)来找到有关如何安装以及每个插件采用什么值的更多信息。
+
+当向service添加插件配置时，客户端对该service的每个请求都将运行所述插件。
+如果某个插件需要针对某些特定使用者调整为不同的值，则可以通过在service和使用者字段中创建一个单独的插件实例来指定`service`和`consumer`，从而做到这一点。
+
+插件可以通过[标签进行标记和过滤](https://docs.konghq.com/1.3.x/db-less-admin-api/#tags)。
+
+```
+{
+    "id": "ce44eef5-41ed-47f6-baab-f725cecf98c7",
+    "name": "rate-limiting",
+    "created_at": 1422386534,
+    "route": null,
+    "service": null,
+    "consumer": null,
+    "config": {"minute":20, "hour":500},
+    "run_on": "first",
+    "protocols": ["http", "https"],
+    "enabled": true,
+    "tags": ["user-level", "low-priority"]
+}
+
+```
+
+有关更多详细信息，请参见下面的“优先级”部分。
+
 ### 优先级
 ### 插件列表
 ### 插件检索
