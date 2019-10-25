@@ -498,7 +498,110 @@ Routes 可以通过[标签进行标记和过滤](https://docs.konghq.com/1.3.x/d
 ```
 
 ### Route 列表
+
+#### 列出所有 Route 
+
+```
+GET /routes
+```
+
+#### 列出与特定Service关联的 Route
+```
+GET /services/{service name or id}/routes
+```
+
+| 属性 | 描述 | 
+| --- | ---- |
+| `service name or id` <br> required | 要检索其Route的service的唯一标识符或`name`属性。使用此端点时，仅列出与指定service关联的Route。 |
+
+*响应*
+```
+HTTP 200 OK
+```
+```
+{
+"data": [{
+    "id": "a9daa3ba-8186-4a0d-96e8-00d80ce7240b",
+    "created_at": 1422386534,
+    "updated_at": 1422386534,
+    "name": "my-route",
+    "protocols": ["http", "https"],
+    "methods": ["GET", "POST"],
+    "hosts": ["example.com", "foo.test"],
+    "paths": ["/foo", "/bar"],
+    "headers": {"x-another-header":["bla"], "x-my-header":["foo", "bar"]},
+    "https_redirect_status_code": 426,
+    "regex_priority": 0,
+    "strip_path": true,
+    "preserve_host": false,
+    "tags": ["user-level", "low-priority"],
+    "service": {"id":"127dfc88-ed57-45bf-b77a-a9d3a152ad31"}
+}, {
+    "id": "9aa116fd-ef4a-4efa-89bf-a0b17c4be982",
+    "created_at": 1422386534,
+    "updated_at": 1422386534,
+    "name": "my-route",
+    "protocols": ["tcp", "tls"],
+    "https_redirect_status_code": 426,
+    "regex_priority": 0,
+    "strip_path": true,
+    "preserve_host": false,
+    "snis": ["foo.test", "example.com"],
+    "sources": [{"ip":"10.1.0.0/16", "port":1234}, {"ip":"10.2.2.2"}, {"port":9123}],
+    "destinations": [{"ip":"10.1.0.0/16", "port":1234}, {"ip":"10.2.2.2"}, {"port":9123}],
+    "tags": ["admin", "high-priority", "critical"],
+    "service": {"id":"ba641b07-e74a-430a-ab46-94b61e5ea66b"}
+}],
+
+    "next": "http://localhost:8001/routes?offset=6378122c-a0a1-438d-a5c6-efabae9fb969"
+}
+```
+
 ### Route 检索
+
+#### 检索 route
+
+```
+GET /routes/{name or id}
+```
+
+| 属性 | 描述 | 
+| --- | ---- |
+| `name or id` <br> required | 要检索的唯一标识符或路线名称。 |
+
+#### 检索与特定插件关联的route
+
+```
+GET /plugins/{plugin id}/route
+```
+
+| 属性 | 描述 | 
+| --- | ---- |
+| `plugin id` <br> required | 与要检索的路线相关联的插件的唯一标识符。 |
+
+*响应*
+```
+HTTP 200 OK
+```
+```
+{
+    "id": "d35165e2-d03e-461a-bdeb-dad0a112abfe",
+    "created_at": 1422386534,
+    "updated_at": 1422386534,
+    "name": "my-route",
+    "protocols": ["http", "https"],
+    "methods": ["GET", "POST"],
+    "hosts": ["example.com", "foo.test"],
+    "paths": ["/foo", "/bar"],
+    "headers": {"x-another-header":["bla"], "x-my-header":["foo", "bar"]},
+    "https_redirect_status_code": 426,
+    "regex_priority": 0,
+    "strip_path": true,
+    "preserve_host": false,
+    "tags": ["user-level", "low-priority"],
+    "service": {"id":"af8330d3-dbdc-48bd-b1be-55b98608834b"}
+}
+```
 
 ## Consumer 对象
 ### Consumer 列表
