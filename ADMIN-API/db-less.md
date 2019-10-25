@@ -569,7 +569,7 @@ GET /routes/{name or id}
 | --- | ---- |
 | `name or id` <br> required | 要检索的唯一标识符或路线名称。 |
 
-#### 检索与特定插件关联的route
+#### 检索与特定插件关联的 route
 
 ```
 GET /plugins/{plugin id}/route
