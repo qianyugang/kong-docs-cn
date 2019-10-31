@@ -1,7 +1,5 @@
 # 无数据库模式 Admin API 
 
-> 本文原文链接：https://docs.konghq.com/1.1.x/db-less-admin-api/
-
 > 此页面指的是用于运行Kong的Admin API，该API配置为无数据库，通过声明性配置管理内存中的实体。
 有关将Kong的Admin API与数据库一起使用的信息，请参阅 [数据库模式的Admin API](https://docs.konghq.com/1.3.x/admin-api)页面。
 
@@ -741,9 +739,175 @@ HTTP 200 OK
 **例子：**如果速率限制插件应用了两次（使用不同的配置）：对于Service（插件配置A）和Consumer（插件配置B），则请求对此消Consumer者进行身份验证的请求将运行插件配置B并忽略A。但是，不验证此Consumer的请求将回退到运行插件configA。请注意，如果禁用了config B（其启用标志设置为false），则config A将应用于与config B匹配的请求。
 
 ### 插件列表
+
+#### 列出所有插件
+
+```
+GET /plugins
+```
+
+#### 列出与指定 Route 关联的插件
+
+```
+GET /routes/{route id}/plugins
+```
+| 属性 | 描述 | 
+| --- | ---- |
+| `route id` <br> required | 要获取其插件的Route的唯一标识符。使用此端点时，将仅列出与指定Route关联的插件。 |
+
+#### 列出与指定 Service 关联的插件
+
+```
+GET /services/{service id}/plugins
+```
+
+| 属性 | 描述 | 
+| --- | ---- |
+| `service id` <br> required | 要检索其插件的service的唯一标识符。使用此端点时，将仅列出与指定service关联的插件。 |
+
+#### 列出与指定 Consumer 关联的插件
+
+```
+GET /consumers/{consumer id}/plugins
+```
+
+| 属性 | 描述 | 
+| --- | ---- |
+| `consumer id` <br> required | 要检索其插件的Consumer的唯一标识符。使用此端点时，将仅列出与指定Consumer相关联的插件。 |
+
+*响应*
+```
+HTTP 200 OK
+```
+```
+{
+"data": [{
+    "id": "02621eee-8309-4bf6-b36b-a82017a5393e",
+    "name": "rate-limiting",
+    "created_at": 1422386534,
+    "route": null,
+    "service": null,
+    "consumer": null,
+    "config": {"minute":20, "hour":500},
+    "run_on": "first",
+    "protocols": ["http", "https"],
+    "enabled": true,
+    "tags": ["user-level", "low-priority"]
+}, {
+    "id": "66c7b5c4-4aaf-4119-af1e-ee3ad75d0af4",
+    "name": "rate-limiting",
+    "created_at": 1422386534,
+    "route": null,
+    "service": null,
+    "consumer": null,
+    "config": {"minute":20, "hour":500},
+    "run_on": "first",
+    "protocols": ["tcp", "tls"],
+    "enabled": true,
+    "tags": ["admin", "high-priority", "critical"]
+}],
+
+    "next": "http://localhost:8001/plugins?offset=6378122c-a0a1-438d-a5c6-efabae9fb969"
+}
+```
+
 ### 插件检索
+#### 插件检索
+```
+GET /plugins/{plugin id}
+```
+| 属性 | 描述 | 
+| --- | ---- |
+| `plugin id` <br> required | 要检索的插件的唯一标识符。 |
+
+*响应*
+```
+HTTP 200 OK
+```
+```
+{
+    "id": "ce44eef5-41ed-47f6-baab-f725cecf98c7",
+    "name": "rate-limiting",
+    "created_at": 1422386534,
+    "route": null,
+    "service": null,
+    "consumer": null,
+    "config": {"minute":20, "hour":500},
+    "run_on": "first",
+    "protocols": ["http", "https"],
+    "enabled": true,
+    "tags": ["user-level", "low-priority"]
+}
+```
+
 ### 已启用的插件检索
+
+检索Kong节点上所有已安装插件的列表。
+```
+GET /plugins/enabled
+```
+*响应*
+```
+HTTP 200 OK
+```
+```
+{
+    "enabled_plugins": [
+        "jwt",
+        "acl",
+        "cors",
+        "oauth2",
+        "tcp-log",
+        "udp-log",
+        "file-log",
+        "http-log",
+        "key-auth",
+        "hmac-auth",
+        "basic-auth",
+        "ip-restriction",
+        "request-transformer",
+        "response-transformer",
+        "request-size-limiting",
+        "rate-limiting",
+        "response-ratelimiting",
+        "aws-lambda",
+        "bot-detection",
+        "correlation-id",
+        "datadog",
+        "galileo",
+        "ldap-auth",
+        "loggly",
+        "statsd",
+        "syslog"
+    ]
+}
+```
 ### 插件schema检索
+
+检索插件配置的schema。
+这有助于了解插件接受哪些字段，并且可用于与Kong的插件系统建立第三方集成。
+```
+GET /plugins/schema/{plugin name}
+```
+*响应*
+```
+HTTP 200 OK
+```
+```
+{
+    "fields": {
+        "hide_credentials": {
+            "default": false,
+            "type": "boolean"
+        },
+        "key_names": {
+            "default": "function",
+            "required": true,
+            "type": "array"
+        }
+    }
+}
+```
 
 ## 证书对象
 ### 证书列表
