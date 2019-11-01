@@ -32,9 +32,6 @@
 - [证书对象](#证书对象)
 	- [证书列表](#证书列表)
 	- [证书检索](#证书检索)
-- [CA证书对象](#CA证书对象)
-	- [CA证书列表](#CA证书列表)
-	- [CA证书检索](#CA证书检索)
 - [SNI 对象](#SNI-对象)
 	- [SNI 列表](#SNI-列表)
 	- [SNI 检索](#SNI-检索)
@@ -910,18 +907,141 @@ HTTP 200 OK
 ```
 
 ## 证书对象
-### 证书列表
-### 证书检索
 
-## CA证书对象
-### CA证书列表
-### CA证书检索
+证书对象表示一个公共证书，可以选择与对应的私钥配对。Kong使用这些对象来处理加密请求的SSL/TLS终止，或在验证客户端/服务的对等证书时用作受信任的CA存储。证书可选地与SNI对象相关联，以将证书/密钥对绑定到一个或多个主机名。
+
+如果除了主证书之外还需要中间证书，那么应该按照以下顺序将它们连接到一个字符串中:主证书在顶部，然后是任何中间证书。
+
+证书可以通过[标签进行标记和过滤](https://docs.konghq.com/1.3.x/db-less-admin-api/#tags)。
+```
+{
+    "id": "7fca84d6-7d37-4a74-a7b0-93e576089a41",
+    "created_at": 1422386534,
+    "cert": "-----BEGIN CERTIFICATE-----...",
+    "key": "-----BEGIN RSA PRIVATE KEY-----...",
+    "tags": ["user-level", "low-priority"]
+}
+```
+
+### 证书列表
+
+#### 列出所有证书
+```
+GET /certificates
+```
+*响应*
+```
+HTTP 200 OK
+```
+```
+{
+"data": [{
+    "id": "d044b7d4-3dc2-4bbc-8e9f-6b7a69416df6",
+    "created_at": 1422386534,
+    "cert": "-----BEGIN CERTIFICATE-----...",
+    "key": "-----BEGIN RSA PRIVATE KEY-----...",
+    "tags": ["user-level", "low-priority"]
+}, {
+    "id": "a9b2107f-a214-47b3-add4-46b942187924",
+    "created_at": 1422386534,
+    "cert": "-----BEGIN CERTIFICATE-----...",
+    "key": "-----BEGIN RSA PRIVATE KEY-----...",
+    "tags": ["admin", "high-priority", "critical"]
+}],
+
+    "next": "http://localhost:8001/certificates?offset=6378122c-a0a1-438d-a5c6-efabae9fb969"
+}
+```
+
+### 证书检索
+```
+GET /certificates/{certificate id}
+```
+| 属性 | 描述 | 
+| --- | ---- |
+| `certificate id` <br> required | 要检索的证书的唯一标识符。 |
+
+*响应*
+```
+HTTP 200 OK
+```
+```
+{
+    "id": "7fca84d6-7d37-4a74-a7b0-93e576089a41",
+    "created_at": 1422386534,
+    "cert": "-----BEGIN CERTIFICATE-----...",
+    "key": "-----BEGIN RSA PRIVATE KEY-----...",
+    "tags": ["user-level", "low-priority"]
+}
+```
 
 ## SNI 对象
+
 ### SNI 列表
+#### 列出所有 SNIs
+```
+GET /snis
+```
+#### 列出与特定证书关联的SNIs
+```
+GET /certificates/{certificate name or id}/snis
+```
+
+| 属性 | 描述 | 
+| --- | ---- |
+| `certificate name or id` <br> required | 要检索其SNI的证书的唯一标识符或`name`属性。使用此端点时，将仅列出与指定证书关联的SNI。 |
+*响应*
+```
+HTTP 200 OK
+```
+```
+{
+"data": [{
+    "id": "a9b2107f-a214-47b3-add4-46b942187924",
+    "name": "my-sni",
+    "created_at": 1422386534,
+    "tags": ["user-level", "low-priority"],
+    "certificate": {"id":"04fbeacf-a9f1-4a5d-ae4a-b0407445db3f"}
+}, {
+    "id": "43429efd-b3a5-4048-94cb-5cc4029909bb",
+    "name": "my-sni",
+    "created_at": 1422386534,
+    "tags": ["admin", "high-priority", "critical"],
+    "certificate": {"id":"d26761d5-83a4-4f24-ac6c-cff276f2b79c"}
+}],
+
+    "next": "http://localhost:8001/snis?offset=6378122c-a0a1-438d-a5c6-efabae9fb969"
+}
+```
+
 ### SNI 检索
 
+#### 检索 SNIs
+```
+GET /snis/{name or id}
+```
+
+| 属性 | 描述 | 
+| --- | ---- |
+| `name or id` <br> required | 要检索的SNI的唯一标识符或名称。 |
+*响应*
+```
+HTTP 200 OK
+```
+```
+{
+    "id": "7fca84d6-7d37-4a74-a7b0-93e576089a41",
+    "name": "my-sni",
+    "created_at": 1422386534,
+    "tags": ["user-level", "low-priority"],
+    "certificate": {"id":"d044b7d4-3dc2-4bbc-8e9f-6b7a69416df6"}
+}
+
+```
 ## Upstream 对象
+
+
+
 ### Upstream 列表
 ### Upstream 检索
 ### 显示节点的Upstream运行状况
