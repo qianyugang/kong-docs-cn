@@ -1024,6 +1024,7 @@ GET /snis/{name or id}
 | 属性 | 描述 | 
 | --- | ---- |
 | `name or id` <br> required | 要检索的SNI的唯一标识符或名称。 |
+
 *响应*
 ```
 HTTP 200 OK
@@ -1040,11 +1041,285 @@ HTTP 200 OK
 ```
 ## Upstream 对象
 
+上游对象代表虚拟主机名，可用于对多个服务（目标）上的传入请求进行负载平衡。
+因此，例如，上游主机名为`service.v1.xyz`的Service对象的`host`机是`service.v1.xyz`。
+对该服务的请求将被代理到上游定义的目标。
 
+上游还包括运行[状况检查器](https://docs.konghq.com/1.1.x/health-checks-circuit-breakers)，该检查器能够根据目标是否能够满足请求来启用和禁用目标。健康状况检查器的配置存储在上游对象中，并应用于其所有目标。
 
+上游可以通过[标签进行标记和过滤](https://docs.konghq.com/1.1.x/db-less-admin-api/#tags)。
+
+```
+{
+    "id": "91020192-062d-416f-a275-9addeeaffaf2",
+    "created_at": 1422386534,
+    "name": "my-upstream",
+    "hash_on": "none",
+    "hash_fallback": "none",
+    "hash_on_cookie_path": "/",
+    "slots": 10000,
+    "healthchecks": {
+        "active": {
+            "https_verify_certificate": true,
+            "unhealthy": {
+                "http_statuses": [429, 404, 500, 501, 502, 503, 504, 505],
+                "tcp_failures": 0,
+                "timeouts": 0,
+                "http_failures": 0,
+                "interval": 0
+            },
+            "http_path": "/",
+            "timeout": 1,
+            "healthy": {
+                "http_statuses": [200, 302],
+                "interval": 0,
+                "successes": 0
+            },
+            "https_sni": "example.com",
+            "concurrency": 10,
+            "type": "http"
+        },
+        "passive": {
+            "unhealthy": {
+                "http_failures": 0,
+                "http_statuses": [429, 500, 503],
+                "tcp_failures": 0,
+                "timeouts": 0
+            },
+            "type": "http",
+            "healthy": {
+                "successes": 0,
+                "http_statuses": [200, 201, 202, 203, 204, 205, 206, 207, 208, 226, 300, 301, 302, 303, 304, 305, 306, 307, 308]
+            }
+        }
+    },
+    "tags": ["user-level", "low-priority"]
+}
+```
 ### Upstream 列表
+
+#### 列出所有Upstreams
+```
+GET /upstreams
+```
+*响应*
+```
+HTTP 200 OK
+```
+```
+{
+"data": [{
+    "id": "a2e013e8-7623-4494-a347-6d29108ff68b",
+    "created_at": 1422386534,
+    "name": "my-upstream",
+    "hash_on": "none",
+    "hash_fallback": "none",
+    "hash_on_cookie_path": "/",
+    "slots": 10000,
+    "healthchecks": {
+        "active": {
+            "https_verify_certificate": true,
+            "unhealthy": {
+                "http_statuses": [429, 404, 500, 501, 502, 503, 504, 505],
+                "tcp_failures": 0,
+                "timeouts": 0,
+                "http_failures": 0,
+                "interval": 0
+            },
+            "http_path": "/",
+            "timeout": 1,
+            "healthy": {
+                "http_statuses": [200, 302],
+                "interval": 0,
+                "successes": 0
+            },
+            "https_sni": "example.com",
+            "concurrency": 10,
+            "type": "http"
+        },
+        "passive": {
+            "unhealthy": {
+                "http_failures": 0,
+                "http_statuses": [429, 500, 503],
+                "tcp_failures": 0,
+                "timeouts": 0
+            },
+            "type": "http",
+            "healthy": {
+                "successes": 0,
+                "http_statuses": [200, 201, 202, 203, 204, 205, 206, 207, 208, 226, 300, 301, 302, 303, 304, 305, 306, 307, 308]
+            }
+        }
+    },
+    "tags": ["user-level", "low-priority"]
+}, {
+    "id": "147f5ef0-1ed6-4711-b77f-489262f8bff7",
+    "created_at": 1422386534,
+    "name": "my-upstream",
+    "hash_on": "none",
+    "hash_fallback": "none",
+    "hash_on_cookie_path": "/",
+    "slots": 10000,
+    "healthchecks": {
+        "active": {
+            "https_verify_certificate": true,
+            "unhealthy": {
+                "http_statuses": [429, 404, 500, 501, 502, 503, 504, 505],
+                "tcp_failures": 0,
+                "timeouts": 0,
+                "http_failures": 0,
+                "interval": 0
+            },
+            "http_path": "/",
+            "timeout": 1,
+            "healthy": {
+                "http_statuses": [200, 302],
+                "interval": 0,
+                "successes": 0
+            },
+            "https_sni": "example.com",
+            "concurrency": 10,
+            "type": "http"
+        },
+        "passive": {
+            "unhealthy": {
+                "http_failures": 0,
+                "http_statuses": [429, 500, 503],
+                "tcp_failures": 0,
+                "timeouts": 0
+            },
+            "type": "http",
+            "healthy": {
+                "successes": 0,
+                "http_statuses": [200, 201, 202, 203, 204, 205, 206, 207, 208, 226, 300, 301, 302, 303, 304, 305, 306, 307, 308]
+            }
+        }
+    },
+    "tags": ["admin", "high-priority", "critical"]
+}],
+
+    "next": "http://localhost:8001/upstreams?offset=6378122c-a0a1-438d-a5c6-efabae9fb969"
+}
+```
+
 ### Upstream 检索
+
+#### 检索 Upstreams
+```
+GET /upstreams/{name or id}
+```
+| 属性 | 描述 | 
+| --- | ---- |
+| `name or id` <br> required | 要检索的Upstream的唯一标识符或名称。 |
+
+### 检索与指定Target相关的Upstream
+
+```
+GET /targets/{target host:port or id}/upstream
+```
+| 属性 | 描述 | 
+| --- | ---- |
+| `target host:port or id` <br> required | 与要检索的上游关联的目标的唯一标识符或host：port。 |
+
+*响应*
+```
+HTTP 200 OK
+```
+```
+{
+    "id": "91020192-062d-416f-a275-9addeeaffaf2",
+    "created_at": 1422386534,
+    "name": "my-upstream",
+    "hash_on": "none",
+    "hash_fallback": "none",
+    "hash_on_cookie_path": "/",
+    "slots": 10000,
+    "healthchecks": {
+        "active": {
+            "https_verify_certificate": true,
+            "unhealthy": {
+                "http_statuses": [429, 404, 500, 501, 502, 503, 504, 505],
+                "tcp_failures": 0,
+                "timeouts": 0,
+                "http_failures": 0,
+                "interval": 0
+            },
+            "http_path": "/",
+            "timeout": 1,
+            "healthy": {
+                "http_statuses": [200, 302],
+                "interval": 0,
+                "successes": 0
+            },
+            "https_sni": "example.com",
+            "concurrency": 10,
+            "type": "http"
+        },
+        "passive": {
+            "unhealthy": {
+                "http_failures": 0,
+                "http_statuses": [429, 500, 503],
+                "tcp_failures": 0,
+                "timeouts": 0
+            },
+            "type": "http",
+            "healthy": {
+                "successes": 0,
+                "http_statuses": [200, 201, 202, 203, 204, 205, 206, 207, 208, 226, 300, 301, 302, 303, 304, 305, 306, 307, 308]
+            }
+        }
+    },
+    "tags": ["user-level", "low-priority"]
+}
+```
+
 ### 显示节点的Upstream运行状况
+
+根据特定Kong节点的透视图显示给定Upstream的所有Target的健康状态。注意，作为特定于节点的信息，对Kong集群的不同节点发出相同的请求可能会产生不同的结果。例如,Kong 的一个特定节点集群可能遇到网络问题,导致无法连接到一些Target:这些Target将由该节点标记为不健康(将此节点的流量引导到它可以成功到达的其他Target),但健康的所有其他Kong节点(使用这一Target没有问题)。
+
+响应的`data`字段包含Target对象的数组。
+每个Target的运行状况在其`health`字段中返回：
+
+- 如果由于DNS问题而无法在环形负载均衡器中激活目标，则其状态将显示为`DNS_ERROR`。
+- 如果在上游配置中未启用运行[健康检查](https://docs.konghq.com/1.1.x/health-checks-circuit-breakers)，则活动目标的运行状况将显示为`HEALTHCHECKS_OFF`。
+- 启用健康检查并自动或[手动](https://docs.konghq.com/1.1.x/db-less-admin-api/#set-target-as-healthy)确定目标为健康后，其状态将显示为`HEALTHY`。这意味着此目标当前已包含在此上游的负载均衡器环中。
+- 通过主动或被动运行状况检查（断路器）或手动禁用目标后，其状态将显示为`UNHEALTHY`。负载平衡器不会通过此上游将任何流量定向到该目标。
+
+```
+GET /upstreams/{name or id}/health/
+```
+| 属性 | 描述 | 
+| --- | ---- |
+| `name or id` <br> required | 要为其显示目标运行状况的唯一标识符或上游名称。 |
+
+*响应*
+```
+HTTP 200 OK
+```
+```
+{
+    "total": 2,
+    "node_id": "cbb297c0-14a9-46bc-ad91-1d0ef9b42df9",
+    "data": [
+        {
+            "created_at": 1485524883980,
+            "id": "18c0ad90-f942-4098-88db-bbee3e43b27f",
+            "health": "HEALTHY",
+            "target": "127.0.0.1:20000",
+            "upstream_id": "07131005-ba30-4204-a29f-0927d53257b4",
+            "weight": 100
+        },
+        {
+            "created_at": 1485524914883,
+            "id": "6c6f34eb-e6c3-4c1f-ac58-4060e5bca890",
+            "health": "UNHEALTHY",
+            "target": "127.0.0.1:20002",
+            "upstream_id": "07131005-ba30-4204-a29f-0927d53257b4",
+            "weight": 200
+        }
+    ]
+}
+```
 
 ## Target 对象
 ### Target 列表
