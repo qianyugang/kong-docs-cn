@@ -76,7 +76,7 @@ Kong是一个云原生，快速，可扩展和分布式微服务抽象层（也�
         * [kong.service.response](GUIDES&REFERENCES/PDK/kong-service-response.md)
         * [kong.table](GUIDES&REFERENCES/PDK/kong-table.md)
 * **Admin Api**
-    * [无数据库模式 Admin API(进行中)](ADMIN-API/db-less.md)
+    * [无数据库模式 Admin API](ADMIN-API/db-less.md)
     * [支持的 Content Types](ADMIN-API/supported-content-types.md)
     * [信息路由](ADMIN-API/information-routes.md)
     * [标签](ADMIN-API/tags.md)
