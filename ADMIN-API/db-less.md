@@ -1322,15 +1322,142 @@ HTTP 200 OK
 ```
 
 ## Target 对象
+
+Target 是带有端口的ip地址/主机名，该端口标识后端服务的实例。
+每个 Upstream 都可以有许多 Target，并且可以动态添加 Target。
+更改是即时进行的。
+
+由于 Upstream 保留了 Target 更改的历史记录，因此无法删除或修改目标。
+要禁用 Target，请发布一个新的`weight=0`的 Target；
+或者，使用`DELETE`便捷方法来实现相同目的。
+
+当前目标对象定义是最新的`created_at`。
+
+Target 可以通过[标签进行标记和过滤](https://docs.konghq.com/1.3.x/db-less-admin-api/#tags)。
+
 ### Target 列表
+
+#### 列出与指定 Upstream 相关的 Target
+
+```
+GET /upstreams/{upstream host:port or id}/targets
+```
+| 属性 | 描述 | 
+| --- | ---- |
+| `upstream host:port or id` <br> required | 要检索其目标的上游的唯一标识符或host：port属性。使用此端点时，将仅列出与指定 Upstream 相关联的 Target。 |
+
+*响应*
+```
+HTTP 200 OK
+```
+```
+{
+"data": [{
+    "id": "4e8d95d4-40f2-4818-adcb-30e00c349618",
+    "created_at": 1422386534,
+    "upstream": {"id":"58c8ccbb-eafb-4566-991f-2ed4f678fa70"},
+    "target": "example.com:8000",
+    "weight": 100,
+    "tags": ["user-level", "low-priority"]
+}, {
+    "id": "ea29aaa3-3b2d-488c-b90c-56df8e0dd8c6",
+    "created_at": 1422386534,
+    "upstream": {"id":"4fe14415-73d5-4f00-9fbc-c72a0fccfcb2"},
+    "target": "example.com:8000",
+    "weight": 100,
+    "tags": ["admin", "high-priority", "critical"]
+}],
+
+    "next": "http://localhost:8001/targets?offset=6378122c-a0a1-438d-a5c6-efabae9fb969"
+}
+```
+
+
 ### 将Target设定为健康
+
+在整个Kong集群中，将负载均衡器中的目标的当前健康状态设置为“健康”。
+
+此端点可用于手动重新启用先前被上游的[健康状况检查器]((https://docs.konghq.com/1.1.x/health-checks-circuit-breakers)禁用的目标。Upstreams只将请求转发给正常的节点，因此这个调用告诉Kong重新开始使用这个目标。
+
+这将重置在Kong节点的所有工作程序中运行的运行状况检查程序的运行状况计数器，并广播整个群集的消息，以便将“健康”状态传播到整个Kong群集。
+
+```
+POST /upstreams/{upstream name or id}/targets/{target or id}/healthy
+```
+| 属性 | 描述 | 
+| --- | ---- |
+| `upstream name or id` <br> required | upstream 的唯一标识符或名称。 |
+| `target or id` <br> required | 要设置为正常的目标的host/port组合元素，或现有目标条目的`id`。 |
+
+*响应*
+```
+HTTP 204 No Content
+```
+
 ### 将Target设置为不健康
+
+在整个Kong集群中，将负载均衡器中的目标的当前健康状态设置为“不健康”。
+
+该端点可用于手动禁用目标并使其停止响应请求。
+upstream 仅将请求转发到运行状况良好的节点，因此此调用告诉Kong开始在环平衡器算法中跳过此目标。
+
+此调用将重置在Kong节点的所有工作程序中运行的运行状况检查程序的运行状况计数器，并广播群集范围内的消息，以便将“不健康”状态传播到整个Kong群集。
+
+对于不健康的目标，将继续执行[主动健康检查](https://docs.konghq.com/1.1.x/health-checks-circuit-breakers/#active-health-checks)。
+
+请注意，如果启用了[主动健康检查](https://docs.konghq.com/1.1.x/health-checks-circuit-breakers/#active-health-checks)，并且探针检测到目标实际上是健康的，它将自动再次重新启用它。
+要从环平衡器中永久删除目标，应改为[删除目标](https://docs.konghq.com/1.1.x/db-less-admin-api/#delete-target)。
+
+```
+POST /upstreams/{upstream name or id}/targets/{target or id}/unhealthy
+```
+| 属性 | 描述 | 
+| --- | ---- |
+| `upstream name or id` <br> required | upstream 的唯一标识符或名称。 |
+| `target or id` <br> required | 要设置为正常的目标的host/port组合元素，或现有目标条目的`id`。 |
+
+*响应*
+```
+HTTP 204 No Content
+```
+
 ### 所有Target列表
 
+列出所有上游的目标。可以返回同一目标的多个目标对象，显示特定目标的更改历史。具有最新`created_at`的目标对象是当前定义。
+
+```
+GET /upstreams/{name or id}/targets/all/
+```
+
+| 属性 | 描述 | 
+| --- | ---- |
+|  `name or id` <br> required | 列出目标的唯一标识符或upstream名称。 |
 
 
-
-
+*响应*
+```
+HTTP 200 OK
+```
+```
+{
+    "total": 2,
+    "data": [
+        {
+            "created_at": 1485524883980,
+            "id": "18c0ad90-f942-4098-88db-bbee3e43b27f",
+            "target": "127.0.0.1:20000",
+            "upstream_id": "07131005-ba30-4204-a29f-0927d53257b4",
+            "weight": 100
+        },
+        {
+            "created_at": 1485524914883,
+            "id": "6c6f34eb-e6c3-4c1f-ac58-4060e5bca890",
+            "target": "127.0.0.1:20002",
+            "upstream_id": "07131005-ba30-4204-a29f-0927d53257b4",
+            "weight": 200
+        }
+    
+```
 
 
 
