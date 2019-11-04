@@ -21,7 +21,7 @@
 
 ## 添加 Target
 
-### 创建与特定上游相关联的目标
+### 创建与指定上游相关联的目标
 
 ```
 POST /upstreams/{upstream host:port or id}/targets
@@ -57,7 +57,7 @@ HTTP 201 Created
 
 ## Targets 列表
 
-### 列出与特定上游相关联的目标
+### 列出与指定上游相关联的目标
 
 ```
 GET /upstreams/{upstream host:port or id}/targets
@@ -165,7 +165,7 @@ HTTP 204 No Content
 
 ## 列出所有 Target
 
-列出上游的所有目标。可以返回同一目标的多个目标对象，显示特定目标的更改历史记录。具有最新`created_at`的目标对象是当前定义。
+列出上游的所有目标。可以返回同一目标的多个目标对象，显示指定目标的更改历史记录。具有最新`created_at`的目标对象是当前定义。
 
 ```
 GET /upstreams/{name or id}/targets/all/
