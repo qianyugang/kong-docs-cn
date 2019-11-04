@@ -131,7 +131,7 @@ GET:/services/{name or id}
 | ---- | ---- |
 | `name or id`<br>**required** | 要检索的服务的唯一标识符或名称。 |
 
-#### 查询与特定路由关联的服务
+#### 查询与指定路由关联的服务
 
 ```
 GET:/routes/{route name or id}/service
@@ -140,7 +140,7 @@ GET:/routes/{route name or id}/service
 | ---- | ---- |
 | `route name or id`<br>**required** | 与要检索的服务关联的唯一标识符或Route的名称。 |
 
-#### 查询特定插件关联的服务
+#### 查询指定插件关联的服务
 
 ```
 GET:/plugins/{plugin id}/service
@@ -185,7 +185,7 @@ PATCH:/services/{name or id}
 | ---- | ---- |
 | `name or id`<br>**required** | 要更新的服务的唯一标识符或名称。 |
 
-#### 更新与特定路由关联的服务
+#### 更新与指定路由关联的服务
 
 ```
 PATCH:/routes/{route name or id}/service
@@ -194,7 +194,7 @@ PATCH:/routes/{route name or id}/service
 | ---- | ---- |
 | `route name or id`<br>**required** | 与要更新的服务关联的唯一标识符或Route的名称。 |
 
-#### 更新与特定插件关联的服务
+#### 更新与指定插件关联的服务
 
 ```
 PATCH:/plugins/{plugin id}/service
@@ -253,7 +253,7 @@ PUT:/services/{name or id}
 | ---- | ---- |
 | `route name or id`<br>**required** | 与要更新或创建的服务关联的唯一标识符或Route的名称。 |
 
-#### 创建或更新与特定路由关联的服务
+#### 创建或更新与指定路由关联的服务
 
 ```
 PUT:/routes/{route name or id}/service
@@ -262,7 +262,7 @@ PUT:/routes/{route name or id}/service
 | ---- | ---- |
 | `route name or id`<br>**required** | 与要更新或创建的服务关联的唯一标识符或Route的名称。 |
 
-#### 创建或更新与特定插件关联的服务
+#### 创建或更新与指定插件关联的服务
 
 ```
 PUT:/plugins/{plugin id}/service
@@ -312,7 +312,7 @@ DELETE:/services/{name or id}
 | ---- | ---- |
 | `name or id`<br>**required** | 要删除的服务的唯一标识符或名称。 |
 
-#### 删除与特定路由关联的服务
+#### 删除与指定路由关联的服务
 
 ```
 DELETE:/routes/{route name or id}/service
