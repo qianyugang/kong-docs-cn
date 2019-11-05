@@ -53,7 +53,7 @@ GET /consumers/{username or id}
 | ---- | ---- |
 | `username or id` <br> *required* |  要检索的Consumer的唯一标识符或用户名。|
 
-### 查询与特定插件关联的Consumer
+### 查询与指定插件关联的Consumer
 
 ```
 GET /plugins/{plugin id}/consumer
@@ -85,7 +85,7 @@ PATCH /consumers/{username or id}
 | ---- | ---- |
 | `username or id` <br> *required* |  要检索的Consumer的唯一标识符或用户名。|
 
-### 更新与特定插件关联的Consumer
+### 更新与指定插件关联的Consumer
 
 ```
 PATCH /plugins/{plugin id}/consumer
@@ -127,7 +127,7 @@ PUT /consumers/{username or id}
 | ---- | ---- |
 | `username or id` <br> *required* |  要检索的Consumer的唯一标识符或用户名。|
 
-### 创建或更新与特定插件关联的Consumer
+### 创建或更新与指定插件关联的Consumer
 
 | 参数 | 描述 |
 | ---- | ---- |
