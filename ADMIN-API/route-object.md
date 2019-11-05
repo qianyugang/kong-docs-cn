@@ -30,7 +30,7 @@ Routes 和 Services 的组合（以及它们之间的关注点分离）提供了
 POST:/routes
 ```
 
-### 创建与特定服务关联的路由
+### 创建与指定服务关联的路由
 
 ```
 POST:/services/{service name or id}/routes
@@ -88,7 +88,7 @@ HTTP 201 Created
 GET:/routes
 ```
 
-### 列出与特定服务关联的路由列表
+### 列出与指定服务关联的路由列表
 
 ```
 GET:/services/{service name or id}/routes
@@ -152,7 +152,7 @@ GET:/routes/{name or id}
 | `service name or id` <br> **required** | 要检索其路由的服务的唯一标识符或`name`属性。仅列出与指定服务关联的路由。 |
 
 
-### 查询与特定插件关联的路由
+### 查询与指定插件关联的路由
 
 ```
 GET:/plugins/{plugin id}/route
@@ -199,7 +199,7 @@ PATCH:/routes/{name or id}
 | `name or id` <br> ** required ** | 唯一标识符或要更新的路由的名称。 |
 
 
-### 更新与特定插件关联的路由
+### 更新与指定插件关联的路由
 
 ```
 PATCH:/plugins/{plugin id}/route
@@ -267,7 +267,7 @@ PUT:/routes/{name or id}
 | `name or id` <br> ** required ** | 要创建或更新的路由的唯一标识符或名称。 |
 ```
 
-### 创建或更新与特定插件关联的路由
+### 创建或更新与指定插件关联的路由
 
 ```
 PUT:/plugins/{plugin id}/route
