@@ -55,7 +55,7 @@ plugins:
     timeout: 1000
     keepalive: 1000
 ```
-在这两种情况下，，`{service}`是此插件配置将定位的Service的`id`或`name`。
+在这两种情况下，`{service}`是此插件配置将定位的Service的`id`或`name`。
 
 ## 在 Consumer 上启用插件
 
