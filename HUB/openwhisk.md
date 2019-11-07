@@ -1,5 +1,7 @@
 # Apache OpenWhisk
 
+> 本文原文链接：https://docs.konghq.com/hub/kong-inc/openwhisk/
+
 该插件调用[OpenWhisk操作](https://github.com/openwhisk/openwhisk/blob/master/docs/actions.md)。
 它可以与其他请求插件结合使用以保护，管理或扩展功能。
 
