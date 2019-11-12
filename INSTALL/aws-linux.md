@@ -1,4 +1,4 @@
-# 在 Amazon Linux 上安装
+# 在 Amazon Linux 上安装 Kong
 
 ## 安装包
 
