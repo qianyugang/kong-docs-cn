@@ -1,5 +1,7 @@
 # 文件结构
 
+> 本文原文链接：https://docs.konghq.com/1.1.x/plugin-development/file-structure/
+
 > 本章假定你已经会使用Lua语言
 
 ## 介绍
