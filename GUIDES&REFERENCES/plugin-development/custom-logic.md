@@ -1,5 +1,7 @@
 # 实现自定义逻辑
 
+> 本文原文链接：https://docs.konghq.com/1.1.x/plugin-development/custom-logic/
+
 ## 简介
 
 Kong插件允许您在 request/response 的生命周期中的几个入口点注入自定义逻辑（使用 Lua 语言），因为它由Kong代理。为此，必须实现`base_plugin.lua` 接口的一个或多个方法。这些方法将在命名空间下的模块中实现：`kong.plugins。<plugin_name> .handler`。
