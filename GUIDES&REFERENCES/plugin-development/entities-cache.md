@@ -1,5 +1,7 @@
 # 缓存自定义实体
 
+> 本文原文链接：https://docs.konghq.com/1.1.x/plugin-development/entities-cache/
+
 ## 介绍
 
 您的插件可能需要经常访问每个请求 和/或 响应的自定义实体（在[前一章](https://docs.konghq.com/1.1.x/plugin-development/custom-entities/)中可见）。通常，加载它们一次并将它们缓存在内存中会显着提高性能，同时确保数据存储区不会因负载增加而受到压力。
