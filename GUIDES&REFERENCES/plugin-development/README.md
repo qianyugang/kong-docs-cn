@@ -1,5 +1,7 @@
 # 什么是插件，它们如何与Kong整合？
 
+> 原文链接：https://docs.konghq.com/1.1.x/plugin-development/
+
 在进一步讨论之前，有必要简要解释一下Kong是如何构建的，特别是它如何与Nginx集成以及Lua与它有什么关系。
 
 [lua-nginx-module](https://github.com/openresty/lua-nginx-module)在Nginx中启用Lua脚本功能。Kong不是用这个模块编译Nginx，而是与OpenResty一起分发，[OpenResty](https://openresty.org/)已经包含了lua-nginx-module。OpenResty不是Nginx的分支，而是一组扩展其功能的模块。
