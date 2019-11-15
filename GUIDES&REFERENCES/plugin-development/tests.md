@@ -1,5 +1,7 @@
 # 单元测试
 
+> 本文原文链接：https://docs.konghq.com/1.1.x/plugin-development/tests/
+
 ## 介绍
 如果你认真对待你写的插件，你可能想为它编写一些测试。Lua的单元测试很简单，并且可以使用许多[测试框架](http://lua-users.org/wiki/UnitTesting)。但是，您可能还想编写集成测试。Kong可以再次为您提供支援。
 
