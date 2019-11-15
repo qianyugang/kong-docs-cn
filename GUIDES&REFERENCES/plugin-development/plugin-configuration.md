@@ -1,5 +1,7 @@
 # 插件配置
 
+> 本文原文链接：https://docs.konghq.com/1.1.x/plugin-development/plugin-configuration/
+
 ## 简介
 
 大多数情况下，您的插件可以配置为满足您的所有用户需求。当插件被执行的时候，您的插件的配置存储在Kong的数据存储区中，以检索它并将其传递给[handler.lua](https://docs.konghq.com/1.1.x/plugin-development/custom-logic/)方法。
