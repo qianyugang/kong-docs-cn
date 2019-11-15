@@ -1,5 +1,7 @@
 # 访问数据存储区
 
+> 本文原文链接：https://docs.konghq.com/1.1.x/plugin-development/access-the-datastore/
+
 ## 简介
 
 Kong通过我们称为“DAOs”的类与模型层交互。本章将详细介绍与数据存储交互的可用API。Kong支持两个主数据存储：[Cassandra 3.x.x](http://cassandra.apache.org/)和[PostgreSQL 9.5+](http://www.postgresql.org/)。
