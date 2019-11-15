@@ -1,5 +1,7 @@
 # 安装/卸载插件
 
+> 本文原文链接：https://docs.konghq.com/1.1.x/plugin-development/distribution/
+
 ## 介绍
 
 Kong的自定义插件由Lua源文件组成，这些源文件需要位于每个Kong节点的文件系统中。本指南将为您提供逐步说明，使Kong节点了解您的自定义插件。这些步骤应该应用于Kong集群中的每个节点，以确保每个节点上都有自定义插件。
