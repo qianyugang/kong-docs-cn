@@ -1,5 +1,7 @@
 # 存储自定义实体
 
+> 本文原文链接：https://docs.konghq.com/1.1.x/plugin-development/custom-entities/
+
 ## 介绍
 
 虽然不是所有插件都需要它，但是您的插件可能需要在数据库中存储比配置更多的东西。在这种情况下，Kong在其主要数据存储之上提供了一个抽象，允许您存储自定义实体。
