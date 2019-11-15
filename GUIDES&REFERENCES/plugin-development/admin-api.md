@@ -1,5 +1,7 @@
 # 扩展Admin API
 
+> 本文原文：https://docs.konghq.com/1.1.x/plugin-development/admin-api/
+
 > 注意：本章假设您具有[Lapis](http://leafo.net/lapis/)的相关知识。
 
 ## 简介
