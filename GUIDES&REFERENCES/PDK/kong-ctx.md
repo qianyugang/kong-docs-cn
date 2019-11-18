@@ -1,5 +1,7 @@
 # kong.ctx
 
+> 本文原文链接：https://docs.konghq.com/1.1.x/pdk/kong.ctx/
+
 当前请求上下文数据
 
 ## kong.ctx.shared
