@@ -1,5 +1,7 @@
 # kong.client
 
+> 本文原文链接：https://docs.konghq.com/1.1.x/pdk/kong.client/
+
 客户信息模块一组函数，用于查询在给定请求的上下文中连接到Kong的客户端的信息。
 
 另见：[nginx.org/en/docs/http/ngx_http_realip_module.html](http://nginx.org/en/docs/http/ngx_http_realip_module.html)
