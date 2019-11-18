@@ -1,5 +1,7 @@
 # kong.table
 
+> 本文原文链接：https://docs.konghq.com/1.1.x/pdk/kong.table/
+
 Lua表的公用程序
 
 ## kong.table.new([narr[, nrec]])
