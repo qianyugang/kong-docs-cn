@@ -1,5 +1,7 @@
 # kong.ip
 
+> 本文原文链接：https://docs.konghq.com/1.1.x/pdk/kong.ip/
+
 可信任的IP模块
 
 此模块可用于确定给定IP地址是否在`trusted_ips`配置属性定义的可信IP地址范围内。
