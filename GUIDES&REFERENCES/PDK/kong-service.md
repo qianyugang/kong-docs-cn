@@ -1,5 +1,7 @@
 # kong.service
 
+> 本文原文链接：https://docs.konghq.com/1.1.x/pdk/kong.service/
+
 service 模块包含一组函数来操作对service的请求的连接，例如连接到给定主机，IP地址/端口，或选择给定的 Upstream 实体以进行负载平衡和健康检查。
 
 ## kong.service.set_upstream(host)
