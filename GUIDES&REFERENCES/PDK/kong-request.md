@@ -1,5 +1,7 @@
 # kong.request
 
+> 本文原文链接：https://docs.konghq.com/1.1.x/pdk/kong.request/
+
 Client request 模块是一组函数，用于获取有关客户端发出的传入请求的信息。
 
 ## kong.request.get_scheme()
