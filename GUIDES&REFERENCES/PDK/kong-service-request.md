@@ -1,5 +1,7 @@
 # kong.service.request
 
+> 本文原文链接：https://docs.konghq.com/1.1.x/pdk/kong.service.request/
+
 操作对service的请求
 
 ## kong.service.request.set_scheme(scheme)
