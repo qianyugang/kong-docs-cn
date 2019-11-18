@@ -1,5 +1,7 @@
 # kong.router
 
+> 本文原文链接：https://docs.konghq.com/1.1.x/pdk/kong.router/
+
 Router模块用于访问请求的路由属性的一组功能。
 
 ## kong.router.get_route()
