@@ -1,5 +1,7 @@
 # kong.node
 
+> 本文原文链接：https://docs.konghq.com/1.1.x/pdk/kong.node/
+
 节点级公用程序
 
 ## kong.node.get_id()
