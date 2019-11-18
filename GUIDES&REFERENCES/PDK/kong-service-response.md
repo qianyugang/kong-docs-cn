@@ -1,5 +1,7 @@
 # kong.service.response
 
+> 本文原文链接：https://docs.konghq.com/1.1.x/pdk/kong.service.response/
+
 用来操作Service的响应
 
 ## kong.service.response.get_status()
