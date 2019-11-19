@@ -1,5 +1,7 @@
 # Service 服务
 
+> 本文原文链接：https://docs.konghq.com/1.1.x/admin-api/#service-object
+
 顾名思义，服务实体是每个上游服务的抽象。举个例子，services 可以是一个数据转换微服务，一个计费api等等。
 
 Service 的主要属性是其URL（Kong应该将流量代理到的地方），可以设置为单个字符串，也可以单独指定其`protocol`, `host`, `port` 和 `path`。
