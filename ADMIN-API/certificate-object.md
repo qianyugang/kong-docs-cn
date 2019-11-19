@@ -1,5 +1,7 @@
 # 证书对象
 
+> 本文原文链接：https://docs.konghq.com/1.1.x/admin-api/#certificate-object
+
 证书对象表示SSL证书的 certificate/private 对。Kong使用这些对象来处理加密请求的 SSL/TLS 终止。证书可选地与SNI对象相关联，以将 cert/key 对与一个或多个主机名绑定。
 
 证书可以通过[标签进行标记和过滤](https://docs.konghq.com/1.1.x/admin-api/#tags)。
