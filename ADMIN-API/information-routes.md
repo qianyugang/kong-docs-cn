@@ -1,5 +1,7 @@
 # 信息路由
 
+> 本文原文链接：https://docs.konghq.com/1.1.x/admin-api/#information-routes
+
 ## 检索节点信息
 
 检索有关节点的一般详细信息。
