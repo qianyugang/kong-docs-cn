@@ -1,5 +1,7 @@
 # Upstream 上游
 
+> 本文原文链接：https://docs.konghq.com/1.1.x/admin-api/#upstream-objects
+
 上游对象表示虚拟主机名，可用于通过多个服务（目标）对传入请求进行负载均衡。例如，对于主机为`service.v1.xyz`的 Service 对象，上游名为 `service.v1.xyz`。对此服务的请求将代理到上游定义的目标。
 
 上游还包括[健康检查](https://docs.konghq.com/1.2.x/health-checks-circuit-breakers)程序，该检查程序能够基于其能力或无法提供请求来启用和禁用目标。运行状况检查程序的配置存储在上游对象中，并应用于其所有目标。
