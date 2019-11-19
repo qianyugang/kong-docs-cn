@@ -1,5 +1,7 @@
 # 支持的Content Types
 
+> https://docs.konghq.com/1.1.x/admin-api/#supported-content-types
+
 Admin API在每个端点上接受2种内容类型：
 
 - application/x-www-form-urlencoded
