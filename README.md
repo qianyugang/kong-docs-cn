@@ -82,14 +82,14 @@ Kong是一个云原生，快速，可扩展和分布式微服务抽象层（也�
     * [支持的 Content Types](ADMIN-API/supported-content-types.md)
     * [信息路由](ADMIN-API/information-routes.md)
     * [标签](ADMIN-API/tags.md)
-    * [Service对象](ADMIN-API/service-object.md)
-    * [Router对象](ADMIN-API/route-object.md)
-    * [Consumer对象](ADMIN-API/consumer-object.md)
+    * [Service 对象](ADMIN-API/service-object.md)
+    * [Route 对象](ADMIN-API/route-object.md)
+    * [Consumer 对象](ADMIN-API/consumer-object.md)
     * [插件对象](ADMIN-API/plugin-object.md)
     * [证书对象](ADMIN-API/certificate-object.md)
-    * [SNI对象](ADMIN-API/sni-object.md)
-    * [Upstream对象](ADMIN-API/upstream-object.md)
-    * [Target对象](ADMIN-API/target-object.md)
+    * [SNI 对象](ADMIN-API/sni-object.md)
+    * [Upstream 对象](ADMIN-API/upstream-object.md)
+    * [Target 对象](ADMIN-API/target-object.md)
 
    
 # 插件文档目录
