@@ -1,5 +1,7 @@
 # 插件
 
+> 本文原文链接：https://docs.konghq.com/1.1.x/admin-api/#plugin-object
+
 插件实体表示将在HTTP请求/响应生命周期期间执行的插件配置。它是如何为在Kong后面运行的服务添加功能的，例如 Authentication 或 Rate Limiting 。您可以访问[Kong Hub](https://docs.konghq.com/hub/)，获取有关如何安装以及每个插件所需值的更多信息。
 
 将插件配置添加到服务时，客户端向该服务发出的每个请求都将运行所述插件。如果某个特定消费者需要将插件调整为不同的值，您可以通过创建一个单独的插件实例来实现，该实例通过`service` 和 `consumer`这两个字段指定服务和消费者。
