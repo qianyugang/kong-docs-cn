@@ -1,5 +1,7 @@
 # 无数据库模式 Admin API 
 
+> 本文原文链接：https://docs.konghq.com/1.1.x/db-less-admin-api/
+
 > 此页面指的是用于运行Kong的Admin API，该API配置为无数据库，通过声明性配置管理内存中的实体。
 有关将Kong的Admin API与数据库一起使用的信息，请参阅 [数据库模式的Admin API](https://docs.konghq.com/1.3.x/admin-api)页面。
 
