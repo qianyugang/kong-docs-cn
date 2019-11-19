@@ -1,5 +1,7 @@
 # Consumer 消费者
 
+> 本文原文链接：https://docs.konghq.com/1.1.x/admin-api/#consumer-object
+
 Consumer对象表示Service服务的使用者或用户。您可以依靠Kong作为主数据存储，也可以将使用者列表与数据库映射，以保持Kong与现有主数据存储之间的一致性。
 
 Consumer消费者可以通过[标签进行标记和过滤](https://docs.konghq.com/1.1.x/admin-api/#tags)。
