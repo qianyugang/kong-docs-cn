@@ -1,5 +1,7 @@
 # SNI对象
 
+> 本文原文链接：https://docs.konghq.com/1.1.x/admin-api/#sni-objects
+
 SNI对象表示主机名与证书的多对一映射。也就是说，证书对象可以有许多与之关联的主机名；当Kong收到SSL请求时，它使用Client Hello中的SNI字段根据与证书关联的SNI查找证书对象。
 
 SNI可以通过[标签进行标记和过滤](https://docs.konghq.com/1.1.x/admin-api/#tags)。
