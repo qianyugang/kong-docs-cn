@@ -26,9 +26,10 @@ Kong是一个云原生，快速，可扩展和分布式微服务抽象层（也�
       * [在 Red Hat 上安装](INSTALL/redhat.md)
       * [在 Amazon Linux 上安装](INSTALL/aws-linux.md)
    - **云安装**
+      * [在 Kubernetes 上安装 Kong 和 Kong Enterprise](INSTALL/kubernetes.md)
       * [在 DC/OS 集群部署](INSTALL/dcos.md)
       * [在 Google Cloud 上安装](INSTALL/google-cloud.md)
-      * [在 Kubernetes 上安装 Kong 和 Kong Enterprise](INSTALL/kubernetes.md)
+      * [在 AWS 软件市场 AMI上安装](INSTALL/aws-marketplace.md)
    - **源安装**
       * [在 Vagrant 上安装](INSTALL/vagrant.md)
       * [使用源码安装](INSTALL/source.md)
