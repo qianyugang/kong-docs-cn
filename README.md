@@ -137,7 +137,7 @@ Kong是一个云原生，快速，可扩展和分布式微服务抽象层（也�
     * [Prometheus 插件](HUB/prometheus.md)
 - **部署**
     * [Kubernetes Sidecar 注入插件](HUB/kubernetes-sidecar-injector.md)
-    * [decK 插件](deck.md)
+    * [decK 插件](HUB/deck.md)
 
 ## 其他文章
 
