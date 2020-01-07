@@ -1,5 +1,7 @@
 # decK 插件
 
+> 本文原文链接：https://docs.konghq.com/hub/kong-inc/deck/
+
 decK以声明方式帮助管理Kong的配置。它可以将配置同步到运行中的Kong群集，比较配置以检测任何漂移或手动更改，并备份Kong的配置。它还可以使用标签以分布式方式管理Kong的配置，从而帮助您将Kong的配置分散到各个团队中。
 
 ## decK：Kong的声明式配置
