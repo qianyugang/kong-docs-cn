@@ -133,7 +133,7 @@ GET /routes/{route id}/plugins
 
 ### 列出与特定 Service 关联的插件
 ```
-GET /routes/{service id}/plugins
+GET /service/{service id}/plugins
 ```
 | 参数 | 描述 | 
 | ---- | ---- |
@@ -141,7 +141,7 @@ GET /routes/{service id}/plugins
 
 ### 列出与特定 Consumer 关联的插件
 ```
-GET /routes/{consumer id}/plugins
+GET /consumer/{consumer id}/plugins
 ```
 | 参数 | 描述 | 
 | ---- | ---- |
