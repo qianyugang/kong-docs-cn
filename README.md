@@ -139,7 +139,7 @@ Kong是一个云原生，快速，可扩展和分布式微服务抽象层（也�
     * [Kubernetes Sidecar 注入插件](HUB/kubernetes-sidecar-injector.md)
     * [decK 插件](HUB/deck.md)
 
-## 其他文章
+## 官方博客
 
 - [Kong 1.0 GA 版本正式发布(更新详情)](BLOG/kong-1.0.md)
 - [Kong 1.0.0 升级指南](BLOG/kong-1.0-update.md)
