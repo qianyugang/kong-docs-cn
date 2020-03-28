@@ -8,7 +8,7 @@
 
 ![](https://2tjosk2rxzc21medji3nfn1g-wpengine.netdna-ssl.com/wp-content/uploads/2020/01/WX20200121-021513@2x-1024x536.png)
 
-## 支持 golang的PDK
+## 支持 golang 的PDK
 
 Lua是用于编写Kong插件的实际使用的语言。虽然Lua的性能良好且非常易于嵌入，但它在开发人员体验，第三方库和普遍欢迎方面都达不到要求。在2019年Kong Summit峰会期间，我们透露了对Go的Go插件支持，从而使开发人员可以使用Go完全开发其插件。
 
@@ -36,9 +36,9 @@ Lua是用于编写Kong插件的实际使用的语言。虽然Lua的性能良好�
 
 ### 升级路径
 
-随着2.0的发布，我们还发布了Kong Gateway 1.5，它充当了较旧版本的Kong Gateway和带有API实体到服务/路由迁移工具的新2.x系列之间的桥梁。
+随着2.0的发布，我们还发布了 Kong Gateway 1.5，它充当了较旧版本的 Kong Gateway 和带有API实体到 service/route 迁移工具的新2.x系列之间的桥梁。
 
-不支持从0.x版本的Kong Gateway直接升级到2.x。而是，这些用户应先从0.x升级到1.5，然后再升级到2.0.0。
+不支持从0.x版本的 Kong Gateway 直接升级到2.x。而是应先从0.x升级到1.5，然后再升级到2.0.0。
 
 从现在开始，我们正式放弃对0.x版本的支持。
 
