@@ -65,7 +65,7 @@ POST /routes/{route id}/plugins
 ### 创建与特定 Service 关联的插件
 
 ```
-POST /routes/{service id}/plugins
+POST /services/{service id}/plugins
 ```
 | 参数 | 描述 | 
 | ---- | ---- |
@@ -74,7 +74,7 @@ POST /routes/{service id}/plugins
 ### 创建与特定 Consumer 关联的插件
 
 ```
-POST /routes/{consumer id}/plugins
+POST /consumers/{consumer id}/plugins
 ```
 | 参数 | 描述 | 
 | ---- | ---- |
