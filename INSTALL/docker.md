@@ -31,18 +31,22 @@
                -p 5432:5432 \
                -e "POSTGRES_USER=kong" \
                -e "POSTGRES_DB=kong" \
+               -e "POSTGRES_PASSWORD=Passw0rd" \
+               -e "POSTGRES_HOST_AUTH_METHOD=trust" \
                postgres:9.6
     ```
 3. 准备数据库
 
 	使用临时Kong容器运行迁移：
     ```
-     $ docker run --rm \
-     --network=kong-net \
-     -e "KONG_DATABASE=postgres" \
-     -e "KONG_PG_HOST=kong-database" \
-     -e "KONG_CASSANDRA_CONTACT_POINTS=kong-database" \
-     kong:latest kong migrations bootstrap
+    $ docker run --rm \
+        --network=kong-net \
+        -e "KONG_LOG_LEVEL=debug" \
+        -e "KONG_DATABASE=postgres" \
+        -e "KONG_PG_HOST=kong-database" \
+        -e "KONG_PG_PASSWORD=Passw0rd" \
+        -e "KONG_CASSANDRA_CONTACT_POINTS=kong-database" \
+        kong:latest kong migrations bootstrap
     ```
     在上面的示例中，配置了Cassandra和PostgreSQL，但您应该使用`cassandra`或`postgres`更新`KONG_DATABASE`环境变量。    
     对于Kong 小于0.15的注意事项：如果Kong版本低于0.15（最高0.14），请使用up子命令而不是bootstrap。另请注意，如果Kong  版本小于0.15，则不应同时进行迁移;只有一个Kong节点应该一次执行迁移。对于0.15,1.0及以上的Kong，此限制被取消。
@@ -55,6 +59,7 @@
      --network=kong-net \
      -e "KONG_DATABASE=postgres" \
      -e "KONG_PG_HOST=kong-database" \
+     -e "KONG_PG_PASSWORD=Passw0rd" \
      -e "KONG_CASSANDRA_CONTACT_POINTS=kong-database" \
      -e "KONG_PROXY_ACCESS_LOG=/dev/stdout" \
      -e "KONG_ADMIN_ACCESS_LOG=/dev/stdout" \
