@@ -153,7 +153,7 @@ Permalink可以重用Kong生成的配置并将其包含在现有配置中。
 
 可以使用`--nginx-conf`参数启动，重新加载和重新启动Kong，该参数必须指定Nginx配置模板。这样的模板使用[Penlight](http://stevedonovan.github.io/Penlight/api/index.html)[模板引擎](http://stevedonovan.github.io/Penlight/api/libraries/pl.template.html)，该引擎使用给定的Kong配置进行编译，然后在启动Nginx之前将其转储到您的Kong前缀目录中。
 
-可以在以下网址找到默认模板：https://github.com/kong/kong/tree/master/kong/templates。
+可以在以下网址找到默认模板：https://github.com/kong/kong/tree/master/kong/templates 。
 它分为两个Nginx配置文件：`nginx.lua`和`nginx_kong.lua`。前者是简约的，包括后者，其中包含了运行所需要的一切。
 当kong start运行时，就在启动Nginx之前，它会将这两个文件复制到前缀目录中，如下所示：
 
