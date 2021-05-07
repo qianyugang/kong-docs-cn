@@ -1,0 +1,71 @@
+version: "3.8"
+
+services:
+  kong-database:
+    image: postgres:9.6
+    container_name: kong-database
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: kong
+      POSTGRES_PASSWORD: Passw0rd
+      POSTGRES_DB: kong
+      POSTGRES_HOST_AUTH_METHOD: trust
+    networks:
+      - kong-net
+
+  kong-migrations:
+    image: kong:2.2.0-alpine
+    command: kong migrations bootstrap
+    depends_on:
+      - kong-database
+    environment:
+      KONG_DATABASE: postgres
+      KONG_PG_PASSWORD: Passw0rd
+      KONG_PG_HOST: kong-database
+      KONG_CASSANDRA_CONTACT_POINTS: kong-database
+    networks:
+      - kong-net
+    restart: on-failure
+
+  kong:
+    image: kong:2.2.0-alpine
+    depends_on:
+      - kong-database
+    environment:
+      KONG_ADMIN_LISTEN: "0.0.0.0:8001, 0.0.0.0:8444 ssl"
+    networks:
+      - kong-net
+    ports:
+      - "8000:8000/tcp"
+      - "127.0.0.1:8001:8001/tcp"
+      - "8443:8443/tcp"
+      - "127.0.0.1:8444:8444/tcp"
+    restart: on-failure
+    volumes:
+      - type: bind
+        source: $PWD/kong/kong.conf
+        target: /etc/kong/kong.conf
+      - type: volume
+        source: kong-data
+        target: /home/custom/kong
+
+  demo-redis:
+    image: redis:6
+    container_name: redis
+    ports:
+      - "6379:6379"
+    networks:
+      - kong-net
+
+networks:
+  kong-net:
+    driver: bridge
+
+volumes:
+  kong-data:
+    driver: local
+    driver_opts:
+      o: bind
+      type: none
+      device: $PWD/kong

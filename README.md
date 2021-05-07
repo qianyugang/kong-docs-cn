@@ -137,7 +137,6 @@ Kong是一个云原生，快速，可扩展和分布式微服务抽象层（也�
    * [AWS Lambda 插件](HUB/aws-lambda.md)
    * [Serverless Functions 插件](HUB/serverless-functions.md)
    * [Apache OpenWhisk 插件](HUB/openwhisk.md)
-
 - **分析与监测**
     * [Datadog 插件](HUB/datadog.md)
     * [Zipkin 插件](HUB/zipkin.md)
@@ -145,6 +144,8 @@ Kong是一个云原生，快速，可扩展和分布式微服务抽象层（也�
 - **部署**
     * [Kubernetes Sidecar 注入插件](HUB/kubernetes-sidecar-injector.md)
     * [decK 插件](HUB/deck.md)
+- **缓存**
+    * [Kong Cache Custom 插件](HUB/kong-cache-redis/kubernetes-sidecar-injector.md)
 
 ## 官方博客
 
