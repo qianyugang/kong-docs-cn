@@ -1,6 +1,8 @@
 ![image](https://user-images.githubusercontent.com/2004103/57691648-59208500-7677-11e9-9b6f-21ee0eb5a4dd.png)
 
-Kong Gateway (OSS) - 一个轻量级开源网关
+Kong Gateway (OSS) - 一个轻量级开源网关。
+
+源码地址：https://github.com/Kong/kong
 
 Kong是一个云原生，快速，可扩展和分布式微服务抽象层（也称为API网关，API中间件或某些情况下的Service Mesh）。作为2015年的开源项目，其核心价值在于高性能和可扩展性。
 
