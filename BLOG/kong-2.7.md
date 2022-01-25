@@ -1,5 +1,7 @@
 # Kong 2.7 已经准备就绪！
 
+原文链接：https://konghq.com/blog/kong-gateway-2-7/
+
 今天，我们将要迎来Kong Gateway的另一个值得关注的进步 - 2.7 版的全面发布！Kong Gateway 和 Kong Gateway OSS 2.7 版下载都可以在您最喜欢的分发渠道上下载。
 
 此版本的 Kong Gateway 包含许多重要功能，可作为解决三个关键领域的基础：
