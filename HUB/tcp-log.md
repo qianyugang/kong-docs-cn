@@ -83,8 +83,8 @@ plugins:
 
 ## 全局插件
 
-- **使用数据库：**可以使用`http://kong:8001/plugins/`配置所有插件。
-- **不使用数据库：**可以通过`plugins: `配置所有插件：声明性配置文件中的条目。
+- **使用数据库：** 可以使用`http://kong:8001/plugins/`配置所有插件。
+- **不使用数据库：** 可以通过`plugins`: 配置所有插件：声明性配置文件中的条目。
 
 与任何 Service ，Route 或 Consumer （或API，如果您使用旧版本的Kong）无关的插件被视为“全局”，并将在每个请求上运行。有关更多信息，请阅读[插件参考](https://docs.konghq.com/latest/admin-api/#add-plugin)和[插件优先级](https://docs.konghq.com/latest/admin-api/#precedence)部分。
 

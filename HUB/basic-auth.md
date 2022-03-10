@@ -32,7 +32,7 @@
 **使用数据库：**
 
 通过发出以下请求在Service上配置此插件：
-```
+```bash
 $ curl -X POST http://kong:8001/services/{service}/plugins \
     --data "name=basic-auth"  \
     --data "config.hide_credentials=true"
@@ -42,7 +42,7 @@ $ curl -X POST http://kong:8001/services/{service}/plugins \
 
 通过添加此部分在服务上配置此插件执行声明性配置文件：
 
-```
+```yaml
 plugins:
 - name: basic-auth
   service: {service}
@@ -57,7 +57,7 @@ plugins:
 
 在Route上配置此插件：
 
-```
+```bash
 $ curl -X POST http://kong:8001/routes/{route}/plugins \
     --data "name=basic-auth"  \
     --data "config.hide_credentials=true"
@@ -67,7 +67,7 @@ $ curl -X POST http://kong:8001/routes/{route}/plugins \
 
 通过添加此部分在路由上配置此插件执行声明性配置文件：
 
-```
+```yaml
 plugins:
 - name: basic-auth
   route: {route}
@@ -80,8 +80,8 @@ plugins:
 
 ## 全局插件
 
-- **使用数据库：**可以使用`http://kong:8001/plugins/`配置所有插件。
-- **不使用数据库：**可以通过`plugins: `配置所有插件：声明性配置文件中的条目。
+- **使用数据库：** 可以使用`http://kong:8001/plugins/`配置所有插件。
+- **不使用数据库：** 可以通过`plugins: `配置所有插件：声明性配置文件中的条目。
 
 与任何 Service ，Route 或 Consumer （或API，如果您使用旧版本的Kong）无关的插件被视为“全局”，并将在每个请求上运行。有关更多信息，请阅读[插件参考](https://docs.konghq.com/latest/admin-api/#add-plugin)和[插件优先级](https://docs.konghq.com/latest/admin-api/#precedence)部分。
 
@@ -140,7 +140,7 @@ consumers:
 **使用数据库：**
 
 您可以通过发出以下HTTP请求来配置新的用户名/密码凭据：
-```
+```bash
 $ curl -X POST http://kong:8001/consumers/{consumer}/basic-auth \
     --data "username=Aladdin" \
     --data "password=OpenSesame"
@@ -149,7 +149,7 @@ $ curl -X POST http://kong:8001/consumers/{consumer}/basic-auth \
 **不使用数据库：**
 
 您可以在`basicauth_credentials`yaml条目上的声明性配置文件中添加凭据：
-```
+```bash
 basicauth_credentials:
 - consumer: {consumer}
   username: Aladdin
@@ -176,7 +176,7 @@ Authorization: Basic QWxhZGRpbjpPcGVuU2VzYW1l
 
 只需使用标题发出请求：
 
-```
+```bash
 $ curl http://kong:8000/{path matching a configured Route} \
     -H 'Authorization: Basic QWxhZGRpbjpPcGVuU2VzYW1l'
 ```
@@ -258,7 +258,7 @@ $ curl -X GET http://kong:8001/consumers/{username or id}/basic-auths
 
 可以使用以下请求检索与basic-auth Credential关联的Consumer ：
 
-```
+```bash
 curl -X GET http://kong:8001/basic-auths/{username or id}/consumer
 
 {
