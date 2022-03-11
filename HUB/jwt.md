@@ -22,7 +22,7 @@
 
 ### 在service上启用插件
 通过发出以下请求在[service](https://docs.konghq.com/latest/admin-api/#service-object)上配置此插件：
-```
+```bash
 $ curl -X POST http://kong:8001/services/{service}/plugins \
     --data "name=jwt" 
 ```
@@ -31,7 +31,7 @@ $ curl -X POST http://kong:8001/services/{service}/plugins \
 
 ### 在路由上启用插件
 通过以下请求在[router](https://docs.konghq.com/latest/admin-api/#Route-object)上配置:
-```
+```bash
 $ curl -X POST http://kong:8001/routes/{route_id}/plugins \
     --data "name=jwt"
 ```
@@ -41,7 +41,7 @@ $ curl -X POST http://kong:8001/routes/{route_id}/plugins \
 ### 在API上启用插件
 如果您正在使用老版本的	Kong（在[CE 0.13.0](https://github.com/Kong/kong/blob/master/CHANGELOG.md#0130---20180322) and [EE 0.32](https://docs.konghq.com/enterprise/changelog/#0-32)版本后被弃用，替换为service） 。您可以通过发出以下请求在此类API之上配置此插件：
 
-```
+```bash
 $ curl -X POST http://kong:8001/apis/{api}/plugins \
     --data "name=jwt" 
 ```
@@ -79,7 +79,7 @@ $ curl -X POST http://kong:8001/apis/{api}/plugins \
 ### 创建一个Consumer
 
 您需要将credential与现有的Consumer对象相关联。要创建使用者，您可以执行以下请求：
-```
+```bash
 $ curl -X POST http://kong:8001/consumers \
     --data "username=<USERNAME>" \
     --data "custom_id=<CUSTOM_ID>"
@@ -163,7 +163,7 @@ HTTP/1.1 200 OK
 既然您的消费者拥有凭证，并且假设我们想要使用HS256进行签名，那么JWT应按照以下方式制作（[RFC 7519](https://tools.ietf.org/html/rfc7519)）：
 
 首先,它的header必须是
-```
+```json
 {
     "typ": "JWT",
     "alg": "HS256"
@@ -172,7 +172,7 @@ HTTP/1.1 200 OK
 
 然后,claims参数中必须包含秘钥的key,在config.key_claim_name配置中.该声明默认为`iss`(发行者字段),将其值设置为我们先前创建的凭证key,claims可能包含其他值。自Kong 0.13.1起，将会在 JWT 的payload和header中都会查找该字段.
 
-```
+```json
 {
     "iss": "a36c3049b36249a3c9f8891cb127243c"
 }
@@ -188,20 +188,20 @@ eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJhMzZjMzA0OWIzNjI0OWEzYzlmODg5MWN
 
 现在,可以把JWT以添加在HEADER中的形式来发起一个请求:
 
-```
+```bash
 $ curl http://kong:8000/{route path} \
     -H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJhMzZjMzA0OWIzNjI0OWEzYzlmODg5MWNiMTI3MjQzYyIsImV4cCI6MTQ0MjQzMDA1NCwibmJmIjoxNDQyNDI2NDU0LCJpYXQiOjE0NDI0MjY0NTR9.AhumfY35GFLuEEjrOXiaADo7Ae6gt_8VLwX7qffhQN4'
 ```
 
 如果在配置文件中配置了config.uri_param_names字段,也可以把JWT以url参数的形式传入:
 声明必须包含秘密的密钥字段（这不是用于生成令牌的私钥，而只是该配置声明中的标识符）（来自config.key_claim_name）。
-```
+```bash
 curl http://kong:8000/{route path}?jwt=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJhMzZjMzA0OWIzNjI0OWEzYzlmODg5MWNiMTI3MjQzYyIsImV4cCI6MTQ0MjQzMDA1NCwibmJmIjoxNDQyNDI2NDU0LCJpYXQiOjE0NDI0MjY0NTR9.AhumfY35GFLuEEjrOXiaADo7Ae6gt_8VLwX7qffhQN4
 ```
 
 如果在配置文件中配置了config.cookie_names,也可以cookies的形式传入:
 
-```
+```bash
 curl --cookie jwt=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJhMzZjMzA0OWIzNjI0OWEzYzlmODg5MWNiMTI3MjQzYyIsImV4cCI6MTQ0MjQzMDA1NCwibmJmIjoxNDQyNDI2NDU0LCJpYXQiOjE0NDI0MjY0NTR9.AhumfY35GFLuEEjrOXiaADo7Ae6gt_8VLwX7qffhQN4 http://kong:8000/{route path}
 ```
 
@@ -224,9 +224,9 @@ JWT将会被转发给上游服务，该服务可以检验此jwt的合法性。
 如[RFC 7519](https://tools.ietf.org/html/rfc7519)中所定义，Kong还可以对已注册的claims执行验证。要对声明claims验证，请将其添加到config.claims_to_verify属性:
 
 可以给已经存在的jwt插件补充如下:
-```
+```bash
 # 增加了对 nbf 和 exp claims的验证:
-curl -X PATCH http://kong:8001/plugins/{jwt plugin id} \
+curl -X PATCH 'http://kong:8001/plugins/{jwt plugin id}' \
     --data "config.claims_to_verify=exp,nbf"
 ```
 
@@ -243,7 +243,7 @@ curl -X PATCH http://kong:8001/plugins/{jwt plugin id} \
 
 可以给已经存在的router补充如下:
 
-```
+```bash
 $ curl -X PATCH http://kong:8001/routes/{route id}/plugins/{jwt plugin id} \
     --data "config.secret_is_base64=true"
 ```

@@ -32,7 +32,7 @@
 **使用数据库：**
 
 通过发出以下请求在Service上配置此插件：
-```
+```bash
 $ curl -X POST http://kong:8001/services/{service}/plugins \
     --data "name=http-log"  \
     --data "config.http_endpoint=http://mockbin.org/bin/:id" \
@@ -45,7 +45,7 @@ $ curl -X POST http://kong:8001/services/{service}/plugins \
 
 通过添加此部分在服务上配置此插件执行声明性配置文件：
 
-```
+```yaml
 plugins:
 - name: http-log
   service: {service}
@@ -63,7 +63,7 @@ plugins:
 
 您可以使用`http://localhost:8001/plugins`在特定的Consumers上启用此插件:
 
-```
+```bash
 $ curl -X POST http://kong:8001/consumers/{consumer}/plugins \
     --data "name=http-log" \
      \
@@ -93,8 +93,8 @@ plugins:
 
 ## 全局插件
 
-- **使用数据库：**可以使用`http://kong:8001/plugins/`配置所有插件。
-- **不使用数据库：**可以通过`plugins: `配置所有插件：声明性配置文件中的条目。
+- **使用数据库：** 可以使用`http://kong:8001/plugins/`配置所有插件。
+- **不使用数据库：** 可以通过`plugins`: 配置所有插件：声明性配置文件中的条目。
 
 与任何 Service ，Route 或 Consumer （或API，如果您使用旧版本的Kong）无关的插件被视为“全局”，并将在每个请求上运行。有关更多信息，请阅读[插件参考](https://docs.konghq.com/latest/admin-api/#add-plugin)和[插件优先级](https://docs.konghq.com/latest/admin-api/#precedence)部分。
 
@@ -119,7 +119,7 @@ plugins:
 ## 日志格式
 
 每个请求都将分别记录在JSON对象中，格式如下：
-```
+```json
 {
     "request": {
         "method": "GET",

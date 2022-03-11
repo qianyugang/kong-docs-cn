@@ -64,8 +64,8 @@ plugins:
 
 ## 全局插件
 
-- **使用数据库：**可以使用`http://kong:8001/plugins/`配置所有插件。
-- **不使用数据库：**可以通过`plugins: `配置所有插件：声明性配置文件中的条目。
+- **使用数据库：** 可以使用`http://kong:8001/plugins/`配置所有插件。
+- **不使用数据库：** 可以通过`plugins: `配置所有插件：声明性配置文件中的条目。
 
 与任何 Service ，Route 或 Consumer （或API，如果您使用旧版本的Kong）无关的插件被视为“全局”，并将在每个请求上运行。有关更多信息，请阅读[插件参考](https://docs.konghq.com/latest/admin-api/#add-plugin)和[插件优先级](https://docs.konghq.com/latest/admin-api/#precedence)部分。
 
@@ -203,7 +203,7 @@ Kong Session Plugin可以全局配置或按实体配置（例如，Service，Rou
 
 将所有这些添加到声明性配置文件中：
 
-```
+```yaml
 services:
 - name: example-service
   url: http://mockbin.org/request
@@ -246,25 +246,25 @@ plugins:
 ### 验证
 
 1. 检查是否禁用了匿名请求
-	```
+	```bash
       $ curl -i -X GET \
     	--url http://localhost:8000/sessions-test
     ```
     应该返回`403`
     
 2. 验证用户是否可以通过会话进行身份验证
-	```
+	```bash
      $ curl -i -X GET \
    		--url http://localhost:8000/sessions-test?apikey=open_sesame
     ```
     响应现在应该具有Set-Cookie标头。确保此cookie有效。
     
     如果cookie看起来像这样：
-    ```
+    ```bash
     Set-Cookie: session=emjbJ3MdyDsoDUkqmemFqw..|1544654411|4QMKAE3I-jFSgmvjWApDRmZHMB8.; Path=/; SameSite=Strict; HttpOnly
     ```
     像这样使用它：
-    ```
+    ```bash
        $ curl -i -X GET \
          --url http://localhost:8000/sessions-test \
          -H "cookie:session=emjbJ3MdyDsoDUkqmemFqw..|1544654411|4QMKAE3I-jFSgmvjWApDRmZHMB8."
