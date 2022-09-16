@@ -9,24 +9,32 @@ Kong是一个云原生，快速，可扩展和分布式微服务抽象层（也�
 
 由于对项目的积极维护，Kong被广泛用于从初创公司到全球5000强以及政府机构的生产中。
 
-❗️重要：本文档是基于 https://docs.konghq.com/gateway-oss/1.1.x/ `1.1.x` 版本，目前官网已经更新至 `2.8.x` 版本，如果使用的其他版本，请查看官方文档：
+**重要❗️：** 本文档是基于 https://legacy-gateway--kongdocs.netlify.app/gateway-oss/1.1.x/ `1.1.x` 版本，目前官网已经更新至 `3.0.x` 版本，如果使用的其他版本，请查看官方文档：
 
-[![](https://img.shields.io/badge/Kong-1.1.x-blue)](https://konghq.com/)
+- 官网最新版本：
+[![](https://img.shields.io/badge/Kong-3.0.x-green)](https://docs.konghq.com/gateway/3.0.x/)
 
-- https://docs.konghq.com/gateway-oss/1.0.x/
-- https://docs.konghq.com/gateway-oss/1.2.x/
-- https://docs.konghq.com/gateway-oss/1.3.x/
-- https://docs.konghq.com/gateway-oss/1.4.x/
-- https://docs.konghq.com/gateway-oss/1.5.x/
-- https://docs.konghq.com/gateway-oss/2.0.x/
-- https://docs.konghq.com/gateway-oss/2.1.x/
-- https://docs.konghq.com/gateway-oss/2.2.x/
-- https://docs.konghq.com/gateway-oss/2.3.x/
-- https://docs.konghq.com/gateway-oss/2.4.x/
-- https://docs.konghq.com/gateway-oss/2.5.x/
-- https://docs.konghq.com/gateway/2.6.x/
-- https://docs.konghq.com/gateway/2.7.x/
-- https://docs.konghq.com/gateway/2.8.x/
+- 官网维护文档版本：
+[![](https://img.shields.io/badge/Kong-2.1.x-blue)](https://docs.konghq.com/gateway-oss/2.1.x/)
+[![](https://img.shields.io/badge/Kong-2.2.x-blue)](https://docs.konghq.com/gateway-oss/2.2.x/)
+[![](https://img.shields.io/badge/Kong-2.3.x-blue)](https://docs.konghq.com/gateway-oss/2.3.x/)
+[![](https://img.shields.io/badge/Kong-2.4.x-blue)](https://docs.konghq.com/gateway-oss/2.4.x/)
+[![](https://img.shields.io/badge/Kong-2.5.x-blue)](https://docs.konghq.com/gateway-oss/2.5.x/)
+[![](https://img.shields.io/badge/Kong-2.6.x-blue)](https://docs.konghq.com/gateway/2.6.x/)
+[![](https://img.shields.io/badge/Kong-2.7.x-blue)](https://docs.konghq.com/gateway/2.7.x/)
+[![](https://img.shields.io/badge/Kong-2.8.x-blue)](https://docs.konghq.com/gateway/2.8.x/)
+
+- 存档历史文档版本：
+[![](https://img.shields.io/badge/Kong-1.0.x-inactive)](https://legacy-gateway--kongdocs.netlify.app/gateway-oss/1.0.x/)
+[![](https://img.shields.io/badge/Kong-1.1.x-inactive)](https://legacy-gateway--kongdocs.netlify.app/gateway-oss/1.1.x/)
+[![](https://img.shields.io/badge/Kong-1.2.x-inactive)](https://legacy-gateway--kongdocs.netlify.app/gateway-oss/1.2.x/)
+[![](https://img.shields.io/badge/Kong-1.3.x-inactive)](https://legacy-gateway--kongdocs.netlify.app/gateway-oss/1.3.x/)
+[![](https://img.shields.io/badge/Kong-1.4.x-inactive)](https://legacy-gateway--kongdocs.netlify.app/gateway-oss/1.4.x/)
+[![](https://img.shields.io/badge/Kong-1.5.x-inactive)](https://legacy-gateway--kongdocs.netlify.app/gateway-oss/1.5.x/)
+[![](https://img.shields.io/badge/Kong-2.0.x-inactive)](https://legacy-gateway--kongdocs.netlify.app/gateway-oss/2.0.x/)
+
+
+
 
 **本篇文档说明：https://102no.com/2019/06/27/kong-docs-cn/**
 
