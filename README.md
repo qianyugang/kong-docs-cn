@@ -20,7 +20,7 @@ Kong是一个云原生，快速，可扩展和分布式微服务抽象层（也�
 - 官网最新版本：
 [![](https://img.shields.io/badge/Kong-3.0.x-green)](https://docs.konghq.com/gateway/3.0.x/)
 
-- 官网维护文档版本：
+- 官网维护版本：
 [![](https://img.shields.io/badge/Kong-2.1.x-blue)](https://docs.konghq.com/gateway-oss/2.1.x/)
 [![](https://img.shields.io/badge/Kong-2.2.x-blue)](https://docs.konghq.com/gateway-oss/2.2.x/)
 [![](https://img.shields.io/badge/Kong-2.3.x-blue)](https://docs.konghq.com/gateway-oss/2.3.x/)
@@ -30,7 +30,7 @@ Kong是一个云原生，快速，可扩展和分布式微服务抽象层（也�
 [![](https://img.shields.io/badge/Kong-2.7.x-blue)](https://docs.konghq.com/gateway/2.7.x/)
 [![](https://img.shields.io/badge/Kong-2.8.x-blue)](https://docs.konghq.com/gateway/2.8.x/)
 
-- 历史存档文档版本：
+- 历史存档版本：
 [![](https://img.shields.io/badge/Kong-1.0.x-inactive)](https://legacy-gateway--kongdocs.netlify.app/gateway-oss/1.0.x/)
 [![](https://img.shields.io/badge/Kong-1.1.x-inactive)](https://legacy-gateway--kongdocs.netlify.app/gateway-oss/1.1.x/)
 [![](https://img.shields.io/badge/Kong-1.2.x-inactive)](https://legacy-gateway--kongdocs.netlify.app/gateway-oss/1.2.x/)
