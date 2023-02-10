@@ -88,7 +88,7 @@ plugins:
 
 ## 默认规则
 
-该插件已包含一个基本的规则列表，将在每个请求中进行检查。您可以在GitHub上找到此列表，dizhi为https://github.com/Kong/kong/blob/master/kong/plugins/bot-detection/rules.lua。
+该插件已包含一个基本的规则列表，将在每个请求中进行检查。您可以在GitHub上找到此列表，地址为[https://github.com/Kong/kong/blob/master/kong/plugins/bot-detection/rules.lua](https://github.com/Kong/kong/blob/master/kong/plugins/bot-detection/rules.lua)。
 
 
 
