@@ -13,7 +13,7 @@ Kong是一个云原生，快速，可扩展和分布式微服务抽象层（也�
 
 ## 提示
 
-**重要❗️：** 本文档是基于  [![](https://img.shields.io/badge/Kong-1.0.x-inactive)](https://legacy-gateway--kongdocs.netlify.app/gateway-oss/1.0.x/)  版本，目前官网已经更新至  [![](https://img.shields.io/badge/Kong-3.1.x-green)](https://docs.konghq.com/gateway/3.1.x/)  版本，如果使用的其他版本，请查看官方文档：
+**重要❗️：** 本文档是基于  [![](https://img.shields.io/badge/Kong-1.0.x-inactive)](https://legacy-gateway--kongdocs.netlify.app/gateway-oss/1.0.x/)  版本，目前官网已经更新至  [![](https://img.shields.io/badge/Kong-3.2.x-green)](https://docs.konghq.com/gateway/3.2.x/)  版本，如果使用的其他版本，请查看官方文档：
 
 ## 版本说明
 
