@@ -201,6 +201,6 @@ Kong是一个云原生，快速，可扩展和分布式微服务抽象层（也�
 - ~~会在每一页文档里面附上单独的英文原文链接，以便做对照。~~
 - ~~会添加kong自带的插件文档。~~
 
-
+[![Star History Chart](https://api.star-history.com/svg?repos=qianyugang/kong-docs-cn&type=Date)](https://star-history.com/#qianyugang/kong-docs-cn&Date)
 
 
