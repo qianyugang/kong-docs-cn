@@ -199,6 +199,7 @@ Kong是一个云原生，快速，可扩展和分布式微服务抽象层（也�
 - [Kong Gateway 3.6.x 正式发布，较大改变！](BLOG/kong-3.6.md)
 - [Kong 3.7重磅上线！Kong AI Gateway 正式 GA！](https://mp.weixin.qq.com/s/zMZpuEA1tI0UNlD7X7PP8A)
 - [Kong Gateway 3.8 正式 GA！](https://mp.weixin.qq.com/s/SrrLB8uvfH5dPPW2OnJXIQ)
+- [Kong Gateway 3.9 发布了：扩展 AI 支持并强化安全功能](https://mp.weixin.qq.com/s/D_cvdZvFzKY16r0IwNVhvA)
 
 **译者注：**
 翻译这个文档的原因是自己正好在学习这个kong，一方面也是锻炼自己的英语能力，所以采用的是人工+机翻结合的方式，如果有遇到翻译的不够通顺，或者对于翻译的语句有歧义的地方，麻烦一定点击官网英文文档 https://docs.konghq.com/gateway-oss/ 查看，并且欢迎提 PR 提修改意见。另，由于kong的文档本身也在不断增加和完善当中，如果有遇到没有即使更新翻译的状况欢迎提issue，我会不断补充的。
